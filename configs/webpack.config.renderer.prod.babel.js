@@ -51,6 +51,17 @@ export default merge.smart(baseConfig, {
           }
         ]
       },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: false
+            },
+          }
+        ]
+      },
       // Pipe other styles through css modules and append to style.css
       {
         test: /^((?!\.global).)*\.css$/,
@@ -165,11 +176,15 @@ export default merge.smart(baseConfig, {
           }
         }
       },
-      // Common Image Formats
       {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader'
-      }
+        test: /\.(png|jpg)$/,
+        loader: 'url?limit=250000'
+      },
+      // Common Image Formats
+      // {
+      //   test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
+      //   use: 'url-loader'
+      // }
     ]
   },
 

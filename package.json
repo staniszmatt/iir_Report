@@ -60,8 +60,21 @@
       "app.html",
       "main.prod.js",
       "main.prod.js.map",
-      "package.json"
+      "package.json",
+      "resources/**/*"
     ],
+    "win": {
+      "icon": "/resources/icons/aeropartsicon_1Jk_icon.ico",
+      "target": [
+        "nsis",
+        "msi"
+      ]
+    },
+    "nsis": {
+      "installerIcon": "aeropartsicon_1Jk_icon.ico",
+      "installerHeaderIcon": "aeropartsicon_1Jk_icon.ico",
+      "deleteAppDataOnUninstall": true
+    },
     "dmg": {
       "contents": [
         {
@@ -74,12 +87,6 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
-    },
-    "win": {
-      "target": [
-        "nsis",
-        "msi"
       ]
     },
     "linux": {
@@ -96,32 +103,20 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate",
+      "owner": "staniszmatt",
+      "repo": "iir_Report",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/staniszmatt/iir_Report"
   },
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://electron-react-boilerplate.js.org"
+    "name": "Matthew Staniszewski",
+    "email": "matthewpstaniszewski@gmail.com",
+    "url": "https://github.com/staniszmatt/iir_Report"
   },
-  "contributors": [
-    {
-      "name": "Vikram Rangaraj",
-      "email": "vikr01@icloud.com",
-      "url": "https://github.com/vikr01"
-    },
-    {
-      "name": "Amila Welihinda",
-      "email": "amilajack@gmail.com",
-      "url": "https://github.com/amilajack"
-    }
-  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues"
@@ -191,6 +186,7 @@
     "@types/node": "^12",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.7",
+    "@types/react-modal": "^8.2.7",
     "@types/react-redux": "^7.1.6",
     "@types/react-router": "^5.1.7",
     "@types/react-router-dom": "^5.1.5",
@@ -283,7 +279,7 @@
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "history": "^4.10.1",
-    "msnodesqlv8": "^1.1.8",
+    "msnodesqlv8": "^2.0.0",
     "mssql": "^6.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
