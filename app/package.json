@@ -1,0 +1,25 @@
+{
+  "name": "planning-app",
+  "productName": "Planning",
+  "version": "1.1.0",
+  "description": "Electron application based on React, React Router, Webpack, React Hot Loader to interface data and create specific work instructions based of inputs",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Matthew Staniszewski",
+    "email": "matthewpstaniszewski@gmail.com",
+    "url": "https://github.com/staniszmatt/electront-react-plannerDB"
+  },
+  "scripts": {
+    "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
+    "postinstall": "yarn electron-rebuild"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "msnodesqlv8": "^2.0.0",
+    "mssql": "^6.2.0"
+  },
+  "devDependencies": {
+    "@types/react-modal": "^3.10.6",
+    "@types/redux-form": "^8.2.6"
+  }
+}

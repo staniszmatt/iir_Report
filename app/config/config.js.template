@@ -1,0 +1,14 @@
+const config = {
+  driver: "msnodesqlv8",
+  server: "serverName",
+  database: "DBName",
+  user: "userName",  //Remove user name and password when windows creds are being used.
+  password: "password"
+  //add when one can use the windows creds
+    //  options: {
+    //    trustedConnection: true,
+    //    useUTC: true
+    //  }
+}
+
+module.exports = config;

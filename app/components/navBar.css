@@ -1,0 +1,47 @@
+.container {
+  width: 99.8%;
+  height: 30px;
+  text-align: center;
+  box-shadow: 0 3px 5px black;
+  background-color: rgba(1, 180, 223, 255);
+  border: 0.8px solid black;
+  display: flex;
+  margin: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-radius: 3px;
+}
+
+.container a {
+  display: inline-flex;
+  margin: auto;
+  opacity: unset;
+}
+
+.container button {
+  font-family: serif;
+  border-radius: 3px;
+  filter: drop-shadow(1.5px 1.5px 1.5px black);
+  width: 140px;
+  background-color: white;
+}
+
+.container button:hover {
+  background-color: cornflowerblue;
+  cursor: pointer;
+  transform: scale(1.01);
+}
+
+.container button:active {
+  background-color: cornflowerblue;
+  cursor: pointer;
+  box-shadow: 1px 1px rgba(255, 255, 255, 0.2);
+  transform: scale(0.97);
+  outline: 1px black;
+}
+
+.container button:focus {
+  outline: thin;
+}

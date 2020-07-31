@@ -1,0 +1,13 @@
+.container {
+  height: 100%;
+  display: flex;
+}
+
+.backgroundImageContainer {
+ margin: auto;
+}
+
+.backgroundImageContainer img {
+  object-fit: contain;
+  width: 100%;
+}

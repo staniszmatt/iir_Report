@@ -1,0 +1,132 @@
+/* Main Modal Styling */
+.modal-container {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  right: 100px;
+  border: 1px solid black;
+  background: rgb(255, 255, 255);
+  overflow: auto;
+  border-radius: 4px;
+  outline: none;
+  padding: 20px;
+  display: flex;
+  flex-flow: column;
+  background-color: #bdbdbd;
+}
+
+.modal-container > div:nth-child(2) {
+  margin: 10px;
+  text-align: center;
+  margin-bottom: unset;
+}
+
+.modal-container > div:nth-child(2) > button {
+  font-size: 16px;
+  margin: auto;
+  font-family: serif;
+  border-radius: 3px;
+  filter: drop-shadow(1.5px 1.5px 1.5px black);
+  background-color: white;
+}
+
+.warning-modal-container > div:last-child > button {
+  font-weight: bold;
+  background-color: red;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.modal-container > div:nth-child(2) > button:hover {
+  background-color: cornflowerblue;
+  cursor: pointer;
+  transform: scale(1.01);
+}
+
+.modal-container > div:nth-child(2) > button:active {
+  background-color: cornflowerblue;
+  cursor: pointer;
+  box-shadow: 1px 1px rgba(255, 255, 255, 0.2);
+  transform: scale(0.97);
+  outline: 1px black;
+}
+
+.modal-container > div:nth-child(2) > button:focus {
+  outline: thin;
+}
+
+/* Error Modal Styling */
+.error-modal-container {
+  text-align: center;
+  background-color: red;
+  border-radius: 5px;
+  box-shadow: inset 0 0 18px #000160;
+  height: 240px;
+}
+
+.error-modal-container > div:first-child > p {
+  font-size: 25px;
+  margin: 25px 0;
+}
+
+.error-modal-container > div:last-child > p {
+  font-size: 18px;
+  margin: 20px 0;
+  text-decoration: underline;
+}
+
+/* Success Modal Styling */
+.success-modal-container {
+  text-align: center;
+  background-color: #48ff48;
+  border-radius: 5px;
+  box-shadow: inset 0 0 18px #000160;
+  height: 240px;
+}
+
+.success-modal-container > div:first-child > p {
+  font-size: 25px;
+  margin: 25px 0;
+}
+
+.success-modal-container > div:last-child > p {
+  font-size: 18px;
+  margin: 20px 0;
+  text-decoration: underline;
+}
+
+/* Warning Modal Styling */
+.warning-modal-container {
+  text-align: center;
+  background-color: yellow;
+  color: red;
+  border-radius: 5px;
+  box-shadow: inset 0 0 18px #000160;
+  height: 240px;
+}
+
+.warning-modal-container > div:first-child > p {
+  font-size: 25px;
+  margin: 25px 0;
+}
+
+.warning-modal-container > div:nth-child(2) > p {
+  font-size: 18px;
+  margin: 20px 0;
+  text-decoration: underline;
+}
+
+.warning-modal-container > div:last-child > button:hover {
+  background-color: #32d023;
+}
+
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  10% {
+    opacity: 0;
+  }
+}
