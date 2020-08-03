@@ -182,23 +182,12 @@ export default merge.smart(baseConfig, {
             mimetype: 'image/svg+xml'
           }
         }
-      },
-      {
-        test: /\.(png|jpg|gif)$/i,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: false
-            },
-          }
-        ]
-      },
-      // Common Image Formats
-      {
-        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-        use: 'url-loader'
       }
+      // Common Image Formats
+      // {
+      //   test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
+      //   use: 'url-loader'
+      // }
     ]
   },
   resolve: {

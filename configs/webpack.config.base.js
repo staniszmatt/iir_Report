@@ -22,8 +22,8 @@ export default {
         }
       },
       {
-        test: /\.(png|jpg|gif)$/,
-        loader: 'url?limit=false'
+        test: /\.(png|jpg)$/,
+        use: 'url-loader'
       }
     ]
   },
