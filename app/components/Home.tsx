@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className={styles.container} data-tid="container">
       <div className={styles.backgroundImageContainer}>
-        <img src="../../resources/AeroPartsLogo.png" alt="AeroParts Logo" />
+        <img src="../internals/img/AeroPartsLogo.png" alt="AeroParts Logo" />
       </div>
     </div>
   );
