@@ -20,6 +20,10 @@ export default {
             cacheDirectory: true
           }
         }
+      },
+      {
+        test: /\.(png|jpg)$/,
+        use: 'url-loader'
       }
     ]
   },
