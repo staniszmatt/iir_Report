@@ -1,0 +1,25 @@
+.form-container {
+  height: 100%;
+  width: 100%;
+  padding-top: 40px;
+}
+
+.form-container > div:last-child {
+  display: flex;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.form-container > div:last-child > button {
+  margin: auto;
+}
+
+.page {
+  background: white;
+  width: 21cm;
+  height: 29.7cm;
+  display: block;
+  margin: 0 auto;
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 1);
+  border: 1px solid black;
+}
