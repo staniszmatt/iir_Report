@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import TearDownSummery from '../components/tearDownSummery';
 // import { tearDownSummerStateType } from '../reducers/types';
 
-export default function HomePage() {
+export default function TearDownSummeryPage() {
   return (
     <div>
       <TearDownSummery />
