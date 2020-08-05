@@ -20,6 +20,20 @@ export default function TearDownSummery() {
     </div>
   );
 
+//   function MyPdfAppComponent(){
+//     const [dataForPdf, setDataForPdf] = React.useState()
+//     React.useEffect(()=>{
+//        goFetchTheData().then(res=> setDataForPdf(res))
+//     },[])
+//     return{
+//        dataForPdf && (
+//        <PDFViewer>
+//           <MyDocument data={dataForPdf}/>
+//        </PDFViewer>
+//        )
+//     }
+//  }
+
   // const testData = {
   //   test: 'test',
   //   data: {
