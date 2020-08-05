@@ -29,7 +29,7 @@ export default function TearDownPDF(props) {
 
   return (
     <Document>
-      <Page style={styles.page}>
+      <Page size="A4" style={styles.page}>
         <View>
           <View style={styles.flex}>
             <View style={styles.middle}>

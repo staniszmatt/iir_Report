@@ -1,43 +1,23 @@
 import React from 'react';
-import { PDFViewer, PDFDownloadLink, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
+import ReactDOM from 'react-dom';
 import TearDownPDF from './tearDowSummeryPDF';
 import Btn from './buttonFunctions/buttonClickHandler';
 // import styles from './tearDownSummer.css';
 
 interface Props {}
 
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: 'row',
-    backgroundColor: '#E4E4E4'
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1
-  }
-});
-
-// Create Document Component
-const MyDocument = () => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text>Section #1</Text>
-      </View>
-      <View style={styles.section}>
-        <Text>Section #2</Text>
-      </View>
-    </Page>
-  </Document>
-);
-
-
 export default function TearDownSummery() {
   return (
-    <PDFViewer>
-      <MyDocument />
-    </PDFViewer>
+    <div>
+      <PDFViewer>
+        <TearDownPDF />
+      </PDFViewer>
+      <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
+        {({ blob, url, loading, error }) =>
+          loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
+      </PDFDownloadLink>
+    </div>
   );
 
   // const testData = {
@@ -86,3 +66,5 @@ export default function TearDownSummery() {
   //   </div>
   // );
 }
+
+ReactDOM.render(<TearDownSummery />, document.getElementById('root'));
