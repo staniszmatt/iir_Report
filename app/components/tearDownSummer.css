@@ -4,22 +4,61 @@
   padding-top: 40px;
 }
 
-.form-container > div:last-child {
-  display: flex;
-  width: 100%;
-  margin: 10px 0;
-}
-
-.form-container > div:last-child > button {
-  margin: auto;
-}
-
-.page {
+.form-page {
   background: white;
-  width: 21cm;
-  height: 29.7cm;
+  width: 8.5in;
+  height: 11in;
   display: block;
   margin: 0 auto;
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 1);
   border: 1px solid black;
 }
+
+.form-header {
+  width: 100%;
+  height: 1in;
+  display: flex;
+}
+
+.form-header > div {
+  margin: auto;
+  font-size: 40px;
+}
+
+.form-footer > div {
+  margin: auto;
+  font-size: 16px;
+}
+
+.form-header > div:first-child,
+.form-header > div:last-child {
+  height: 50px;
+  width: 150px;
+  object-fit: contain;
+}
+
+.form-header > div:first-child > img {
+  width: 100%;
+  height: 100%;
+}
+
+.form-body {
+  height: 9in;
+  display: flex;
+}
+
+.form-body > div:nth-child(2) {
+  width: 8in;
+  font-size: 16px;
+}
+
+.form-body > div:first-child,
+.form-body > div:last-child {
+  width: 0.25in;
+}
+
+.form-footer {
+  height: 1in;
+  display: flex;
+}
+
