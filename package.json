@@ -61,7 +61,7 @@
       "main.prod.js",
       "main.prod.js.map",
       "package.json",
-      "app/img/"
+      "app/**/*"
     ],
     "win": {
       "icon": "/resources/icons/aeropartsicon_1Jk_icon.ico",
@@ -186,7 +186,7 @@
     "@types/node": "^12",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.7",
-    "@types/react-modal": "^8.2.7",
+    "@types/react-modal": "^3.11.2",
     "@types/react-redux": "^7.1.6",
     "@types/react-router": "^5.1.7",
     "@types/react-router-dom": "^5.1.5",
@@ -271,7 +271,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@hot-loader/react-dom": "^16.13.0",
-    "@types/react-modal": "^3.10.6",
+    "@react-pdf/renderer": "^1.6.10",
+    "@react-pdf/styled-components": "^1.4.0",
+    "@types/react-modal": "^3.11.2",
     "connected-react-router": "^6.8.0",
     "core-js": "^3.6.5",
     "devtron": "^1.4.0",
@@ -279,6 +281,7 @@
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "history": "^4.10.1",
+    "image-type": "^4.1.0",
     "msnodesqlv8": "^2.0.0",
     "mssql": "^6.2.0",
     "react": "^16.12.0",

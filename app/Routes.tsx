@@ -3,9 +3,10 @@ import { Switch, Route } from 'react-router-dom';
 import routes from './constants/routes.json';
 import App from './containers/App';
 import HomePage from './containers/HomePage';
-// import CounterPage from './containers/CounterPage';
+import TearDownSummerPage from './containers/TearDownSummerPage';
 import Nav from './components/navBar';
 import ErrorModal from './components/modals/ModalPage';
+
 
 export default function Routes() {
   return (
@@ -13,8 +14,8 @@ export default function Routes() {
       <ErrorModal />
       <Nav />
       <Switch>
+        <Route path={routes.IIRFORM} component={TearDownSummerPage} />
         <Route path={routes.HOME} component={HomePage} />
-        {/**   <Route path={routes.COUNTER} component={CounterPage} />  */}
       </Switch>
     </App>
   );

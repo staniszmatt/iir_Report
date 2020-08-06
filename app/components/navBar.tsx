@@ -6,8 +6,8 @@ import styles from './navBar.css';
 export default function Nav() {
   return (
     <div className={styles.container}>
-      <Link to={routes.HOME}>
-        <button type="button">HOME</button>
+      <Link to={routes.IIRFORM}>
+        <button type="button">IIR Form</button>
       </Link>
     </div>
   );

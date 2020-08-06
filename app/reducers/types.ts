@@ -1,5 +1,11 @@
 import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 
+export type iirStateType = {
+  iir: {
+    loadPDF: boolean;
+  }
+}
+
 export type modalStateType = {
   modals: {
     modalState: boolean;
@@ -12,8 +18,10 @@ export type modalStateType = {
 
 // export type GetState = () => counterStateType;
 export type GetErrorModalState = () => modalStateType;
+export type GetIIRState = () => iirStateType;
 
 export type Store =
   | ReduxStore<modalStateType, Action<string>>
+  | ReduxStore<iirStateType, Action<string>>;
 
 export type Dispatch = ReduxDispatch<Action<string>>;

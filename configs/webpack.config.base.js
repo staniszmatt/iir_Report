@@ -22,7 +22,7 @@ export default {
         }
       },
       {
-        test: /\.(png|jpg)$/,
+        test: /\.(png|jpg|pdf)$/,
         use: 'url-loader'
       }
     ]
