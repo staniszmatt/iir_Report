@@ -3,8 +3,11 @@ import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
 import ReactDOM from 'react-dom';
 import TearDownPDF from './tearDowSummeryPDF';
 
+interface Props {}
 
-export default function TearDownSummery() {
+
+export default function TearDownSummery(props: Props) {
+  console.log("tear down component, props:", props);
   return (
     <div>
       <PDFViewer>
@@ -18,4 +21,4 @@ export default function TearDownSummery() {
   );
 }
 
-ReactDOM.render(<TearDownSummery />, document.getElementById('root'));
+// ReactDOM.render(<TearDownSummery />, document.getElementById('root'));

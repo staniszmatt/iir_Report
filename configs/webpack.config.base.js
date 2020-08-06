@@ -22,9 +22,20 @@ export default {
         }
       },
       {
-        test: /\.(png|jpg|pdf)$/,
-        use: 'url-loader'
+        test: /\.(png|svg|jpg|gif|pdf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]'
+            }
+          }
+        ]
       }
+      // {
+      //   test: /\.(png|jpg|pdf)$/,
+      //   use: 'url-loader'
+      // }
     ]
   },
 

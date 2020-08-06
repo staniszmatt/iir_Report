@@ -61,7 +61,7 @@
       "main.prod.js",
       "main.prod.js.map",
       "package.json",
-      "app/img/"
+      "app/**/*"
     ],
     "win": {
       "icon": "/resources/icons/aeropartsicon_1Jk_icon.ico",

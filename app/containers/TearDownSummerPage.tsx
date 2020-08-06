@@ -1,29 +1,18 @@
-import React from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import TearDownSummery from '../components/tearDownSummery';
-// import { tearDownSummerStateType } from '../reducers/types';
+import { toggleIIRState } from '../actions/iirActions';
+import { iirStateType } from '../reducers/types'
 
-export default function TearDownSummeryPage() {
-  return (
-    <div>
-      <TearDownSummery />
-    </div>
-  );
+
+function mapStateToProps(state: iirStateType) {
+  return {
+    iir: state.iir
+  };
 }
 
-// function mapStateToProps(state: tearDownSummerStateType) {
-//   return {
-//     tearDownSummery: state.tearDownSummery
-//   };
-// }
-
-// function mapDispatchToProps(dispatch: Dispatch<null>) {
-//   return bindActionCreators(
-//     {  },
-//     dispatch
-//   );
-// }
-// // TODO: Fix typescript, either the rules or the interface.
-// export default connect(mapStateToProps, mapDispatchToProps)(TearDownSummer);
+function mapDispatchToProps(dispatch: Dispatch<null>) {
+  return bindActionCreators({ toggleIIRState }, dispatch);
+}
+// TODO: Fix typescript, either the rules or the interface.
+export default connect(mapStateToProps, mapDispatchToProps)(TearDownSummery);
