@@ -1,16 +1,15 @@
-const sql = require('mssql/msnodesqlv8');
+const sql = require('mssql');
+require('msnodesqlv8');
 
 const pool = new sql.ConnectionPool({
-  user: 'staniszmatt', // Remove user name and password when windows cred are being used.
-  password: 'Neon199*',
   driver: 'msnodesqlv8',
-  server: '127.0.0.1,1433',
-  database: 'planningDB_Dev'
+  server: 'AMR-FS1\\SQLEXPRESS',
+  database: 'Repair',
   // Add when one can use the windows cred
-  //  options: {
-  //    trustedConnection: true,
-  //    useUTC: true
-  //  }
+  options: {
+    trustedConnection: true,
+    useUTC: true
+  }
 });
 
 module.exports = pool;

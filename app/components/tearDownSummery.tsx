@@ -1,13 +1,18 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import TearDownPDF from './tearDowSummeryPDF';
+import TearDownPDF from './tearDownSummeryPDF';
+import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
 
-interface Props {}
+interface Props {
+  getData: () => {}
+}
 
 export default function TearDownSummery(props: Props) {
   console.log("tear down component, props:", props);
+
+  const { getData } = props;
 
 
   return (
@@ -40,7 +45,7 @@ export default function TearDownSummery(props: Props) {
           </div>
         </div>
       </div>
-
+      <Btn buttonName="Test Get Data" ClickHandler={getData} />
       <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
         {({ blob, url, loading, error }) =>
           loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
