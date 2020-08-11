@@ -1,6 +1,5 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { Field, reduxForm, InjectedArrayProps } from 'redux-form';
 import TearDownPDF from './tearDownSummeryPDF';
 import Btn from './buttonFunctions/buttonClickHandler';
 import FormInput from './forms/formInput';
@@ -8,13 +7,14 @@ import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
 
 interface Props {
-  getData: () => {}
+  getData: () => {};
+  postIIRReport: () => {};
 }
 
 export default function TearDownSummery(props: Props) {
-  console.log("tear down component, props:", props);
+  console.log('tear down component, props:', props);
 
-  const { getData } = props;
+  const { getData, postIIRReport } = props;
 
   const toUpperCase = (value: string) => {
     return value && value.toUpperCase();
@@ -39,13 +39,6 @@ export default function TearDownSummery(props: Props) {
               <div>
                 <div>
                   <div>
-                    <Field
-                      label="Work Order Number:"
-                      compoont={FormInput}
-                      name="workOrderNumber"
-                      type="text"
-                      formation={toUpperCase}
-                    />
 
                   </div>
                 </div>
@@ -62,7 +55,7 @@ export default function TearDownSummery(props: Props) {
           </div>
         </div>
       </div>
-      <Btn buttonName="Test Get Data" ClickHandler={getData} />
+      <Btn buttonName="Test Input IIR data" ClickHandler={postIIRReport} />
       <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
         {({ blob, url, loading, error }) =>
           loading ? <i> Loading document...</i> : <i> Download Pdf </i>}

@@ -14,7 +14,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
-import getData from '../app/api/getData';
+import getData from './api/getData';
+import postIIRReport from './api/postIIRReport';
 
 export default class AppUpdater {
   constructor() {
@@ -133,6 +134,9 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
   switch (arg.request) {
     case 'getData':
       requestToSend = getData;
+      break;
+    case 'postIIRReport':
+      requestToSend = postIIRReport;
       break;
     default:
       switchFail = true;

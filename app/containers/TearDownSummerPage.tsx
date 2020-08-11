@@ -1,7 +1,7 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import TearDownSummery from '../components/tearDownSummery';
-import { toggleIIRState, getData } from '../actions/iirActions';
+import { toggleIIRState, getData, postIIRReport } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
 function mapStateToProps(state: iirStateType) {
@@ -11,7 +11,13 @@ function mapStateToProps(state: iirStateType) {
 }
 
 function mapDispatchToProps(dispatch: Dispatch<null>) {
-  return bindActionCreators({ toggleIIRState, getData }, dispatch);
+  return bindActionCreators({
+      toggleIIRState,
+      getData,
+      postIIRReport
+    },
+    dispatch
+  );
 }
 // TODO: Fix typescript, either the rules or the interface.
 export default connect(mapStateToProps, mapDispatchToProps)(TearDownSummery);
