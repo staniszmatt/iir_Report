@@ -5,16 +5,9 @@ import { createHashHistory } from 'history';
 import { routerMiddleware, routerActions } from 'connected-react-router';
 import { createLogger } from 'redux-logger';
 import createRootReducer from '../reducers';
-// import * as counterActions from '../actions/counterActions';
-import * as customerActions from '../actions/customerActions';
-import * as partNumbersActions from '../actions/partNumbersActions';
+import * as iirActions from '../actions/iirActions';
 import * as modalActions from '../actions/modalActions';
-import {
-  customerStateType,
-  modalStateType,
-  partNumbersStateType
-  // counterStateType
-} from '../reducers/types';
+import { modalStateType, iirStateType } from '../reducers/types';
 
 declare global {
   interface Window {
@@ -35,6 +28,16 @@ const history = createHashHistory();
 const rootReducer = createRootReducer(history);
 
 const configureStore = (initialState?: {
+  iir?:
+    | {
+        loadPDF: boolean;
+        workOrder: string;
+        workOrderLine: string;
+        workOrderInfo: {};
+        // eslint-disable-next-line prettier/prettier
+      }
+    | any
+    | iirStateType;
   modals?:
     | {
         modalState: boolean;
@@ -72,6 +75,7 @@ const configureStore = (initialState?: {
   // Redux DevTools Configuration
   const actionCreators = {
     ...modalActions,
+    ...iirActions,
     ...routerActions
   };
   // If Redux DevTools Extension is installed use it, otherwise use Redux compose

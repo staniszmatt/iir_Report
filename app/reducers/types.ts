@@ -3,6 +3,9 @@ import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 export type iirStateType = {
   iir: {
     loadPDF: boolean;
+    workOrder: string;
+    workOrderLine: string;
+    workOrderInfo: {};
   }
 }
 
