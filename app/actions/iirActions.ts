@@ -19,7 +19,7 @@ export function getData() {
 
     const mainRequest = {
       request: 'getData'
-    }
+    };
 
     const handleGetDataResp = (_event: {}, resp: { error: {}; data: {} }) => {
       console.log('handle data: ', resp);
@@ -27,6 +27,6 @@ export function getData() {
     }
     ipcRenderer.send('asynchronous-message', mainRequest);
     console.log('request sent');
-    ipcRenderer.on('asynchronous-replay', handleGetDataResp);
+    ipcRenderer.on('asynchronous-reply', handleGetDataResp);
   }
 }

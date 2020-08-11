@@ -22,6 +22,10 @@ export default {
         }
       },
       {
+        test: /\.node$/,
+        use: 'node-loader'
+      },
+      {
         test: /\.(png|jpg|pdf)$/,
         use: 'url-loader'
       }

@@ -1,7 +1,9 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { Field, reduxForm, InjectedArrayProps } from 'redux-form';
 import TearDownPDF from './tearDownSummeryPDF';
 import Btn from './buttonFunctions/buttonClickHandler';
+import FormInput from './forms/formInput';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
 
@@ -13,6 +15,10 @@ export default function TearDownSummery(props: Props) {
   console.log("tear down component, props:", props);
 
   const { getData } = props;
+
+  const toUpperCase = (value: string) => {
+    return value && value.toUpperCase();
+  };
 
 
   return (
@@ -31,7 +37,18 @@ export default function TearDownSummery(props: Props) {
             <div />
             <div>
               <div>
-                <div></div>
+                <div>
+                  <div>
+                    <Field
+                      label="Work Order Number:"
+                      compoont={FormInput}
+                      name="workOrderNumber"
+                      type="text"
+                      formation={toUpperCase}
+                    />
+
+                  </div>
+                </div>
                 <div></div>
                 <div></div>
                 <div></div>
