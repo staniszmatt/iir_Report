@@ -1,28 +1,27 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import TearDownPDF from './tearDownSummeryPDF';
+import WorkOrderSearchForm from './WorkOrderSearchForm';
 import Btn from './buttonFunctions/buttonClickHandler';
-import FormInput from './forms/formInput';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
 
 interface Props {
-  getData: () => {};
+  getWorkOrderData: () => {};
   postIIRReport: () => {};
 }
 
 export default function TearDownSummery(props: Props) {
   console.log('tear down component, props:', props);
 
-  const { getData, postIIRReport } = props;
-
-  const toUpperCase = (value: string) => {
-    return value && value.toUpperCase();
-  };
-
+  const { getWorkOrderData, postIIRReport } = props;
 
   return (
     <div className={styles['form-container']}>
+      <div>
+        <WorkOrderSearchForm onSubmit={getWorkOrderData} />
+      </div>
+
       <div className={styles['form-page']}>
         <div>
           <div className={styles['form-header']}>
@@ -38,9 +37,7 @@ export default function TearDownSummery(props: Props) {
             <div>
               <div>
                 <div>
-                  <div>
-
-                  </div>
+                  <div>First Line of inputs</div>
                 </div>
                 <div></div>
                 <div></div>
@@ -55,11 +52,16 @@ export default function TearDownSummery(props: Props) {
           </div>
         </div>
       </div>
-      <Btn buttonName="Test Input IIR data" ClickHandler={postIIRReport} />
-      <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
-        {({ blob, url, loading, error }) =>
-          loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
-      </PDFDownloadLink>
+
+      <div>
+        <button type="button">
+          <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
+            {({ blob, url, loading, error }) =>
+              loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
+          </PDFDownloadLink>
+        </button>
+      </div>
+
     </div>
   );
 }

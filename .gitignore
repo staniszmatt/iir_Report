@@ -49,4 +49,6 @@ npm-debug.log.*
 *.sass.d.ts
 *.scss.d.ts
 
+app/config/config.tsx
 app/config/config.js
+app/config/config

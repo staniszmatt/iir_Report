@@ -1,9 +1,11 @@
-import { stat } from 'fs';
 import { Action } from 'redux';
 import { TOGGLE_PDF_DISPLAY }  from '../actions/iirActions';
 
 const IState = {
-  loadPDF: false
+  loadPDF: false,
+  workOrder: '',
+  workOrderLine: '',
+  workOrderInfo: {}
 };
 
 export interface CustomAction extends Action {

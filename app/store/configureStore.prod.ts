@@ -4,12 +4,7 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
-import {
-  Store,
-  customerStateType,
-  modalStateType,
-  partNumbersStateType
-} from '../reducers/types';
+import { Store, modalStateType, iirStateType } from '../reducers/types';
 // import { Store, customerStateType, counterStateType } from '../reducers/types';
 
 const history = createHashHistory();
@@ -18,6 +13,16 @@ const router = routerMiddleware(history);
 const enhancer = applyMiddleware(thunk, router);
 
 function configureStore(initialState?: {
+  iir?:
+    | {
+        loadPDF: boolean;
+        workOrder: string;
+        workOrderLine: string;
+        workOrderInfo: {};
+        // eslint-disable-next-line prettier/prettier
+      }
+    | any
+    | iirStateType;
   modals?:
     | {
         modalState: boolean;

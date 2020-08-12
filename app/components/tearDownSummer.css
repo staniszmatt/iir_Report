@@ -4,6 +4,33 @@
   padding-top: 40px;
 }
 
+.form-header > div {
+  margin: auto;
+  font-size: 40px;
+}
+
+.form-footer > div {
+  margin: auto;
+  font-size: 16px;
+}
+
+.form-container > div:first-child {
+  height: 140px;
+  display: flex;
+}
+
+.form-container > div:last-child {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.form-container > div:last-child > button {
+  font-size: 30px;
+  width: 220px;
+  height: 54px;
+  border-radius: 5px;
+}
+
 .form-page {
   background: white;
   width: 8.5in;
@@ -18,16 +45,6 @@
   width: 100%;
   height: 1in;
   display: flex;
-}
-
-.form-header > div {
-  margin: auto;
-  font-size: 40px;
-}
-
-.form-footer > div {
-  margin: auto;
-  font-size: 16px;
 }
 
 .form-header > div:first-child,
@@ -61,4 +78,3 @@
   height: 1in;
   display: flex;
 }
-
