@@ -67,8 +67,8 @@ function validate(values: Values) {
     errors.workOrderSearch = 'Please Enter A Work Order Number!';
   }
   if (workOrderSearch) {
-    if (workOrderSearch.length > 6) {
-      errors.workOrderSearch = 'Work Order Number should only be 6 characters long!';
+    if (workOrderSearch.length > 5) {
+      errors.workOrderSearch = 'Work Order Number should only be 5 characters long!';
     }
   }
   if (!workOrderSearchLineItem) {
