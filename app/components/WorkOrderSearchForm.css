@@ -1,0 +1,11 @@
+.form-container {
+  margin: auto;
+}
+
+.form-container > div {
+  display: flex;
+}
+
+.form-container > div > form > div:first-child > input {
+  width: 55px;
+}

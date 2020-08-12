@@ -11,23 +11,34 @@ export function toggleIIRState() {
   };
 }
 
-export function getData() {
-  console.log('Get Data')
+export function getWorkOrderData(workOrder: {
+  workOrderSearch: string;
+  workOrderSearchLineItem: string;
+}) {
+  console.log('Get Work Order Data');
   return (dispatch: Dispatch, getstate: GetIIRState) => {
     const state = getstate().iir;
     console.log('State:', state);
 
+    const workOrderNumber = `${workOrder.workOrderSearch}   ${workOrder.workOrderSearchLineItem}`;
+
     const mainRequest = {
-      request: 'getData'
+      request: 'getWorkOrderData',
+      workOrderNumber
     };
 
-    const handleGetDataResp = (_event: {}, resp: { error: {}; data: {} }) => {
+    console.log('Main Request:', mainRequest);
+
+    const handleGetWorkOrderDataResp = (
+      _event: {},
+      resp: { error: {}; data: {} }
+    ) => {
       console.log('handle data: ', resp);
-      ipcRenderer.removeListener('asynchronous-replay', handleGetDataResp);
+      ipcRenderer.removeListener('asynchronous-replay', handleGetWorkOrderDataResp);
     }
     ipcRenderer.send('asynchronous-message', mainRequest);
     console.log('request sent');
-    ipcRenderer.on('asynchronous-reply', handleGetDataResp);
+    ipcRenderer.on('asynchronous-reply', handleGetWorkOrderDataResp);
   };
 }
 

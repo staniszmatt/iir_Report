@@ -1,6 +1,10 @@
 const odbc = require('odbc');
 
-async function getData(request) {
+interface Request {
+  workOrderNumber: string;
+}
+
+async function getWorkOrderData(request: Request) {
   console.log('request', request);
   const returnData = {
     error: {},
@@ -9,7 +13,7 @@ async function getData(request) {
   try {
     const db = await odbc.connect('DSN=AeroSuper');
     const data = await db.query(`SELECT * FROM sales_order_line
-    WHERE sales_order_line.SalesOrderAndLineNumber = '12939   01'`);
+    WHERE sales_order_line.SalesOrderAndLineNumber = '${request.workOrderNumber}'`);
     console.log('data', data);
     returnData.data = data;
     db.close();
@@ -21,4 +25,4 @@ async function getData(request) {
   return returnData;
 }
 
-export default getData;
+export default getWorkOrderData;

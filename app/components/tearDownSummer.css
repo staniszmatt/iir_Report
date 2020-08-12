@@ -4,6 +4,11 @@
   padding-top: 40px;
 }
 
+.form-container > div:first-child {
+  height: 100px;
+  display: flex;
+}
+
 .form-page {
   background: white;
   width: 8.5in;
