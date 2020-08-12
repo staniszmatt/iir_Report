@@ -21,6 +21,7 @@ export default function TearDownSummery(props: Props) {
       <div>
         <WorkOrderSearchForm onSubmit={getWorkOrderData} />
       </div>
+
       <div className={styles['form-page']}>
         <div>
           <div className={styles['form-header']}>
@@ -51,11 +52,16 @@ export default function TearDownSummery(props: Props) {
           </div>
         </div>
       </div>
-      <Btn buttonName="Test Input IIR data" ClickHandler={postIIRReport} />
-      <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
-        {({ blob, url, loading, error }) =>
-          loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
-      </PDFDownloadLink>
+
+      <div>
+        <button type="button">
+          <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
+            {({ blob, url, loading, error }) =>
+              loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
+          </PDFDownloadLink>
+        </button>
+      </div>
+
     </div>
   );
 }

@@ -1,11 +1,47 @@
 .form-container {
   margin: auto;
+  background-color: #80808073;
+  border-radius: 5px;
 }
 
 .form-container > div {
   display: flex;
+  width: 650px;
 }
 
-.form-container > div > form > div:first-child > input {
+.form-container > div:first-child {
+  font-size: 25px;
+  margin: 10px 0;
+}
+
+.form-container > div:first-child > div {
+  white-space: nowrap;
+  margin: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.form-container > div:last-child > div {
+  margin: auto;
+  display: flex;
+}
+
+.form-container > div:last-child > div > div > button {
+  margin: 0 20px;
+}
+
+.form-container > div:last-child > div > form {
+  width: unset;
+}
+
+.form-container > div:last-child > div > form > div {
+  margin: 0 10px;
+}
+
+.form-container > div:last-child > div > form > div:first-child > input {
   width: 55px;
+}
+
+.form-container > div:last-child > div > form > div:last-child > input {
+  width: 30px;
 }
