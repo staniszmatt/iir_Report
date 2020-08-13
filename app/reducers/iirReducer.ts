@@ -1,28 +1,45 @@
 import { Action } from 'redux';
-import { TOGGLE_PDF_DISPLAY }  from '../actions/iirActions';
+import {
+  TOGGLE_PDF_DISPLAY,
+  TOGGLE_LOADING_SCREEN_DISPLAY,
+  SET_WORK_ORDER,
+  SET_WORK_ORDER_DATA
+} from '../actions/iirActions';
 
 const IState = {
   loadPDF: false,
-  workOrder: '',
-  workOrderLine: '',
+  loadingScreen: false,
+  workOrder: {},
   workOrderInfo: {}
 };
 
 export interface CustomAction extends Action {
   type: string;
-  resp?: {
-    list?: [] | undefined;
-    error?: {} | undefined;
-  };
+  resp?: {};
 }
 
-export default function iir(state = IState, action: Action) {
+export default function iir(state = IState, action: CustomAction) {
   switch (action.type) {
     case TOGGLE_PDF_DISPLAY:
       return {
         ...state,
         loadPDF: !state.loadPDF
-      }
+      };
+    case TOGGLE_LOADING_SCREEN_DISPLAY:
+      return {
+        ...state,
+        loadingScreen: !state.loadingScreen
+      };
+    case SET_WORK_ORDER:
+      return {
+        ...state,
+        workOrder: action.resp
+      };
+    case SET_WORK_ORDER_DATA:
+      return {
+        ...state,
+        workOrderInfo: action.resp
+      };
     default:
       return state;
   }

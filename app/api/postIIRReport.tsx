@@ -33,6 +33,7 @@ async function postIIRReport(request: Request) {
   };
 
   try {
+    // TODO: Add line item to query!
     const db = await pool.connect();
     const query = `INSERT INTO iir_report_dev (SalesOrderNumber, customerReasonForRemoval, genConditionReceived, evalFindings, workedPerformed)
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName

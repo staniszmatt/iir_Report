@@ -16,8 +16,10 @@ function configureStore(initialState?: {
   iir?:
     | {
         loadPDF: boolean;
-        workOrder: string;
-        workOrderLine: string;
+        workOrder: {
+          workOrderSearch: string;
+          workOrderSearchLineItem: string;
+        };
         workOrderInfo: {};
         // eslint-disable-next-line prettier/prettier
       }
