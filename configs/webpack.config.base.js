@@ -26,7 +26,7 @@ export default {
         use: 'node-loader'
       },
       {
-        test: /\.(png|jpg|pdf)$/,
+        test: /\.(png|jpg|gif|pdf)$/,
         use: 'url-loader'
       }
     ]

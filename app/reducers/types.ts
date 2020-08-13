@@ -3,11 +3,14 @@ import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 export type iirStateType = {
   iir: {
     loadPDF: boolean;
-    workOrder: string;
-    workOrderLine: string;
+    loadingScreen: boolean;
+    workOrder: {
+      workOrderSearch: string;
+      workOrderSearchLineItem: string;
+    };
     workOrderInfo: {};
-  }
-}
+  };
+};
 
 export type modalStateType = {
   modals: {
