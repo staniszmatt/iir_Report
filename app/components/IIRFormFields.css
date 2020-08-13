@@ -1,0 +1,5 @@
+.form-container {
+  display: block;
+  width: unset;
+  min-width: 500px;
+}

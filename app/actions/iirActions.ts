@@ -64,7 +64,7 @@ export function getWorkOrderData(workOrder: {
       dispatch(toggleLoadingScreenState());
 
       if (Object.keys(resp.error).length === 0) {
-        if (resp.data.length === 0) {
+        if (!resp.data.length === 0) {
           dispatch(
             toggleErrorModalState(
               `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`
