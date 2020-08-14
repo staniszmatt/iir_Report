@@ -43,6 +43,8 @@ export function getWorkOrderData(workOrder: {
     console.log('State:', state);
 
     if (workOrder.workOrderSearchLineItem.length === 1) {
+      // Disabled here because we need to keep it at a two char of 0x where x is a number.
+      // eslint-disable-next-line no-param-reassign
       workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
     }
 

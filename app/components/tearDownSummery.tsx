@@ -3,7 +3,7 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import LoadingScreen from './LoadingDisplay';
 import TearDownPDF from './tearDownSummeryPDF';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
-import IIRForm from './IIRFormFields';
+import IIRFormPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
 import dummyData from '../dummyData/getDummyIIRData';
@@ -64,27 +64,12 @@ export default function TearDownSummery(props: Props) {
     warrentyString = 'Yes';
   }
 
-  const workOrderNumber = `Work Order: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
-  const customerName = `Customer: ${workOrderInfo.CustomerName}`;
-  const customerNumber = `Customer Order Number: ${workOrderInfo.CustomerOrderNumber}`;
-  const dateIssued = `Date Issued: ${workOrderInfo.DateIssuedYYMMDD}`;
-
-  const partNumber = `Part Number: ${workOrderInfo.PartNumber}`;
-  const partNumberDescription = `Part Description: ${workOrderInfo.PartDescription}`;
-  const partSerialNumber = `Serial Number: ${workOrderInfo.SerialNumber}`;
-  const partQuantity = `Quantity: ${workOrderInfo.Quantity}`;
-
-  const tsnNum = `TSN: ${workOrderInfo.TSN}`;
-  const tsrNum = `TSR: ${workOrderInfo.TSR}`;
-  const tsoNum = `TSO: ${workOrderInfo.TSO}`;
-  const orderType = `Order Type: ${workOrderInfo.OrderType}`;
-  const warrenty = `Warrenty: ${warrentyString}`;
-
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
-    workedPerformed: workOrderInfo.workedPerformed
+    workedPerformedNote: workOrderInfo.workedPerformed,
+    workedPerformed: workOrderInfo.Manual_Combined
   };
 
   return (
@@ -110,28 +95,67 @@ export default function TearDownSummery(props: Props) {
                 <div>
                   <div>
                     <div >
-                      <div>{workOrderNumber}</div>
-                      <div>{customerName}</div>
-                      <div>{customerNumber}</div>
-                      <div>{dateIssued}</div>
-                    </div>
-                    <div>
-                      <div>{partNumber}</div>
-                      <div>{partNumberDescription}</div>
-                      <div>{partSerialNumber}</div>
-                      <div>{partQuantity}</div>
+                      <div>
+                        <div>Work Order:</div>
+                        <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
+                      </div>
+                      <div>
+                        <div>Customer:</div>
+                        <div>{workOrderInfo.CustomerOrderNumber}</div>
+                      </div>
+                      <div>
+                        <div>Customer Order Number:</div>
+                        <div>{workOrderInfo.CustomerOrderNumber}</div>
+                      </div>
+                      <div>
+                        <div>Date Issued:</div>
+                        <div>{workOrderInfo.DateIssuedYYMMDD}</div>
+                      </div>
                     </div>
                     <div>
                       <div>
-                        <div>{tsnNum}</div>
-                        <div>{tsrNum}</div>
-                        <div>{tsoNum}</div>
+                        <div>Part Number:</div>
+                        <div>{workOrderInfo.PartNumber}</div>
                       </div>
-                      <div>{orderType}</div>
-                      <div>{warrenty}</div>
+                      <div>
+                        <div>Part Description:</div>
+                        <div>{workOrderInfo.PartDescription}</div>
+                      </div>
+                      <div>
+                        <div>Serial Number:</div>
+                        <div>{workOrderInfo.SerialNumber}</div>
+                      </div>
+                      <div>
+                        <div>Quantity:</div>
+                        <div>{workOrderInfo.Quantity}</div>
+                      </div>
                     </div>
                     <div>
-                      <IIRForm onSubmit={postIIRReport} props={iirProps} />
+                      <div>
+                        <div>
+                          <div>TSN:</div>
+                          <div>{workOrderInfo.TSN}</div>
+                        </div>
+                        <div>
+                          <div>TSR:</div>
+                          <div>{workOrderInfo.TSR}</div>
+                        </div>
+                        <div>
+                          <div>TSO:</div>
+                          <div>{workOrderInfo.TSO}</div>
+                        </div>
+                      </div>
+                      <div>
+                        <div>Order Type:</div>
+                        <div>{workOrderInfo.OrderType}</div>
+                      </div>
+                      <div>
+                        <div>Warrenty:</div>
+                        <div>{warrentyString}</div>
+                      </div>
+                    </div>
+                    <div>
+                      <IIRFormPDF onSubmit={postIIRReport} props={iirProps} />
                     </div>
                   </div>
                 </div>

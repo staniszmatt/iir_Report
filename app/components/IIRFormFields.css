@@ -1,5 +1,12 @@
 .form-container {
   display: block;
   width: unset;
-  min-width: 500px;
+  min-width: 650px;
+  margin: auto;
+}
+
+.form-disabled > div > div:last-child > textarea {
+  box-shadow: unset;
+  outline: none;
+  border: none;
 }

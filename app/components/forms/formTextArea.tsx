@@ -3,24 +3,37 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './formInput.css';
 
 interface Props {
   defaultValue: string;
   disabled: boolean;
-  input: { name: string };
+  input: {
+    name: string;
+    value: string;
+  };
   rows: number;
   label: string;
 }
 
+interface ValueState {
+  inputValue: string;
+}
+
 export default function FormTextArea(props: Props) {
   const { defaultValue, disabled, input, rows, label } = props;
-  let setFocus = false;
 
-  if (defaultValue !== 'undefined') {
-    setFocus = true;
-  }
+  const [valueState, setValueState] = useState<ValueState>({
+    inputValue: defaultValue
+  });
+
+  const valueChange = (event: { currentTarget: { value: string } }) => {
+    setValueState({
+      ...valueState,
+      inputValue: event.currentTarget.value
+    });
+  };
 
   return (
     <div className={styles['textarea-container']}>
@@ -30,12 +43,12 @@ export default function FormTextArea(props: Props) {
       <div>
         <textarea
           {...input}
-          defaultValue={defaultValue}
+          value={valueState.inputValue}
+          onChange={valueChange}
           disabled={disabled}
           id={props.input.name}
           aria-multiline
           rows={rows}
-          autoFocus={setFocus}
         />
       </div>
     </div>

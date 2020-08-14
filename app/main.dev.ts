@@ -59,6 +59,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
+    backgroundColor: '#FFF',
+    titleBarStyle: 'default',
     width: 1024,
     height: 728,
     icon: path.join(
