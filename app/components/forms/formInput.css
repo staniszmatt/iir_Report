@@ -65,12 +65,15 @@ form {
 
 .textarea-container > div:first-child {
   text-align: center;
+  font-size: 12pt;
+  font-weight: bold;
 }
 
 .textarea-container > div:last-child > textarea {
   width: -webkit-fill-available;
   resize: vertical;
-  min-height: 125px;
+  max-height: 120px;
+  min-height: 120px;
   box-shadow: inset 0 0 5px #000154;
-  padding: 20px 15px;
+  padding: 5px;
 }
