@@ -1,5 +1,6 @@
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
+import { Link } from 'react-router-dom';
 import LoadingScreen from './LoadingDisplay';
 import TearDownPDF from './tearDownSummeryPDF';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
@@ -169,12 +170,20 @@ export default function TearDownSummery(props: Props) {
           </div>
 
           <div>
-            <button type="button">
-              <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
-                {({ blob, url, loading, error }) =>
-                  loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
-              </PDFDownloadLink>
-            </button>
+            <div>
+              <Link to={routes.EDITFORM}>
+                <button type="button">Edit Form</button>
+              </Link>
+            </div>
+            <div>
+              <button type="button">
+                <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
+                  {({ blob, url, loading, error }) =>
+                    loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
+                </PDFDownloadLink>
+              </button>
+            </div>
+
           </div>
         </div>
       )}

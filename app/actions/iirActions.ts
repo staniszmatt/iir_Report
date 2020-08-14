@@ -4,6 +4,7 @@ import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
 
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
 export const TOGGLE_LOADING_SCREEN_DISPLAY = 'TOGGLE_LOADING_SCREEN_DISPLAY';
+export const TOGGLE_IIR_EDIT_STATE = 'TOGGLE_IIR_EDIT_STATE';
 export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 
@@ -16,6 +17,12 @@ export function toggleDisplayPDFFormState() {
 export function toggleLoadingScreenState() {
   return {
     type: TOGGLE_LOADING_SCREEN_DISPLAY
+  };
+}
+
+export function toggleIIRAddEditState() {
+  return {
+    type: TOGGLE_IIR_EDIT_STATE
   };
 }
 
@@ -112,5 +119,58 @@ export function postIIRReport(_iirData: {}) {
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState())
     ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
+  };
+}
+
+export function getIIRData(workOrder: {
+  workOrderSearch: string;
+  workOrderSearchLineItem: string;
+}) {
+  console.log('Get IIR Data');
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    console.log('State:', state);
+
+    if (workOrder.workOrderSearchLineItem.length === 1) {
+      // Disabled here because we need to keep it at a two char of 0x where x is a number.
+      // eslint-disable-next-line no-param-reassign
+      workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
+    }
+
+    const mainRequest = {
+      request: 'getIIRData',
+      workOrder
+    };
+
+    console.log('Main Request:', mainRequest);
+
+    const handleGeIIRDataResp = (
+      _event: {},
+      resp: { error: {}; data: [{}] }
+    ) => {
+      console.log('handle iir data: ', resp);
+
+      dispatch(toggleLoadingScreenState());
+debugger;
+      if (Object.keys(resp.error).length === 0) {
+        if (!resp.data.length === 0) {
+          dispatch(
+            toggleErrorModalState(
+              `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`
+            )
+          );
+        } else {
+          dispatch(setWorkOrder(workOrder));
+          dispatch(setWorkOrderData(resp.data[0]));
+        }
+      } else {
+        dispatch(toggleErrorModalState('Error Happened'));
+      }
+
+      ipcRenderer.removeListener('asynchronous-replay', handleGeIIRDataResp);
+    };
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
   };
 }

@@ -78,7 +78,7 @@
   font-weight: bold;
 }
 
-.form-container > div:last-child > div > button {
+.form-container > div:last-child > div > div > button {
   font-size: 25px;
   width: 175px;
   height: 40px;
