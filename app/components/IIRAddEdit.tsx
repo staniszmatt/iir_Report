@@ -2,7 +2,7 @@ import React from 'react';
 import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFormPDF from './IIRFromFiledPDF';
-import styles from './tearDownSummer.css';
+import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
 import dummyData from '../dummyData/getDummyIIRData';
 
@@ -65,16 +65,11 @@ export default function IIRAddEdit(props: Props) {
   };
 
   return (
-    <div className={styles['form-container']}>
+    <div className={styles['iir-container']}>
       <div>
         <WorkOrderSearchForm onSubmit={getIIRData} />
       </div>
       {loadingScreen && <LoadingScreen />}
-      <div className={styles['form-header']}>
-        <div>
-          <img src={logo} alt="Aero Parts Logo" />
-        </div>
-      </div>
       <div>
         {iirFormDisplay && (
           <IIRFormPDF onSubmit={postIIRReport} props={iirProps} />

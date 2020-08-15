@@ -1,6 +1,6 @@
 export default function dummyIIRData() {
   const dummyData = {
-    loadPDF: true,
+    loadPDF: false,
     loadingScreen: true,
     workOrderInfo: {
       CustomerName: 'LUFTHANSA TECHNIK',
