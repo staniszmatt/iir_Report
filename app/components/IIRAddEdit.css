@@ -1,0 +1,10 @@
+.iir-container {
+  height: 100%;
+  width: 100%;
+  padding-top: 40px;
+}
+
+.iir-container > div:first-child {
+  height: 140px;
+  display: flex;
+}

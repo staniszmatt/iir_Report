@@ -92,6 +92,5 @@ function validate(values: Values) {
 
 export default reduxForm<FormProps, DispatchProps>({
   form: 'workOrderSearchForm',
-  validate,
-  destroyOnUnmount: false
+  validate
 })(WorkOrderSearchForm);

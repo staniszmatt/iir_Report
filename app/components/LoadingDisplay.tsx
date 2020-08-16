@@ -5,7 +5,7 @@ export default function LoadingScreen() {
   return (
     <div className={styles['loading-container']}>
       <div>
-        <div className={styles['loader']} />
+        <div className={styles.loader} />
       </div>
     </div>
   );

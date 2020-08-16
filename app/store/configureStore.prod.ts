@@ -16,6 +16,9 @@ function configureStore(initialState?: {
   iir?:
     | {
         loadPDF: boolean;
+        iirFormDisplay: boolean;
+        loadingScreen: boolean;
+        postIIRNotes: boolean;
         workOrder: {
           workOrderSearch: string;
           workOrderSearchLineItem: string;

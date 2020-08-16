@@ -1,7 +1,7 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import TearDownAddEdit from '../components/TearDownAddEdit';
-import { getWorkOrderData, postIIRReport } from '../actions/iirActions';
+import IIRAddEdit from '../components/IIRAddEdit';
+import { postIIRReport, getIIRData } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
 function mapStateToProps(state: iirStateType) {
@@ -11,12 +11,13 @@ function mapStateToProps(state: iirStateType) {
 }
 
 function mapDispatchToProps(dispatch: Dispatch<null>) {
-  return bindActionCreators({
-      getWorkOrderData,
-      postIIRReport
+  return bindActionCreators(
+    {
+      postIIRReport,
+      getIIRData
     },
     dispatch
   );
 }
 // TODO: Fix typescript, either the rules or the interface.
-export default connect(mapStateToProps, mapDispatchToProps)(TearDownAddEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(IIRAddEdit);
