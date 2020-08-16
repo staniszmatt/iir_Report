@@ -1,7 +1,7 @@
 import React from 'react';
 import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
-import IIRFormPDF from './IIRFromFiledPDF';
+import IIRFormFields from './IIRFormFields';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
 import dummyData from '../dummyData/getDummyIIRData';
@@ -72,7 +72,7 @@ export default function IIRAddEdit(props: Props) {
       {loadingScreen && <LoadingScreen />}
       <div>
         {iirFormDisplay && (
-          <IIRFormPDF onSubmit={postIIRReport} props={iirProps} />
+          <IIRFormFields onSubmit={postIIRReport} props={iirProps} />
         )}
       </div>
     </div>

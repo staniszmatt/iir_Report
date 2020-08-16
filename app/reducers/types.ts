@@ -3,7 +3,9 @@ import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 export type iirStateType = {
   iir: {
     loadPDF: boolean;
+    iirFormDisplay: boolean;
     loadingScreen: boolean;
+    postIIRNotes: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;

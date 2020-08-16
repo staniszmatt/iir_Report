@@ -4,13 +4,15 @@ import {
   TOGGLE_LOADING_SCREEN_DISPLAY,
   SET_WORK_ORDER,
   SET_WORK_ORDER_DATA,
-  TOGGLE_IIR_EDIT_STATE
+  TOGGLE_IIR_EDIT_STATE,
+  TOGGLE_POST_IIR_NOTES
 } from '../actions/iirActions';
 
 const IState = {
   loadPDF: false,
   iirFormDisplay: false,
   loadingScreen: false,
+  postIIRNotes: false,
   workOrder: {},
   workOrderInfo: {}
 };
@@ -41,6 +43,11 @@ export default function iir(state = IState, action: CustomAction) {
       return {
         ...state,
         workOrder: action.resp
+      };
+    case TOGGLE_POST_IIR_NOTES:
+      return {
+        ...state,
+        postIIRNotes: !state.iirFormDisplay
       };
     case SET_WORK_ORDER_DATA:
       return {

@@ -170,11 +170,13 @@ export default function TearDownSummery(props: Props) {
           </div>
 
           <div>
-            <div>
-              <Link to={routes.EDITFORM}>
-                <button type="button">Edit Form</button>
-              </Link>
-            </div>
+            {/**
+              <div>
+                <Link to={routes.EDITFORM}>
+                  <button type="button">Edit Form</button>
+                </Link>
+              </div>
+            */}
             <div>
               <button type="button">
                 <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">

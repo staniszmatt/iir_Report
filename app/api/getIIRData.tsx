@@ -37,22 +37,12 @@ async function getWorkOrderData(request: Request) {
 
     console.log('IIR DB Request resp', getIIRData.recordset[0]);
 
-    returnData.data = getIIRData.recordset[0];
-    returnData.success = true;
-
-    // if (getIIRData.recordset.length > 0) {
-    //   const {
-    //     customerReasonForRemoval,
-    //     genConditionReceived,
-    //     evalFindings,
-    //     workedPerformed
-    //   } = getIIRData.recordset[0];
-
-    //   returnData.data[0].customerReasonForRemoval = customerReasonForRemoval;
-    //   returnData.data[0].genConditionReceived = genConditionReceived;
-    //   returnData.data[0].evalFindings = evalFindings;
-    //   returnData.data[0].workedPerformed = workedPerformed;
-    // }
+    if (getIIRData.recordset.length > 0) {
+      returnData.data = getIIRData.recordset[0];
+      returnData.success = true;
+    } else {
+      returnData.success = true;
+    }
   } catch (error) {
     console.log('error', error);
     returnData.error = error;
