@@ -1,7 +1,7 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import IIRAddEdit from '../components/IIRAddEdit';
-import { postIIRReport, getIIRData } from '../actions/iirActions';
+import { postOrUpdateIIRReport, getIIRData } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
 function mapStateToProps(state: iirStateType) {
@@ -13,7 +13,7 @@ function mapStateToProps(state: iirStateType) {
 function mapDispatchToProps(dispatch: Dispatch<null>) {
   return bindActionCreators(
     {
-      postIIRReport,
+      postOrUpdateIIRReport,
       getIIRData
     },
     dispatch

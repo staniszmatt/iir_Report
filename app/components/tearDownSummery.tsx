@@ -8,11 +8,10 @@ import IIRFormPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
 import dummyData from '../dummyData/getDummyIIRData';
-import postIIRReport from '../actions/iirActions';
 
 interface Props {
   getWorkOrderData: () => {};
-  postIIRReport: () => {};
+  postOrUpdateIIRReport: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
@@ -54,7 +53,7 @@ export default function TearDownSummery(props: Props) {
 
   const data = dummyData();
 
-  const { getWorkOrderData, postIIRReport } = props;
+  const { getWorkOrderData, postOrUpdateIIRReport } = props;
   // eslint-disable-next-line react/destructuring-assignment
   // const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
   const { loadingScreen, loadPDF, workOrder, workOrderInfo } = data;
@@ -156,7 +155,10 @@ export default function TearDownSummery(props: Props) {
                       </div>
                     </div>
                     <div>
-                      <IIRFormPDF onSubmit={postIIRReport} props={iirProps} />
+                      <IIRFormPDF
+                        onSubmit={postOrUpdateIIRReport}
+                        props={iirProps}
+                      />
                     </div>
                   </div>
                 </div>

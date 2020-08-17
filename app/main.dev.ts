@@ -17,6 +17,7 @@ import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
 import getIIRData from './api/getIIRData';
 import postIIRReport from './api/postIIRReport';
+import updateIIRReport from './api/updateIIRReport';
 
 export default class AppUpdater {
   constructor() {
@@ -143,6 +144,9 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
       break;
     case 'postIIRReport':
       requestToSend = postIIRReport;
+      break;
+    case 'updateIIRReport':
+      requestToSend = updateIIRReport;
       break;
     default:
       switchFail = true;

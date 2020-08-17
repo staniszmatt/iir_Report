@@ -7,7 +7,7 @@ import logo from '../img/logo.png';
 // import dummyData from '../dummyData/getDummyIIRData';
 
 interface Props {
-  postIIRReport: () => {};
+  postOrUpdateIIRReport: () => {};
   getIIRData: () => {};
   iir: {
     loadingScreen: boolean;
@@ -51,14 +51,13 @@ export default function IIRAddEdit(props: Props) {
 
 
 
-  const { postIIRReport, getIIRData } = props;
+  const { postOrUpdateIIRReport, getIIRData } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, iirFormDisplay, workOrder, workOrderInfo } = props.iir;
 
   // TODO: Remove when done with testing, this is the dummy data setup.
   // const data = dummyData();
   // const { loadingScreen, iirFormDisplay, workOrder, workOrderInfo } = data;
-
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
@@ -75,7 +74,7 @@ export default function IIRAddEdit(props: Props) {
       {loadingScreen && <LoadingScreen />}
       <div>
         {iirFormDisplay && (
-          <IIRFormFields onSubmit={postIIRReport} props={iirProps} />
+          <IIRFormFields onSubmit={postOrUpdateIIRReport} props={iirProps} />
         )}
       </div>
     </div>
