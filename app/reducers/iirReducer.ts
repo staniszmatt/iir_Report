@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import {
+  RESET_STATE,
   TOGGLE_PDF_DISPLAY,
   TOGGLE_LOADING_SCREEN_DISPLAY,
   SET_WORK_ORDER,
@@ -24,35 +25,44 @@ export interface CustomAction extends Action {
 
 export default function iir(state = IState, action: CustomAction) {
   switch (action.type) {
-    case TOGGLE_PDF_DISPLAY:
-      return {
-        ...state,
-        loadPDF: !state.loadPDF
-      };
     case TOGGLE_LOADING_SCREEN_DISPLAY:
       return {
         ...state,
         loadingScreen: !state.loadingScreen
       };
+    case TOGGLE_PDF_DISPLAY:
+      return {
+        ...state,
+        loadPDF: true
+      };
     case TOGGLE_IIR_EDIT_STATE:
       return {
         ...state,
-        iirFormDisplay: !state.iirFormDisplay
+        iirFormDisplay: true
+      };
+    case TOGGLE_POST_IIR_NOTES:
+      return {
+        ...state,
+        postIIRNotes: true
       };
     case SET_WORK_ORDER:
       return {
         ...state,
         workOrder: action.resp
       };
-    case TOGGLE_POST_IIR_NOTES:
-      return {
-        ...state,
-        postIIRNotes: !state.iirFormDisplay
-      };
     case SET_WORK_ORDER_DATA:
       return {
         ...state,
         workOrderInfo: action.resp
+      };
+    case RESET_STATE:
+      return {
+        ...state,
+        loadPDF: false,
+        iirFormDisplay: false,
+        postIIRNotes: false,
+        workOrder: {},
+        workOrderInfo: {}
       };
     default:
       return state;

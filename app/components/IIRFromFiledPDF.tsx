@@ -91,6 +91,5 @@ const IIRForm = (
 };
 
 export default reduxForm<FormProps, DispatchProps>({
-  form: 'iirForm',
-  destroyOnUnmount: false
+  form: 'iirFormDisabled'
 })(IIRForm);
