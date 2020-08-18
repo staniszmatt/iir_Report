@@ -1,8 +1,10 @@
+/* eslint-disable promise/catch-or-return */
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Link } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import LoadingScreen from './LoadingDisplay';
-import TearDownPDF from './tearDownSummeryPDF';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFormPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
@@ -72,15 +74,35 @@ export default function TearDownSummery(props: Props) {
     workedPerformed: workOrderInfo.Manual_Combined
   };
 
+  const getPDF = () => {
+    const input = document.getElementById('capture');
+
+    html2canvas(input, {scrollY: -window.scrollY}).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      // window.open(imgData);
+      const pdf = new jsPDF('p', 'px', 'a4');
+      var width = pdf.internal.pageSize.getWidth();
+      var height = pdf.internal.pageSize.getHeight();
+
+      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+      pdf.save("test.pdf");
+    });
+
+  }
+
   return (
     <div className={styles['form-container']}>
+
+
       <div>
         <WorkOrderSearchForm onSubmit={getWorkOrderData} />
       </div>
+
+
       {loadingScreen && <LoadingScreen />}
       {loadPDF && (
         <div>
-          <div className={styles['form-page']}>
+          <div id="capture" className={styles['form-page']}>
             <div>
               <div className={styles['form-header']}>
                 <div>
@@ -180,11 +202,13 @@ export default function TearDownSummery(props: Props) {
               </div>
             */}
             <div>
-              <button type="button">
+              <button onClick={getPDF} type="button">
+                {/**
                 <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
                   {({ blob, url, loading, error }) =>
                     loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
                 </PDFDownloadLink>
+                */}
               </button>
             </div>
 
