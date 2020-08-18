@@ -1,5 +1,3 @@
-// import { GetErrorModalState, Dispatch } from '../reducers/types';
-
 export const TOGGLE_ERROR_MODAL_STATE = 'TOGGLE_ERROR_MODAL_STATE';
 export const TOGGLE_SUCCESS_MODAL_STATE = 'TOGGLE_SUCCESS_MODAL_STATE';
 export const TOGGLE_MODAL_STATE = 'TOGGLE_MODAL_STATE';

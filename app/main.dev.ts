@@ -14,6 +14,10 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import getWorkOrderData from './api/getWorkOrderData';
+import getIIRData from './api/getIIRData';
+import postIIRReport from './api/postIIRReport';
+import updateIIRReport from './api/updateIIRReport';
 
 export default class AppUpdater {
   constructor() {
@@ -57,6 +61,8 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
+    backgroundColor: '#FFF',
+    titleBarStyle: 'default',
     width: 1024,
     height: 728,
     icon: path.join(
@@ -130,6 +136,18 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
   let switchFail = false;
 
   switch (arg.request) {
+    case 'getWorkOrderData':
+      requestToSend = getWorkOrderData;
+      break;
+    case 'getIIRData':
+      requestToSend = getIIRData;
+      break;
+    case 'postIIRReport':
+      requestToSend = postIIRReport;
+      break;
+    case 'updateIIRReport':
+      requestToSend = updateIIRReport;
+      break;
     default:
       switchFail = true;
       break;

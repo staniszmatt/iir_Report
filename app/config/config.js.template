@@ -1,14 +1,52 @@
-const config = {
+
+//
+// SQL Setup: This config file must stay as a .js format.
+//
+
+const sql = require('mssql/msnodesqlv8');
+
+const pool = new sql.ConnectionPool({
+  user: 'dbSQLUserName',
+  password: 'dbSQLPassword',
   driver: "msnodesqlv8",
-  server: "serverName",
-  database: "DBName",
-  user: "userName",  //Remove user name and password when windows creds are being used.
-  password: "password"
-  //add when one can use the windows creds
-    //  options: {
-    //    trustedConnection: true,
-    //    useUTC: true
-    //  }
+  server: 'ipAddress,PORT'
+  database: 'dbName'
+})
+
+module.exports = pool;
+
+//
+// Windows Cred Login
+//
+
+const sql = require('mssql/msnodesqlv8');
+
+const config = {
+  driver: 'msnodesqlv8',
+  server: 'networkServerName\\SQLEXPRESS',
+  database: 'dataBaseName',
+  options: {
+    trustedConnection: true
+  }
 }
 
-module.exports = config;
+const pool = new sql.ConnectionPool(config);
+
+module.exports = pool;
+
+//
+// ODBC driver Login
+//
+
+const odbc = require('odbc');
+const db = await odbc.connect('DSN=AeroSuper');
+const data = await db.query('Query String HERE!');
+
+//
+// Note for possible windows driver ODBC setup
+//
+// const config = {
+//   driver: 'msnodesqlv8',
+//   connectionString:
+//     'Driver={ODBC Driver 17 for SQL Server};Server{AMR-FS1\\SQLEXPRESS};Database={Repair};Trusted_Connection={yes}'
+// };

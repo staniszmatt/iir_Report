@@ -22,7 +22,11 @@ export default {
         }
       },
       {
-        test: /\.(png|jpg)$/,
+        test: /\.node$/,
+        use: 'node-loader'
+      },
+      {
+        test: /\.(png|jpg|gif|pdf)$/,
         use: 'url-loader'
       }
     ]

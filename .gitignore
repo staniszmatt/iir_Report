@@ -38,6 +38,9 @@ app/renderer.prod.js
 app/renderer.prod.js.map
 app/style.css
 app/style.css.map
+app/config/config.tsx
+app/config/config.js
+app/config/config
 dist
 dll
 main.js
@@ -48,5 +51,3 @@ npm-debug.log.*
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts
-
-./app/config/config.js

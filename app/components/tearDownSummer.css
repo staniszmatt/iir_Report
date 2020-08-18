@@ -1,0 +1,116 @@
+.form-container {
+  height: 100%;
+  width: 100%;
+  padding-top: 40px;
+}
+
+.form-header > div {
+  margin: auto;
+  font-size: 40px;
+}
+
+.form-footer > div {
+  margin: auto;
+  font-size: 10pt;
+}
+
+.form-container > div:first-child {
+  height: 140px;
+  display: flex;
+}
+
+.form-header > div:first-child,
+.form-header > div:last-child {
+  height: 50px;
+  width: 150px;
+  object-fit: contain;
+}
+
+.form-body > div:nth-child(2) {
+  width: 8in;
+  font-size: 10pt;
+}
+
+.form-body > div:first-child,
+.form-body > div:last-child {
+  width: 0.30in;
+}
+
+.form-body > div:nth-child(2) > div > div {
+  display: flex;
+  margin: 15px 0;
+}
+
+.form-body > div:nth-child(2) > div > div > div {
+  margin: auto;
+  text-align: center;
+}
+
+.form-container > div:last-child > div:last-child {
+  text-align: center;
+  margin: auto;
+}
+
+.form-body > div:nth-child(2) > div > div:last-child {
+  display: flex;
+}
+
+.form-body > div:nth-child(2) > div > div:nth-child(3) > div:first-child > div {
+  display: flex;
+}
+
+.form-body > div:nth-child(2) > div > div:nth-child(2) > div > div:nth-child(odd),
+.form-body > div:nth-child(2) > div > div:first-child > div > div:nth-child(odd) {
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.form-body > div:nth-child(2) > div > div:nth-child(3) > div:first-child > div > div {
+  margin: 0 5px 0 0;
+}
+
+
+.form-body > div:nth-child(2) > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(odd),
+.form-body > div:nth-child(2) > div > div:nth-child(3) > div:last-child > div:nth-child(odd),
+.form-body > div:nth-child(2) > div > div:nth-child(3) > div:first-child > div > div:nth-child(odd)
+{
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.form-container > div:last-child > div > div > button {
+  font-size: 25px;
+  width: 175px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.form-page {
+  background: white;
+  width: 8.5in;
+  height: 11in;
+  display: block;
+  margin: 0 auto;
+  overflow-y: unset;
+}
+
+.form-header {
+  width: 100%;
+  height: 1in;
+  display: flex;
+}
+
+.form-header > div:first-child > img {
+  width: 100%;
+  height: 100%;
+}
+
+.form-body {
+  height: 9in;
+  display: flex;
+}
+
+.form-footer {
+  height: 1in;
+  display: flex;
+}
