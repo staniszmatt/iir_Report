@@ -106,7 +106,7 @@ export function getWorkOrderData(workOrder: {
       } else {
         dispatch(reset('iirFormDisabled'));
         dispatch(resetState());
-        dispatch(toggleErrorModalState('Error Happened'));
+        dispatch(toggleErrorModalState(resp.error));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handleGetWorkOrderDataResp);
@@ -152,10 +152,7 @@ export function postOrUpdateIIRReport(iirNotes: {
       if (Object.keys(resp.error).length === 0) {
         dispatch(toggleSuccessModalState('Success!'));
       } else {
-        const error = {
-          error: 'Error happend updating or adding IIR Notes!'
-        }
-        dispatch(toggleErrorModalState(error));
+        dispatch(toggleErrorModalState(resp.error));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
@@ -210,7 +207,7 @@ export function getIIRData(workOrder: {
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
       } else {
-        dispatch(toggleErrorModalState('Error Happened'));
+        dispatch(toggleErrorModalState(resp.error));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handleGeIIRDataResp);
