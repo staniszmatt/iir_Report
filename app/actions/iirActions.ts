@@ -117,6 +117,7 @@ export function getWorkOrderData(workOrder: {
   };
 }
 
+<<<<<<< HEAD
 export function postOrUpdateIIRReport(iirNotes: {
   customerReasonForRemoval: string | null;
   evalFindings: string | null;
@@ -163,6 +164,8 @@ export function postOrUpdateIIRReport(iirNotes: {
   };
 }
 
+=======
+>>>>>>> dev
 export function getIIRData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
@@ -217,5 +220,62 @@ export function getIIRData(workOrder: {
     dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
+  };
+}
+
+export function postOrUpdateIIRReport(iirNotes: {
+  customerReasonForRemoval: string | null;
+  evalFindings: string | null;
+  genConditionReceived: string | null;
+  workedPerformed: string | null;
+}) {
+  console.log('IIR notes: ', iirNotes);
+
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    let request = 'updateIIRReport';
+    console.log('State:', state);
+    // Changes from updating IIR notes to Adding IIR notes if there was no record.
+    if (state.postIIRNotes) {
+      request = 'postIIRReport';
+    }
+    // TODO: SETUP updateIIRReport api.
+    const mainRequest = {
+      request,
+      SalesOrderNumber: state.workOrder.workOrderSearch,
+      salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
+      customerReasonForRemoval: iirNotes.customerReasonForRemoval,
+      genConditionReceived: iirNotes.genConditionReceived,
+      evalFindings: iirNotes.evalFindings,
+      workedPerformed: iirNotes.workedPerformed
+    };
+
+    console.log('main Request: ', mainRequest);
+    const handlePostIIRResp = (_event: {}, resp: { error: {}; data: {} }) => {
+
+      console.log('handle data: ', resp);
+
+      dispatch(toggleLoadingScreenState());
+
+      if (Object.keys(resp.error).length === 0) {
+        const iirRequest = {
+          workOrderSearch: state.workOrder.workOrderSearch,
+          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+        }
+        dispatch(getIIRData(iirRequest));
+        dispatch(toggleSuccessModalState('Succesfully updated IIR notes!'));
+      } else {
+        dispatch(
+          toggleErrorModalState(
+            'Somthing went wrong updating or adding IIR notes!'
+          )
+        );
+      }
+
+      ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
+    };
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
   };
 }
