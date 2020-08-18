@@ -4,7 +4,6 @@ import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Link } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import domtoimage from 'dom-to-image';
 import JsPDF from 'jspdf';
 import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';

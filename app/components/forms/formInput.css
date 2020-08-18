@@ -71,6 +71,7 @@ form {
 
 .textarea-container > div:last-child > textarea {
   width: -webkit-fill-available;
+  text-align: top;
   resize: vertical;
   max-height: 120px;
   min-height: 120px;
