@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable promise/always-return */
+/* eslint-disable promise/catch-or-return */
 import React from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Link } from 'react-router-dom';
+import html2canvas from '@nidi/html2canvas';
+import JsPDF from 'jspdf';
+import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
-import TearDownPDF from './tearDownSummeryPDF';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFormPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
-import dummyData from '../dummyData/getDummyIIRData';
+// import dummyData from '../dummyData/getDummyIIRData';
 
 interface Props {
   getWorkOrderData: () => {};
@@ -51,12 +55,12 @@ export default function TearDownSummery(props: Props) {
 
   console.log('tear down component, props:', props);
 
-  const data = dummyData();
+  // const data = dummyData();
 
   const { getWorkOrderData, postOrUpdateIIRReport } = props;
   // eslint-disable-next-line react/destructuring-assignment
-  // const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo } = data;
+  const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
+  // const { loadingScreen, loadPDF, workOrder, workOrderInfo } = data;
 
   let warrentyString = 'No';
 
@@ -71,6 +75,20 @@ export default function TearDownSummery(props: Props) {
     workedPerformedNote: workOrderInfo.workedPerformed,
     workedPerformed: workOrderInfo.Manual_Combined
   };
+  // Sets up the React component with the id to create a image and convert it to PNG then
+  // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
+  // create a PDF from a component.
+  const getPDF = () => {
+    const input: any = document.getElementById('capture');
+    html2canvas(input, { scrollY: -window.scrollY }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new JsPDF('p', 'px', 'a4');
+      const width = pdf.internal.pageSize.getWidth();
+      const height = pdf.internal.pageSize.getHeight();
+      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+      pdf.save('test.pdf');
+    });
+  };
 
   return (
     <div className={styles['form-container']}>
@@ -80,7 +98,7 @@ export default function TearDownSummery(props: Props) {
       {loadingScreen && <LoadingScreen />}
       {loadPDF && (
         <div>
-          <div className={styles['form-page']}>
+          <div id="capture" className={styles['form-page']}>
             <div>
               <div className={styles['form-header']}>
                 <div>
@@ -94,7 +112,7 @@ export default function TearDownSummery(props: Props) {
                 <div />
                 <div>
                   <div>
-                    <div >
+                    <div>
                       <div>
                         <div>Work Order:</div>
                         <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
@@ -172,19 +190,16 @@ export default function TearDownSummery(props: Props) {
           </div>
 
           <div>
-            {/**
-              <div>
-                <Link to={routes.EDITFORM}>
-                  <button type="button">Edit Form</button>
-                </Link>
-              </div>
-            */}
+
             <div>
-              <button type="button">
-                <PDFDownloadLink document={<TearDownPDF />} fileName="IIR.pdf">
-                  {({ blob, url, loading, error }) =>
-                    loading ? <i> Loading document...</i> : <i> Download Pdf </i>}
-                </PDFDownloadLink>
+              <Link to={routes.EDITFORM}>
+                <button type="button">Edit Form</button>
+              </Link>
+            </div>
+
+            <div>
+              <button onClick={getPDF} type="button">
+                Create PDF
               </button>
             </div>
 

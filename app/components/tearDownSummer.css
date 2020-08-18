@@ -91,8 +91,7 @@
   height: 11in;
   display: block;
   margin: 0 auto;
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 1);
-  border: 1px solid black;
+  overflow-y: unset;
 }
 
 .form-header {
