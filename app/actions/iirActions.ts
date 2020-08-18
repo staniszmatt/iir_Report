@@ -148,11 +148,14 @@ export function postOrUpdateIIRReport(iirNotes: {
     const handlePostIIRResp = (_event: {}, resp: { error: {}; data: {} }) => {
       console.log('handle post/update iir data response, resp: ', resp);
       dispatch(toggleLoadingScreenState());
-      debugger;
+
       if (Object.keys(resp.error).length === 0) {
-        toggleSuccessModalState(`Success!`);
+        dispatch(toggleSuccessModalState('Success!'));
       } else {
-        dispatch(toggleErrorModalState('Error happend updating or adding IIR Notes!'));
+        const error = {
+          error: 'Error happend updating or adding IIR Notes!'
+        }
+        dispatch(toggleErrorModalState(error));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
