@@ -271,6 +271,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@hot-loader/react-dom": "^16.13.0",
+    "@nidi/html2canvas": "^1.0.0-rc.13",
     "@react-pdf/styled-components": "^1.4.0",
     "@types/react-modal": "^3.11.2",
     "connected-react-router": "^6.8.0",
@@ -280,7 +281,6 @@
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "history": "^4.10.1",
-    "html2canvas": "^1.0.0-rc.7",
     "image-type": "^4.1.0",
     "jspdf": "^2.0.0",
     "msnodesqlv8": "^2.0.0",

@@ -70,11 +70,12 @@ form {
 }
 
 .textarea-container > div:last-child > textarea {
-  width: -webkit-fill-available;
-  text-align: top;
+  /* width: -webkit-fill-available; */
+  width: 100%;
+  vertical-align: top;
   resize: vertical;
   max-height: 120px;
-  min-height: 120px;
+  /* min-height: 120px; */
   box-shadow: inset 0 0 5px #000154;
   padding: 5px;
 }
