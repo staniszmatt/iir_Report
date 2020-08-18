@@ -1,9 +1,11 @@
+/* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 import React from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Link } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import domtoimage from 'dom-to-image';
+import JsPDF from 'jspdf';
 import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFormPDF from './IIRFromFiledPDF';
@@ -80,25 +82,20 @@ export default function TearDownSummery(props: Props) {
     html2canvas(input, {scrollY: -window.scrollY}).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
       // window.open(imgData);
-      const pdf = new jsPDF('p', 'px', 'a4');
-      var width = pdf.internal.pageSize.getWidth();
-      var height = pdf.internal.pageSize.getHeight();
+      const pdf = new JsPDF('p', 'px', 'a4');
+      const width = pdf.internal.pageSize.getWidth();
+      const height = pdf.internal.pageSize.getHeight();
 
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-      pdf.save("test.pdf");
+      pdf.save('test.pdf');
     });
-
   }
 
   return (
     <div className={styles['form-container']}>
-
-
       <div>
         <WorkOrderSearchForm onSubmit={getWorkOrderData} />
       </div>
-
-
       {loadingScreen && <LoadingScreen />}
       {loadPDF && (
         <div>
@@ -116,7 +113,7 @@ export default function TearDownSummery(props: Props) {
                 <div />
                 <div>
                   <div>
-                    <div >
+                    <div>
                       <div>
                         <div>Work Order:</div>
                         <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
