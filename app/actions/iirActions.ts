@@ -106,7 +106,13 @@ export function getWorkOrderData(workOrder: {
       } else {
         dispatch(reset('iirFormDisabled'));
         dispatch(resetState());
-        dispatch(toggleErrorModalState(resp.error));
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error = 'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handleGetWorkOrderDataResp);
@@ -145,14 +151,23 @@ export function postOrUpdateIIRReport(iirNotes: {
     };
 
     console.log('main Request: ', mainRequest);
-    const handlePostIIRResp = (_event: {}, resp: { error: {}; data: {} }) => {
+    const handlePostIIRResp = (
+      _event: {},
+      resp: { error: { name: string; code: string }; data: {} }
+    ) => {
       console.log('handle post/update iir data response, resp: ', resp);
       dispatch(toggleLoadingScreenState());
 
       if (Object.keys(resp.error).length === 0) {
         dispatch(toggleSuccessModalState('Success!'));
       } else {
-        dispatch(toggleErrorModalState(resp.error));
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error = 'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
@@ -207,7 +222,13 @@ export function getIIRData(workOrder: {
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
       } else {
-        dispatch(toggleErrorModalState(resp.error));
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error = 'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handleGeIIRDataResp);
