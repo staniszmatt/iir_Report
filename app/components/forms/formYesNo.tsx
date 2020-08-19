@@ -7,9 +7,9 @@ import FormRadioInput from './formRadioInput';
 import styles from './formInput.css';
 
 interface Props {
-  checkedValue: boolean;
-  defaultValue: string;
-  disabled: boolean;
+  // checkedValue: boolean;
+  // defaultValue: string;
+  // disabled: boolean;
   input: { name: string };
   label: string;
   type: string;
