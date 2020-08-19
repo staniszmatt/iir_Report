@@ -16,13 +16,12 @@ interface DispatchProps {
     evalFindings: string;
     genConditionReceived: string;
     workedPerformedNote: string;
-  }
+  };
 }
 
 const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  console.log('IIR Form, props', props);
   let btnText = 'Update IIR Notes';
   const { handleSubmit, onSubmit } = props;
 
