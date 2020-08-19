@@ -165,7 +165,7 @@ export default function TearDownSummery(props: Props) {
                         <div>{workOrderInfo.OrderType}</div>
                       </div>
                       <div>
-                        <div>Warrenty:</div>
+                        <div>Warranty:</div>
                         <div>{warrentyString}</div>
                       </div>
                     </div>
