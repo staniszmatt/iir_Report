@@ -18,8 +18,6 @@ interface ReturnData {
 }
 
 async function postIIRReport(request: Request) {
-  console.log('post iir report request', request);
-
   const {
     SalesOrderNumber,
     salesOrderNumberLine,
@@ -79,11 +77,7 @@ async function postIIRReport(request: Request) {
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
 
-    console.log('Query Check: ', query);
-
     const postIIRReportData = await db.query(query);
-
-    console.log('return resp:', postIIRReportData);
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;
@@ -96,7 +90,6 @@ async function postIIRReport(request: Request) {
       };
     }
   } catch (error) {
-    console.log('iir post error: ', error);
     returnData.error = error;
   }
   return returnData;
