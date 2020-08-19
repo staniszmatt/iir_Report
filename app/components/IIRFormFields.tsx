@@ -102,7 +102,6 @@ const IIRForm = (
 
 export default reduxForm<FormProps, DispatchProps>({
   form: 'iirForm',
-  destroyOnUnmount: false,
   // Set Initial values to null so returns null if no changes are made.
   initialValues: {
     customerReasonForRemoval: null,

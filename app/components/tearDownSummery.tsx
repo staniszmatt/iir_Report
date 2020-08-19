@@ -15,6 +15,7 @@ import logo from '../img/logo.png';
 interface Props {
   getWorkOrderData: () => {};
   postOrUpdateIIRReport: () => {};
+  handleEditIIRPDF: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
@@ -51,7 +52,7 @@ interface Props {
 }
 
 export default function TearDownSummery(props: Props) {
-  const { getWorkOrderData, postOrUpdateIIRReport } = props;
+  const { getWorkOrderData, postOrUpdateIIRReport, handleEditIIRPDF } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
 
@@ -95,7 +96,7 @@ export default function TearDownSummery(props: Props) {
       </div>
       {loadingScreen && <LoadingScreen />}
       {loadPDF && (
-        <div>
+        <div className={styles['form-page-container']}>
           <div className={styles['form-page']}>
             <div id="capture">
               <div className={styles['form-header']}>
@@ -192,7 +193,9 @@ export default function TearDownSummery(props: Props) {
           <div>
             <div>
               <Link to={routes.EDITFORM}>
-                <button type="button">Edit Form</button>
+                <button onClick={handleEditIIRPDF} type="button">
+                  Edit Form
+                </button>
               </Link>
             </div>
             <div>

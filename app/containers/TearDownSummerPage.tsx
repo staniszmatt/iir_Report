@@ -2,7 +2,11 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { reset } from 'redux-form';
 import { connect } from 'react-redux';
 import TearDownSummery from '../components/tearDownSummery';
-import { getWorkOrderData, postOrUpdateIIRReport } from '../actions/iirActions';
+import {
+  getWorkOrderData,
+  postOrUpdateIIRReport,
+  handleEditIIRPDF
+} from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
 function mapStateToProps(state: iirStateType) {
@@ -17,7 +21,8 @@ function mapDispatchToProps(dispatch: Dispatch<null>) {
   return bindActionCreators(
     {
       getWorkOrderData,
-      postOrUpdateIIRReport
+      postOrUpdateIIRReport,
+      handleEditIIRPDF
     },
     dispatch
   );

@@ -65,7 +65,9 @@ export function getWorkOrderData(workOrder: {
 
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
-    console.log('State:', state);
+    // Reset states and clear the current iir form if displayed
+    dispatch(reset('iirFormDisabled'));
+    dispatch(resetState());
 
     if (workOrder.workOrderSearchLineItem.length === 1) {
       // Disabled here because we need to keep it at a two char of 0x where x is a number.
@@ -74,20 +76,15 @@ export function getWorkOrderData(workOrder: {
     }
 
     const workOrderNumber = `${workOrder.workOrderSearch}   ${workOrder.workOrderSearchLineItem}`;
-
     const mainRequest = {
       request: 'getWorkOrderData',
       workOrderNumber
     };
 
-    console.log('Main Request:', mainRequest);
-
     const handleGetWorkOrderDataResp = (
       _event: {},
       resp: { error: {}; data: [{}] }
     ) => {
-      console.log('handle data: ', resp);
-
       dispatch(toggleLoadingScreenState());
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
@@ -115,7 +112,10 @@ export function getWorkOrderData(workOrder: {
         dispatch(toggleErrorModalState(returnError));
       }
 
-      ipcRenderer.removeListener('asynchronous-reply', handleGetWorkOrderDataResp);
+      ipcRenderer.removeListener(
+        'asynchronous-reply',
+        handleGetWorkOrderDataResp
+      );
     };
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState());
@@ -238,5 +238,18 @@ export function getIIRData(workOrder: {
     dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
+  };
+}
+
+export function handleEditIIRPDF() {
+  console.log('handle edit iir form');
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+
+    const workOrder = {
+      workOrderSearch: state.workOrder.workOrderSearch,
+      workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+    }
+    dispatch(getIIRData(workOrder));
   };
 }
