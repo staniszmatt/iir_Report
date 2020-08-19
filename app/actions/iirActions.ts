@@ -106,7 +106,13 @@ export function getWorkOrderData(workOrder: {
       } else {
         dispatch(reset('iirFormDisabled'));
         dispatch(resetState());
-        dispatch(toggleErrorModalState('Error Happened'));
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error = 'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handleGetWorkOrderDataResp);
@@ -114,6 +120,61 @@ export function getWorkOrderData(workOrder: {
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleGetWorkOrderDataResp);
+  };
+}
+
+export function postOrUpdateIIRReport(iirNotes: {
+  customerReasonForRemoval: string | null;
+  evalFindings: string | null;
+  genConditionReceived: string | null;
+  workedPerformed: string | null;
+}) {
+  console.log('IIR notes: ', iirNotes);
+
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    let request = 'updateIIRReport';
+    console.log('State:', state);
+    // Changes from updating IIR notes to Adding IIR notes if there was no record.
+    if (state.postIIRNotes) {
+      request = 'postIIRReport';
+    }
+    // TODO: SETUP updateIIRReport api.
+    const mainRequest = {
+      request,
+      SalesOrderNumber: state.workOrder.workOrderSearch,
+      salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
+      customerReasonForRemoval: iirNotes.customerReasonForRemoval,
+      genConditionReceived: iirNotes.genConditionReceived,
+      evalFindings: iirNotes.evalFindings,
+      workedPerformed: iirNotes.workedPerformed
+    };
+
+    console.log('main Request: ', mainRequest);
+    const handlePostIIRResp = (
+      _event: {},
+      resp: { error: { name: string; code: string }; data: {} }
+    ) => {
+      console.log('handle post/update iir data response, resp: ', resp);
+      dispatch(toggleLoadingScreenState());
+
+      if (Object.keys(resp.error).length === 0) {
+        dispatch(toggleSuccessModalState('Success!'));
+      } else {
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error = 'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
+      }
+
+      ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
+    };
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
   };
 }
 
@@ -161,7 +222,13 @@ export function getIIRData(workOrder: {
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
       } else {
-        dispatch(toggleErrorModalState('Error Happened'));
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error = 'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
       }
 
       ipcRenderer.removeListener('asynchronous-reply', handleGeIIRDataResp);
@@ -171,62 +238,5 @@ export function getIIRData(workOrder: {
     dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
-  };
-}
-
-export function postOrUpdateIIRReport(iirNotes: {
-  customerReasonForRemoval: string | null;
-  evalFindings: string | null;
-  genConditionReceived: string | null;
-  workedPerformed: string | null;
-}) {
-  console.log('IIR notes: ', iirNotes);
-
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    const state = getState().iir;
-    let request = 'updateIIRReport';
-    console.log('State:', state);
-    // Changes from updating IIR notes to Adding IIR notes if there was no record.
-    if (state.postIIRNotes) {
-      request = 'postIIRReport';
-    }
-    // TODO: SETUP updateIIRReport api.
-    const mainRequest = {
-      request,
-      SalesOrderNumber: state.workOrder.workOrderSearch,
-      salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
-      customerReasonForRemoval: iirNotes.customerReasonForRemoval,
-      genConditionReceived: iirNotes.genConditionReceived,
-      evalFindings: iirNotes.evalFindings,
-      workedPerformed: iirNotes.workedPerformed
-    };
-
-    console.log('main Request: ', mainRequest);
-    const handlePostIIRResp = (_event: {}, resp: { error: {}; data: {} }) => {
-
-      console.log('handle data: ', resp);
-
-      dispatch(toggleLoadingScreenState());
-
-      if (Object.keys(resp.error).length === 0) {
-        const iirRequest = {
-          workOrderSearch: state.workOrder.workOrderSearch,
-          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
-        }
-        dispatch(getIIRData(iirRequest));
-        dispatch(toggleSuccessModalState('Succesfully updated IIR notes!'));
-      } else {
-        dispatch(
-          toggleErrorModalState(
-            'Somthing went wrong updating or adding IIR notes!'
-          )
-        );
-      }
-
-      ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
-    };
-    ipcRenderer.send('asynchronous-message', mainRequest);
-    dispatch(toggleLoadingScreenState());
-    ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
   };
 }
