@@ -74,6 +74,7 @@ export default function TearDownSummery(props: Props) {
   const getPDF = () => {
     const input: any = document.getElementById('capture');
     input.style.margin = '0';
+    input.style.border = 'unset';
 
     html2canvas(input, { scrollY: -window.scrollY, scale: 2 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
@@ -84,6 +85,7 @@ export default function TearDownSummery(props: Props) {
       pdf.save('test.pdf');
     });
     input.style.margin = 'auto';
+    input.style.border = '1px solid black';
   };
 
   return (

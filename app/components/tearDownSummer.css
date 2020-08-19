@@ -49,7 +49,11 @@ div.form-footer > div:last-child {
 }
 
 .form-container > div:last-child > div:last-child {
-  text-align: center;
+  display: flex;
+  margin: 20px 0;
+}
+
+.form-container > div:last-child > div:last-child > div {
   margin: auto;
 }
 
@@ -80,11 +84,19 @@ div.form-footer > div:last-child {
   font-weight: bold;
 }
 
+.form-container > div:last-child > div > div > a {
+  opacity: unset;
+}
+
+.form-container > div:last-child > div > div > a > button,
 .form-container > div:last-child > div > div > button {
-  font-size: 25px;
-  width: 175px;
-  height: 40px;
+  font-size: 18px;
   border-radius: 5px;
+  font-family: serif;
+  border-radius: 3px;
+  filter: drop-shadow(1.5px 1.5px 1.5px black);
+  width: 140px;
+  background-color: white;
 }
 
 .form-page {
@@ -97,6 +109,7 @@ div.form-footer > div:last-child {
 .form-page > div {
   width: 8in;
   margin: auto;
+  border: 1px solid black;
 }
 
 .form-page > div > div:nth-child(3) {
