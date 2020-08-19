@@ -1,4 +1,3 @@
-/* eslint-disable prefer-destructuring */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'mssql/msnodesqlv8';
@@ -8,7 +7,8 @@ interface Request {
   workOrder: {
     workOrderSearch: string;
     workOrderSearchLineItem: string;
-  };
+  }
+
 }
 
 interface ReturnData {
@@ -18,6 +18,7 @@ interface ReturnData {
 }
 
 async function getWorkOrderData(request: Request) {
+  console.log('request', request);
   const returnData: ReturnData = {
     error: {},
     data: [],
@@ -30,7 +31,11 @@ async function getWorkOrderData(request: Request) {
     FROM iir_report_dev AS i
     WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
 
+    console.log('iir data query:', iirQuery);
+
     const getIIRData = await dbIIR.query(iirQuery);
+
+    console.log('IIR DB Request resp', getIIRData.recordset[0]);
 
     if (getIIRData.recordset.length > 0) {
       returnData.data = getIIRData.recordset[0];
@@ -39,8 +44,10 @@ async function getWorkOrderData(request: Request) {
       returnData.success = true;
     }
   } catch (error) {
+    console.log('error', error);
     returnData.error = error;
   }
+  console.log('return data: ', returnData);
   return returnData;
 }
 

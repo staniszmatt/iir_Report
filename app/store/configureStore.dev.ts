@@ -38,31 +38,7 @@ const configureStore = (initialState?: {
           workOrderSearch: string;
           workOrderSearchLineItem: string;
         };
-        workOrderInfo: {
-          CustomerName: string;
-          CustomerNumber: string;
-          CustomerOrderNumber: string;
-          DateIssuedYYMMDD: string;
-          ItemNumber: string;
-          Manual_Combined: string;
-          OrderType: string;
-          PartDescription: string;
-          PartNumber: string;
-          Quantity: number;
-          SalesOrderAndLineNumber: string;
-          SalesOrderNumber: string;
-          SerialNumber: string;
-          TSN: number;
-          TSO: number;
-          TSR: number;
-          Trv_Num: string;
-          Warrenty_Y_N: string;
-          Work_Order_Number: string;
-          customerReasonForRemoval: string;
-          evalFindings: string;
-          genConditionReceived: string;
-          workedPerformed: string;
-        };
+        workOrderInfo: {};
         // eslint-disable-next-line prettier/prettier
       }
     | any
