@@ -60,12 +60,10 @@ export function getWorkOrderData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
 }) {
-
-  console.log('Get Work Order Data');
-
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    const state = getState().iir;
-    console.log('State:', state);
+  return (dispatch: Dispatch) => {
+    // Reset states and clear the current iir form if displayed
+    dispatch(reset('iirFormDisabled'));
+    dispatch(resetState());
 
     if (workOrder.workOrderSearchLineItem.length === 1) {
       // Disabled here because we need to keep it at a two char of 0x where x is a number.
@@ -74,25 +72,20 @@ export function getWorkOrderData(workOrder: {
     }
 
     const workOrderNumber = `${workOrder.workOrderSearch}   ${workOrder.workOrderSearchLineItem}`;
-
     const mainRequest = {
       request: 'getWorkOrderData',
       workOrderNumber
     };
 
-    console.log('Main Request:', mainRequest);
-
     const handleGetWorkOrderDataResp = (
       _event: {},
-      resp: { error: {}; data: [{}] }
+      resp: { error: { code: string; name: string }; data: object[] }
     ) => {
-      console.log('handle data: ', resp);
-
       dispatch(toggleLoadingScreenState());
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
         // Checking if data is empty and the edit form search is false
-        if (!resp.data.length === 0) {
+        if (!(resp.data.length === 0)) {
           dispatch(
             toggleErrorModalState(
               `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
@@ -110,12 +103,16 @@ export function getWorkOrderData(workOrder: {
         if (Object.keys(resp.error).length > 1) {
           returnError.error = `${resp.error.code}: ${resp.error.name}`;
         } else {
-          returnError.error = 'Something went wrong updating or adding IIR notes!';
+          returnError.error =
+            'Something went wrong updating or adding IIR notes!';
         }
         dispatch(toggleErrorModalState(returnError));
       }
 
-      ipcRenderer.removeListener('asynchronous-reply', handleGetWorkOrderDataResp);
+      ipcRenderer.removeListener(
+        'asynchronous-reply',
+        handleGetWorkOrderDataResp
+      );
     };
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState());
@@ -129,12 +126,9 @@ export function postOrUpdateIIRReport(iirNotes: {
   genConditionReceived: string | null;
   workedPerformed: string | null;
 }) {
-  console.log('IIR notes: ', iirNotes);
-
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     let request = 'updateIIRReport';
-    console.log('State:', state);
     // Changes from updating IIR notes to Adding IIR notes if there was no record.
     if (state.postIIRNotes) {
       request = 'postIIRReport';
@@ -149,13 +143,10 @@ export function postOrUpdateIIRReport(iirNotes: {
       evalFindings: iirNotes.evalFindings,
       workedPerformed: iirNotes.workedPerformed
     };
-
-    console.log('main Request: ', mainRequest);
     const handlePostIIRResp = (
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
     ) => {
-      console.log('handle post/update iir data response, resp: ', resp);
       dispatch(toggleLoadingScreenState());
 
       if (Object.keys(resp.error).length === 0) {
@@ -165,7 +156,8 @@ export function postOrUpdateIIRReport(iirNotes: {
         if (Object.keys(resp.error).length > 1) {
           returnError.error = `${resp.error.code}: ${resp.error.name}`;
         } else {
-          returnError.error = 'Something went wrong updating or adding IIR notes!';
+          returnError.error =
+            'Something went wrong updating or adding IIR notes!';
         }
         dispatch(toggleErrorModalState(returnError));
       }
@@ -182,12 +174,10 @@ export function getIIRData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
 }) {
-  console.log('Get IIR Data');
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     dispatch(resetState());
     dispatch(reset('iirForm'));
-    console.log('State:', state);
     // Reset to default false state posting Notes
     if (state.postIIRNotes) {
       dispatch(togglePostIIRNotes());
@@ -208,11 +198,12 @@ export function getIIRData(workOrder: {
       workOrder
     };
 
-    console.log('Main Request:', mainRequest);
-    const handleGeIIRDataResp = (_event: {}, resp: { error: {}; data: {} }) => {
-      console.log('handle iir data: ', resp);
-        // Turn off the loading screen once we receive a response.
-        dispatch(toggleLoadingScreenState());
+    const handleGeIIRDataResp = (
+      _event: {},
+      resp: { error: { code: string; name: string }; data: { length: number } }
+    ) => {
+      // Turn off the loading screen once we receive a response.
+      dispatch(toggleLoadingScreenState());
       if (Object.keys(resp.error).length === 0) {
         // If there is no data and the postIIRNotes is false, set postIIRNotes to true
         if (resp.data.length === 0) {
@@ -226,7 +217,8 @@ export function getIIRData(workOrder: {
         if (Object.keys(resp.error).length > 1) {
           returnError.error = `${resp.error.code}: ${resp.error.name}`;
         } else {
-          returnError.error = 'Something went wrong updating or adding IIR notes!';
+          returnError.error =
+            'Something went wrong updating or adding IIR notes!';
         }
         dispatch(toggleErrorModalState(returnError));
       }
@@ -238,5 +230,17 @@ export function getIIRData(workOrder: {
     dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
+  };
+}
+
+export function handleEditIIRPDF() {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+
+    const workOrder = {
+      workOrderSearch: state.workOrder.workOrderSearch,
+      workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+    };
+    dispatch(getIIRData(workOrder));
   };
 }
