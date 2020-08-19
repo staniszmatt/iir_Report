@@ -8,10 +8,9 @@ import JsPDF from 'jspdf';
 import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
-import IIRFormPDF from './IIRFromFiledPDF';
+import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
-import * as logo from '../img/logo.png';
-// import dummyData from '../dummyData/getDummyIIRData';
+import logo from '../img/logo.png';
 
 interface Props {
   getWorkOrderData: () => {};
@@ -55,6 +54,7 @@ export default function TearDownSummery(props: Props) {
   const { getWorkOrderData, postOrUpdateIIRReport } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
+
   let warrentyString = 'No';
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
@@ -73,14 +73,17 @@ export default function TearDownSummery(props: Props) {
   // create a PDF from a component.
   const getPDF = () => {
     const input: any = document.getElementById('capture');
-    html2canvas(input, { scrollY: -window.scrollY }).then(canvas => {
+    input.style.margin = '0';
+
+    html2canvas(input, { scrollY: -window.scrollY, scale: 2 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new JsPDF('p', 'px', 'a4');
+      const pdf = new JsPDF('p', 'mm', 'a4');
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
       pdf.save('test.pdf');
     });
+    input.style.margin = 'auto';
   };
 
   return (
@@ -91,8 +94,8 @@ export default function TearDownSummery(props: Props) {
       {loadingScreen && <LoadingScreen />}
       {loadPDF && (
         <div>
-          <div id="capture" className={styles['form-page']}>
-            <div>
+          <div className={styles['form-page']}>
+            <div id="capture">
               <div className={styles['form-header']}>
                 <div>
                   <img src={logo} alt="Aero Parts Logo" />
@@ -102,7 +105,6 @@ export default function TearDownSummery(props: Props) {
                 <div />
               </div>
               <div className={styles['form-body']}>
-                <div />
                 <div>
                   <div>
                     <div>
@@ -166,14 +168,18 @@ export default function TearDownSummery(props: Props) {
                       </div>
                     </div>
                     <div>
-                      <IIRFormPDF
+                      <IIRFromFiledPDF
                         onSubmit={postOrUpdateIIRReport}
                         props={iirProps}
                       />
                     </div>
                   </div>
                 </div>
-                <div />
+              </div>
+              <div>
+                <div>
+                  Athurized Signature: ______________________________________
+                </div>
               </div>
               <div className={styles['form-footer']}>
                 <div>FORM-X-XX-XXXX Rev.X</div>

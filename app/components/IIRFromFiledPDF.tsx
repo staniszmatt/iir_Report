@@ -10,6 +10,13 @@ interface FormProps {}
 
 interface DispatchProps {
   onSubmit: () => {};
+  props: {
+    customerReasonForRemoval: string;
+    evalFindings: string;
+    genConditionReceived: string;
+    workedPerformedNote: string;
+    workedPerformed: string;
+  };
 }
 
 const IIRForm = (
