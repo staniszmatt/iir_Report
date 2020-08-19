@@ -1,12 +1,12 @@
 .form-container {
   display: block;
-  width: 100%;
+  width: unset;
   min-width: 650px;
   margin: auto;
 }
 
 .form-container > div > div {
-  width: 715px;
+  width: 630px;
   margin: auto;
 }
 
@@ -24,5 +24,4 @@
   box-shadow: unset;
   outline: none;
   border: none;
-  width: 98%;
 }

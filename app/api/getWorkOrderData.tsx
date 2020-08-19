@@ -15,6 +15,7 @@ interface ReturnData {
 }
 
 async function getWorkOrderData(request: Request) {
+  console.log('request', request);
   const returnData: ReturnData = {
     error: {},
     data: []
@@ -27,12 +28,15 @@ async function getWorkOrderData(request: Request) {
     INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
     WHERE sales_order_line.SalesOrderAndLineNumber = '${request.workOrderNumber}'`);
 
+    console.log('data', data);
     if (data.length > 0) {
       returnData.data = data;
       // Can't get the server to do more than one join for some reason, work around is a second query.
       const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num
       FROM traveler_header
       WHERE traveler_header.Sales_Order_Number = 'CN101'`);
+
+      console.log('second data ', secondData);
 
       const { Manual_Combined, Work_Order_Number, Trv_Num } = secondData[0];
 
@@ -47,6 +51,8 @@ async function getWorkOrderData(request: Request) {
       FROM iir_report_dev AS i
       WHERE i.SalesOrderNumber = '${returnData.data[0].SalesOrderNumber}' AND i.salesOrderNumberLine = '${returnData.data[0].ItemNumber}'`;
       const getIIRData = await dbIIR.query(iirQuery);
+
+      console.log('IIR DB Request resp', getIIRData);
 
       returnData.data[0].customerReasonForRemoval = 'NONE';
       returnData.data[0].genConditionReceived = 'NONE';
@@ -68,8 +74,10 @@ async function getWorkOrderData(request: Request) {
       }
     }
   } catch (error) {
+    console.log('error', error);
     returnData.error = error;
   }
+  console.log('return data: ', returnData);
   return returnData;
 }
 
