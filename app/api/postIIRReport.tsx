@@ -50,33 +50,27 @@ async function postIIRReport(request: Request) {
   // Needed to do this so we can get a count of the total number posts to be made
   // eslint-disable-next-line array-callback-return
   Object.keys(nullableKeys).map(key => {
-
-    console.log('Null Key value check : ', nullableKeys[key]);
     // Do not return anything if set to null!
     if (nullableKeys[key] !== null) {
       dbQueryRequest[key] = nullableKeys[key];
     }
   });
 
-  console.log('key values added: ', dbQueryRequest);
-
   // Setup the query string based off the none null values stored in dbQueryRequest.
   // The else statement removes the comma to complete the query string.
   Object.keys(dbQueryRequest).map((key, index) => {
     const keyLastIndex = Object.keys(dbQueryRequest).length - 1;
     if (index !== keyLastIndex) {
-      console.log('single key: ', key);
-      console.log('single key value: ', dbQueryRequest[key]);
       keyName += `${key}, `;
       keyValue += `'${dbQueryRequest[key]}', `;
     } else {
       keyName += `${key}`;
       keyValue += `'${dbQueryRequest[key]}'`;
     }
+    // Do not want to return anything, not sure at the moment if I need to restructure this.
+    // eslint-disable-next-line no-useless-return
+    return;
   });
-
-  console.log('Key Names', keyName);
-  console.log('key values', keyValue);
 
   try {
     // TODO: Add line item to query!

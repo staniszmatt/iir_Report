@@ -10,7 +10,7 @@ import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFormPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
-import logo from '../img/logo.png';
+import * as logo from '../img/logo.png';
 // import dummyData from '../dummyData/getDummyIIRData';
 
 interface Props {
@@ -48,20 +48,13 @@ interface Props {
       genConditionReceived: string;
       workedPerformed: string;
     };
-  }
+  };
 }
 
 export default function TearDownSummery(props: Props) {
-
-  console.log('tear down component, props:', props);
-
-  // const data = dummyData();
-
   const { getWorkOrderData, postOrUpdateIIRReport } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
-  // const { loadingScreen, loadPDF, workOrder, workOrderInfo } = data;
-
   let warrentyString = 'No';
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
@@ -119,7 +112,7 @@ export default function TearDownSummery(props: Props) {
                       </div>
                       <div>
                         <div>Customer:</div>
-                        <div>{workOrderInfo.CustomerOrderNumber}</div>
+                        <div>{workOrderInfo.CustomerName}</div>
                       </div>
                       <div>
                         <div>Customer Order Number:</div>
@@ -188,21 +181,17 @@ export default function TearDownSummery(props: Props) {
               </div>
             </div>
           </div>
-
           <div>
-
             <div>
               <Link to={routes.EDITFORM}>
                 <button type="button">Edit Form</button>
               </Link>
             </div>
-
             <div>
               <button onClick={getPDF} type="button">
                 Create PDF
               </button>
             </div>
-
           </div>
         </div>
       )}
