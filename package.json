@@ -272,7 +272,6 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@nidi/html2canvas": "^1.0.0-rc.13",
-    "@react-pdf/styled-components": "^1.4.0",
     "@types/react-modal": "^3.11.2",
     "connected-react-router": "^6.8.0",
     "core-js": "^3.6.5",
