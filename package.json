@@ -53,7 +53,7 @@
   },
   "build": {
     "productName": "TearDownReport",
-    "appId": "org.develar.ElectronReact",
+    "appId": "org.develar.TearDownReport",
     "files": [
       "dist/",
       "node_modules/",
