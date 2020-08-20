@@ -40,8 +40,6 @@ export default function FormTextArea(props: Props) {
     });
   };
 
-  console.log('valueState: ', valueState);
-
   return (
     <div className={styles['textarea-container']}>
       <div>

@@ -17,9 +17,7 @@ interface ReturnData {
   succuss: boolean;
 }
 
-async function updateIIRReport(request: Request) {
-  console.log('post iir report request', request);
-
+async function postIIRReport(request: Request) {
   const {
     SalesOrderNumber,
     salesOrderNumberLine,
@@ -50,43 +48,36 @@ async function updateIIRReport(request: Request) {
   // eslint-disable-next-line array-callback-return
   Object.keys(nullableKeys).map(key => {
 
-    console.log('Null Key value check : ', nullableKeys[key]);
     // Do not return anything if set to null!
     if (nullableKeys[key] !== null) {
       dbQueryRequest[key] = nullableKeys[key];
     }
   });
 
-  console.log('key values added: ', dbQueryRequest);
-
   // Setup the query string based off the none null values stored in dbQueryRequest.
   // The else statement removes the comma to complete the query string.
   Object.keys(dbQueryRequest).map((key, index) => {
     const keyLastIndex = Object.keys(dbQueryRequest).length - 1;
     if (index !== keyLastIndex) {
-      console.log('single key: ', key);
-      console.log('single key value: ', dbQueryRequest[key]);
-      keyValue += `${key} = '${dbQueryRequest[key]}',`;
+      keyValue += `${key} = '${dbQueryRequest[key]}', `;
     } else {
       keyValue += `${key} = '${dbQueryRequest[key]}'`;
     }
+    // Do not need to return anything, not sure how to fix typescript error just yet.
+    // eslint-disable-next-line no-useless-return
+    return;
   });
 
-  console.log('key values', keyValue);
-
   try {
-    // TODO: Add line item to query!
     const db = await pool.connect();
+
+
     const query = `UPDATE iir_report_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = '${SalesOrderNumber}' AND salesOrderNumberLine = '${salesOrderNumberLine}'`;
 
-    console.log('Query Check: ', query);
-
     const postIIRReportData = await db.query(query);
-
-    console.log('return resp:', postIIRReportData);
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;
@@ -99,10 +90,9 @@ async function updateIIRReport(request: Request) {
       };
     }
   } catch (error) {
-    console.log('iir post error: ', error);
     returnData.error = error;
   }
   return returnData;
 }
 
-export default updateIIRReport;
+export default postIIRReport;
