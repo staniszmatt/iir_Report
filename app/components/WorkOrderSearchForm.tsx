@@ -68,18 +68,15 @@ function validate(values: Values) {
   }
   if (workOrderSearch) {
     if (workOrderSearch.length > 5) {
-      errors.workOrderSearch =
-        'Work Order Number should only be 5 characters long!';
+      errors.workOrderSearch = 'Work Order Number should only be 5 characters long!';
     }
   }
   if (!workOrderSearchLineItem) {
-    errors.workOrderSearchLineItem =
-      'Please enter the work order number line item number!';
+    errors.workOrderSearchLineItem = 'Please enter the work order number line item number!';
   }
   if (workOrderSearchLineItem) {
     if (workOrderSearchLineItem.length > 2) {
-      errors.workOrderSearchLineItem =
-        'Line item number should only be 2 characters long!';
+      errors.workOrderSearchLineItem = 'Line item number should only be 2 characters long!';
     }
     // eslint-disable-next-line no-restricted-globals
     if (isNaN(workOrderSearchLineItem as any)) {
