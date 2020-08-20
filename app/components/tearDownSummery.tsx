@@ -10,7 +10,7 @@ import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
-import logo from '../img/logo.png';
+import logo from '../img/Logo.png';
 
 interface Props {
   getWorkOrderData: () => {};
