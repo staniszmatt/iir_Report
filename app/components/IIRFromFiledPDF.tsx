@@ -6,16 +6,23 @@ import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import FormTextInput from './forms/formTextArea';
 import styles from './IIRFormFields.css';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface FormProps {}
 
 interface DispatchProps {
   onSubmit: () => {};
+  props: {
+    customerReasonForRemoval: string;
+    evalFindings: string;
+    genConditionReceived: string;
+    workedPerformedNote: string;
+    workedPerformed: string;
+  };
 }
 
 const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  console.log('IIR Form, props', props);
   const { handleSubmit, onSubmit } = props;
 
   const {
@@ -25,11 +32,11 @@ const IIRForm = (
     workedPerformedNote,
     workedPerformed
   } = props.props;
-
+  // Removing white space for this specific item in the JobCost DB.
   const workedPerformedFixString = workedPerformed
-    .replace('       ', ' ', 'g')
-    .replace('           ', ' ', 'g')
-    .replace('         ', ' ', 'g');
+    .replace('       ', ' ')
+    .replace('           ', ' ')
+    .replace('         ', ' ');
 
   const workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
 

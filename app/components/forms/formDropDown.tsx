@@ -40,10 +40,6 @@ export default function FormDropDown(props: Props) {
     );
   };
 
-  const test = (e) => {
-    console.log('test', e);
-  }
-
   return (
     <div className={styles['form-container']}>
       <label htmlFor={name}>{label}</label>
@@ -51,7 +47,6 @@ export default function FormDropDown(props: Props) {
         type={type || 'select'}
         checked={checkedValue}
         defaultValue={defaultValue}
-        onBlur={test}
         id={name}
         {...input}
       >

@@ -1,7 +1,12 @@
 import { bindActionCreators, Dispatch } from 'redux';
+import { reset } from 'redux-form';
 import { connect } from 'react-redux';
 import IIRAddEdit from '../components/IIRAddEdit';
-import { postOrUpdateIIRReport, getIIRData } from '../actions/iirActions';
+import {
+  postOrUpdateIIRReport,
+  getIIRData,
+  resetState
+} from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
 function mapStateToProps(state: iirStateType) {
@@ -11,6 +16,10 @@ function mapStateToProps(state: iirStateType) {
 }
 
 function mapDispatchToProps(dispatch: Dispatch<null>) {
+  // Reset Search Form when loading the page.
+  dispatch(reset('workOrderSearchForm'));
+  dispatch(reset('iirForm'));
+  dispatch(resetState());
   return bindActionCreators(
     {
       postOrUpdateIIRReport,
