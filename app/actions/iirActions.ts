@@ -76,7 +76,6 @@ export function getWorkOrderData(workOrder: {
       request: 'getWorkOrderData',
       workOrderNumber
     };
-
     const handleGetWorkOrderDataResp = (
       _event: {},
       resp: { error: { code: string; name: string }; data: object[] }
@@ -85,7 +84,7 @@ export function getWorkOrderData(workOrder: {
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
         // Checking if data is empty and the edit form search is false
-        if (!(resp.data.length === 0)) {
+        if (resp.data.length === 0) {
           dispatch(
             toggleErrorModalState(
               `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
