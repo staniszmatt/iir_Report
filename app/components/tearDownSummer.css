@@ -8,33 +8,22 @@
   font-size: 40px;
 }
 
+.form-body > div {
+  width: 100%;
+  font-size: 10pt;
+}
+
+.form-page > div {
+  width: 8in;
+  margin: auto;
+  border: 1px solid black;
+}
+
 div.form-footer > div {
   position: absolute;
   font-size: 10pt;
   bottom: 10px;
   margin-left: 30px;
-}
-
-div.form-footer > div:last-child {
-  right: 0;
-  margin-right: 30px;
-}
-
-.form-container > div:first-child {
-  height: 140px;
-  display: flex;
-}
-
-.form-header > div:first-child,
-.form-header > div:last-child {
-  height: 50px;
-  width: 150px;
-  object-fit: contain;
-}
-
-.form-body > div {
-  width: 100%;
-  font-size: 10pt;
 }
 
 .form-body > div > div > div {
@@ -47,6 +36,26 @@ div.form-footer > div:last-child {
   text-align: center;
 }
 
+.form-container > div:first-child {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 10px 0;
+  background-color: #77d2ea4a;
+}
+
+.form-container > div:nth-child(2) {
+  height: 100px;
+  display: flex;
+}
+
+.form-header > div:first-child,
+.form-header > div:last-child {
+  height: 50px;
+  width: 150px;
+  object-fit: contain;
+}
+
 .form-page-container > div:last-child {
   display: flex;
   margin: 20px 0;
@@ -54,6 +63,23 @@ div.form-footer > div:last-child {
 
 .form-page-container > div:last-child > div {
   margin: auto;
+}
+
+div.form-footer > div:last-child {
+  right: 0;
+  margin-right: 35px;
+}
+
+.form-page > div > div:nth-child(3) {
+  margin: auto;
+}
+
+.form-page > div > div:last-child {
+  margin: auto;
+}
+
+.form-page > div > div:nth-child(3) > div {
+  margin-left: 25px;
 }
 
 .form-body > div > div > div:last-child {
@@ -74,11 +100,20 @@ div.form-footer > div:last-child {
   margin: 0 5px 0 0;
 }
 
-
-.form-body > div > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(odd),
+.form-body
+  > div
+  > div
+  > div:nth-child(3)
+  > div:nth-child(2)
+  > div:nth-child(odd),
 .form-body > div > div > div:nth-child(3) > div:last-child > div:nth-child(odd),
-.form-body > div > div > div:nth-child(3) > div:first-child > div > div:nth-child(odd)
-{
+.form-body
+  > div
+  > div
+  > div:nth-child(3)
+  > div:first-child
+  > div
+  > div:nth-child(odd) {
   font-size: 11pt;
   font-weight: bold;
 }
@@ -87,40 +122,11 @@ div.form-footer > div:last-child {
   opacity: unset;
 }
 
-.form-page-container > div > div > a > button,
-.form-page-container > div > div > button {
-  font-size: 18px;
-  border-radius: 5px;
-  font-family: serif;
-  border-radius: 3px;
-  filter: drop-shadow(1.5px 1.5px 1.5px black);
-  width: 140px;
-  background-color: white;
-}
-
 .form-page {
   background: white;
   display: flex;
   margin: 0 auto;
   overflow-y: unset;
-}
-
-.form-page > div {
-  width: 8in;
-  margin: auto;
-  border: 1px solid black;
-}
-
-.form-page > div > div:nth-child(3) {
-  margin: auto;
-}
-
-.form-page > div > div:nth-child(3) > div {
-  margin-left: 25px;
-}
-
-.form-page > div > div:last-child {
-  margin: auto;
 }
 
 .form-header {
