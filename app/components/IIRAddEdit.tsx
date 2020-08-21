@@ -39,7 +39,7 @@ export default function IIRAddEdit(props: Props) {
 
   return (
     <div className={styles['iir-container']}>
-      <div>IIR ADD/EDIT NOTES</div>
+      <div>ADD/EDIT TEAR DOWN NOTES</div>
       <div>
         <WorkOrderSearchForm onSubmit={getIIRData} />
       </div>
