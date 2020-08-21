@@ -235,11 +235,24 @@ export function getIIRData(workOrder: {
 export function handleEditIIRPDF() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
-
     const workOrder = {
       workOrderSearch: state.workOrder.workOrderSearch,
       workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
     };
+
     dispatch(getIIRData(workOrder));
+  };
+}
+
+export function handleReviewIIRPDF() {
+  console.log('Review PDF Clicked!');
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    const workOrder = {
+      workOrderSearch: state.workOrder.workOrderSearch,
+      workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+    };
+
+    dispatch(getWorkOrderData(workOrder));
   };
 }

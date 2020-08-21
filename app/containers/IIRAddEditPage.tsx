@@ -6,7 +6,8 @@ import IIRAddEdit from '../components/IIRAddEdit';
 import {
   postOrUpdateIIRReport,
   getIIRData,
-  resetState
+  resetState,
+  handleReviewIIRPDF
 } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
@@ -24,7 +25,8 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
   return bindActionCreators(
     {
       postOrUpdateIIRReport,
-      getIIRData
+      getIIRData,
+      handleReviewIIRPDF
     },
     dispatch
   );
