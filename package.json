@@ -52,10 +52,11 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "TearDownReport",
+    "appId": "org.develar.TearDownReport",
     "files": [
       "dist/",
+      "resources/",
       "node_modules/",
       "app.html",
       "main.prod.js",
@@ -285,8 +286,8 @@
     "msnodesqlv8": "^2.0.0",
     "mssql": "^6.2.0",
     "odbc": "^2.3.4",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.19",
     "react-modal": "^3.11.2",
     "react-redux": "^7.1.3",

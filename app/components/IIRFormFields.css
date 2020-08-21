@@ -5,19 +5,23 @@
   margin: auto;
 }
 
+.form-btn-container > div {
+  margin: auto;
+  margin: 10px auto;
+}
+
 .form-container > div > div {
   width: 715px;
   margin: auto;
 }
 
-.form-container > div > div:last-child {
+.form-btn-container {
   text-align: center;
+  display: flex;
 }
 
-.form-container > div > div:last-child > button {
-  font-size: 14pt;
-  border-radius: 3px;
-  margin-bottom: 10px;
+.form-btn-container > div > a {
+  opacity: unset;
 }
 
 .form-disabled > div > div:last-child > textarea {

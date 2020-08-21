@@ -1,0 +1,20 @@
+button.btn-style {
+  font-size: 18px;
+  border-radius: 5px;
+  font-family: serif;
+  filter: drop-shadow(1.5px 1.5px 1.5px black);
+  background-color: white;
+}
+
+button.btn-style:hover {
+  cursor: pointer;
+  background-color: cornflowerblue;
+  transform: scale(1.01);
+}
+
+button.btn-style:active {
+  cursor: pointer;
+  box-shadow: 1px 1px rgba(255, 255, 255, 0.2);
+  transform: scale(0.97);
+  outline: 1px black;
+}

@@ -16,7 +16,8 @@
   "license": "MIT",
   "dependencies": {
     "msnodesqlv8": "^2.0.0",
-    "mssql": "^6.2.0"
+    "mssql": "^6.2.0",
+    "odbc": "^2.3.4"
   },
   "devDependencies": {
     "@types/react-modal": "^3.10.6",

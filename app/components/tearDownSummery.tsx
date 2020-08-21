@@ -10,12 +10,13 @@ import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
-import logo from '../img/logo.png';
+import logo from '../img/Logo.png';
 
 interface Props {
   getWorkOrderData: () => {};
   postOrUpdateIIRReport: () => {};
   handleEditIIRPDF: () => {};
+  cancelLoading: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
@@ -52,7 +53,12 @@ interface Props {
 }
 
 export default function TearDownSummery(props: Props) {
-  const { getWorkOrderData, postOrUpdateIIRReport, handleEditIIRPDF } = props;
+  const {
+    getWorkOrderData,
+    postOrUpdateIIRReport,
+    handleEditIIRPDF,
+    cancelLoading
+  } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
 
@@ -69,6 +75,8 @@ export default function TearDownSummery(props: Props) {
     workedPerformedNote: workOrderInfo.workedPerformed,
     workedPerformed: workOrderInfo.Manual_Combined
   };
+
+  const cancelProp = { cancelLoading };
   // Sets up the React component with the id to create a image and convert it to PNG then
   // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
   // create a PDF from a component.
@@ -91,10 +99,11 @@ export default function TearDownSummery(props: Props) {
 
   return (
     <div className={styles['form-container']}>
+      <div>TEAR DONW FORM REVIEW</div>
       <div>
         <WorkOrderSearchForm onSubmit={getWorkOrderData} />
       </div>
-      {loadingScreen && <LoadingScreen />}
+      {loadingScreen && <LoadingScreen props={cancelProp} />}
       {loadPDF && (
         <div className={styles['form-page-container']}>
           <div className={styles['form-page']}>

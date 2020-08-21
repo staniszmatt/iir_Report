@@ -1,7 +1,9 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-useless-escape */
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
+import routes from '../constants/routes.json';
 import FormTextInput from './forms/formTextArea';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './IIRFormFields.css';
@@ -12,6 +14,7 @@ interface FormProps {}
 interface DispatchProps {
   onSubmit: () => {};
   props: {
+    handleReviewIIRPDF: () => {};
     customerReasonForRemoval: string;
     evalFindings: string;
     genConditionReceived: string;
@@ -29,7 +32,8 @@ const IIRForm = (
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformedNote
+    workedPerformedNote,
+    handleReviewIIRPDF
   } = props.props;
 
   if (
@@ -91,8 +95,15 @@ const IIRForm = (
             rows="10"
           />
         </div>
-        <div>
-          <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
+        <div className={styles['form-btn-container']}>
+          <div>
+            <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
+          </div>
+          <div>
+            <Link to={routes.IIRFORM}>
+              <Btn buttonName="Review PDF" ClickHandler={handleReviewIIRPDF} />
+            </Link>
+          </div>
         </div>
       </div>
     </form>
