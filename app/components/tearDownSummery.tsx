@@ -10,7 +10,7 @@ import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
-import logo from '../img/logo.png';
+import logo from '../img/Logo.png';
 
 interface Props {
   getWorkOrderData: () => {};
@@ -91,6 +91,7 @@ export default function TearDownSummery(props: Props) {
 
   return (
     <div className={styles['form-container']}>
+      <div>IIR FORM REVIEW</div>
       <div>
         <WorkOrderSearchForm onSubmit={getWorkOrderData} />
       </div>

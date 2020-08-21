@@ -52,10 +52,11 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "TearDownReport",
+    "appId": "org.develar.TearDownReport",
     "files": [
       "dist/",
+      "resources/",
       "node_modules/",
       "app.html",
       "main.prod.js",
