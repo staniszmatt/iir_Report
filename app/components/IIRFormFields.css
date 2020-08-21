@@ -24,15 +24,6 @@
   opacity: unset;
 }
 
-.form-btn-container > div > button,
-.form-btn-container > div > a > button {
-  font-size: 18px;
-  border-radius: 5px;
-  font-family: serif;
-  filter: drop-shadow(1.5px 1.5px 1.5px black);
-  background-color: white;
-}
-
 .form-disabled > div > div:last-child > textarea {
   box-shadow: unset;
   outline: none;
