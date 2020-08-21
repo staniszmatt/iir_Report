@@ -17,11 +17,19 @@
         }
       })();
     </script>
+    <base href="data:///" />
   </head>
   <body>
     <div class="backgroundImageContainer">
+      <!--
+        Used the dist folder since this allowed the production build to pull the image needed
+        When using '../resources/logo.png', the build doesn't create the data: string, tries to pull form a specific locaiton.a
+        Figured this out when I used background: url('../resources/logo.png') converted it to a data: string and displayed.a
+        Somthing caught my eye in the dist folder seeing that there were converted icons and my image I needed.
+        Tried it and seemed to work for what I need it to do.
+      -->
       <img
-        src="../internals/img/Logo.png"
+        src="./dist/01fcd48d0ddb01ee039dfc7e13ea71ad.png"
         class="mainBackground"
         alt="AeroParts Logo"
       />
