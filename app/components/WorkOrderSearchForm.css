@@ -29,6 +29,7 @@
 
 .form-container > div:last-child > div > div > button {
   margin: 0 20px;
+  font-size: 16px;
 }
 
 .form-container > div:last-child > div > form {

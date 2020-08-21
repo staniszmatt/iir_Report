@@ -9,15 +9,23 @@ interface Props {
   } | null;
 }
 
-export default function LoadingScreen(props: Props | null) {
-  console.log('loading screen props', props);
-  debugger;
+export default function LoadingScreen(props: Props) {
   let loadCancleBtn = false;
   let loadCancleFunction = null;
 
-  if (Object.keys(props).length !== 0) {
+  const cancleNull = () => {
+    // This is to satisify the requirement to pass a function to the click handler.
+    // Cancled return error since we dont' want this to do anything.
+    // Not sure if this is an ok fix or not.
+    // eslint-disable-next-line no-useless-return
+    return;
+  };
+
+  if (props.props !== null) {
     loadCancleFunction = props.props.cancleLoading;
     loadCancleBtn = true;
+  } else {
+    loadCancleFunction = cancleNull;
   }
 
   return (
@@ -26,13 +34,11 @@ export default function LoadingScreen(props: Props | null) {
         <div className={styles.loader} />
       </div>
       <div>
-
         {loadCancleBtn && (
-        <div>
-          <Btn buttonName="Cancle" ClickHandler={loadCancleFunction} />
-        </div>
+          <div>
+            <Btn buttonName="Cancle" ClickHandler={loadCancleFunction} />
+          </div>
         )}
-
       </div>
     </div>
   );

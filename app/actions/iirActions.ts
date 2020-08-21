@@ -245,7 +245,6 @@ export function handleEditIIRPDF() {
 }
 
 export function handleReviewIIRPDF() {
-  console.log('Review PDF Clicked!');
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     const workOrder = {
@@ -258,5 +257,12 @@ export function handleReviewIIRPDF() {
 }
 
 export function cancleLoading() {
-  console.log('Cancle Load Clicked!');
+  // Resets the state, removes loading screen and clears the listner that
+  // could be setup to prevent aditional server request issues when cancling
+  // a loading state.
+  return (dispatch: Dispatch) => {
+    dispatch(resetState());
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.removeAllListeners('asynchronous-reply');
+  };
 }

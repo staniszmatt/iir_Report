@@ -3,7 +3,6 @@ button.btn-style {
   border-radius: 5px;
   font-family: serif;
   filter: drop-shadow(1.5px 1.5px 1.5px black);
-  width: 140px;
   background-color: white;
 }
 

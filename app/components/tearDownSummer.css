@@ -122,16 +122,6 @@ div.form-footer > div:last-child {
   opacity: unset;
 }
 
-/* .form-page-container > div > div > button,
-.form-page-container > div > div > a > button {
-  font-size: 18px;
-  border-radius: 5px;
-  font-family: serif;
-  filter: drop-shadow(1.5px 1.5px 1.5px black);
-  width: 140px;
-  background-color: white;
-} */
-
 .form-page {
   background: white;
   display: flex;
