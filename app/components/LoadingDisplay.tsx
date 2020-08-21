@@ -5,27 +5,27 @@ import styles from './LoadingDisplay.css';
 
 interface Props {
   props: {
-    cancleLoading: () => {};
+    cancelLoading: () => {};
   } | null;
 }
 
 export default function LoadingScreen(props: Props) {
-  let loadCancleBtn = false;
-  let loadCancleFunction = null;
+  let loadCancelBtn = false;
+  let loadCancelFunction = null;
 
-  const cancleNull = () => {
+  const cancelNull = () => {
     // This is to satisify the requirement to pass a function to the click handler.
-    // Cancled return error since we dont' want this to do anything.
+    // Canceld return error since we dont' want this to do anything.
     // Not sure if this is an ok fix or not.
     // eslint-disable-next-line no-useless-return
     return;
   };
 
   if (props.props !== null) {
-    loadCancleFunction = props.props.cancleLoading;
-    loadCancleBtn = true;
+    loadCancelFunction = props.props.cancelLoading;
+    loadCancelBtn = true;
   } else {
-    loadCancleFunction = cancleNull;
+    loadcancelFunction = cancelNull;
   }
 
   return (
@@ -34,9 +34,9 @@ export default function LoadingScreen(props: Props) {
         <div className={styles.loader} />
       </div>
       <div>
-        {loadCancleBtn && (
+        {loadCancelBtn && (
           <div>
-            <Btn buttonName="Cancle" ClickHandler={loadCancleFunction} />
+            <Btn buttonName="Cancel" ClickHandler={loadCancelFunction} />
           </div>
         )}
       </div>

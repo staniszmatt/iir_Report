@@ -256,7 +256,7 @@ export function handleReviewIIRPDF() {
   };
 }
 
-export function cancleLoading() {
+export function cancelLoading() {
   // Resets the state, removes loading screen and clears the listner that
   // could be setup to prevent aditional server request issues when cancling
   // a loading state.
