@@ -43,7 +43,7 @@ export default function IIRAddEdit(props: Props) {
       <div>
         <WorkOrderSearchForm onSubmit={getIIRData} />
       </div>
-      {loadingScreen && <LoadingScreen />}
+      {loadingScreen && <LoadingScreen props={null} />}
       <div>
         {iirFormDisplay && (
           <IIRFormFields onSubmit={postOrUpdateIIRReport} props={iirProps} />

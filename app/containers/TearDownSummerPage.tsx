@@ -6,7 +6,8 @@ import TearDownSummery from '../components/tearDownSummery';
 import {
   getWorkOrderData,
   postOrUpdateIIRReport,
-  handleEditIIRPDF
+  handleEditIIRPDF,
+  cancleLoading
 } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
@@ -23,7 +24,8 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
     {
       getWorkOrderData,
       postOrUpdateIIRReport,
-      handleEditIIRPDF
+      handleEditIIRPDF,
+      cancleLoading
     },
     dispatch
   );

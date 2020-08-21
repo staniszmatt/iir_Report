@@ -256,3 +256,7 @@ export function handleReviewIIRPDF() {
     dispatch(getWorkOrderData(workOrder));
   };
 }
+
+export function cancleLoading() {
+  console.log('Cancle Load Clicked!');
+}
