@@ -1,6 +1,6 @@
 .container {
   height: 100%;
-  display: flex;
+  margin-top: 140px;
 }
 
 .backgroundImageContainer {
@@ -10,4 +10,15 @@
 .backgroundImageContainer img {
   object-fit: contain;
   width: 100%;
+}
+
+/* Temp setup for testing */
+
+.container > div:last-child {
+  text-align: center;
+}
+
+.container > div:last-child > div:last-child > textarea {
+  min-width: 99%;
+  min-height: 250px;
 }

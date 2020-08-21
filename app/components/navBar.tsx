@@ -12,6 +12,9 @@ export default function Nav() {
       <Link to={routes.IIRFORM}>
         <button type="button">Tear Down Form</button>
       </Link>
+      <Link to={routes.HOME}>
+        <button type="button">HOME TEST</button>
+      </Link>
     </div>
   );
 }

@@ -71,10 +71,10 @@ export function getWorkOrderData(workOrder: {
       workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
     }
 
-    const workOrderNumber = `${workOrder.workOrderSearch}   ${workOrder.workOrderSearchLineItem}`;
     const mainRequest = {
       request: 'getWorkOrderData',
-      workOrderNumber
+      workOrderSearch: workOrder.workOrderSearch,
+      workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
     const handleGetWorkOrderDataResp = (
       _event: {},
@@ -265,4 +265,44 @@ export function cancelLoading() {
     dispatch(toggleLoadingScreenState());
     ipcRenderer.removeAllListeners('asynchronous-reply');
   };
+}
+
+export function testDB(queryString: string) {
+  console.log('test db clicked!, query:', queryString);
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const mainRequest = {
+      request: 'testDB',
+      query: queryString
+    };
+
+    const handleTestDBResp = (_event: {}, resp: {}) => {
+      // Turn off the loading screen once we receive a response.
+      dispatch(toggleLoadingScreenState());
+
+      console.log('server Response: ', resp);
+
+      ipcRenderer.removeListener('asynchronous-reply', handleTestDBResp);
+    };
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', handleTestDBResp);
+
+
+
+
+
+
+
+
+  };
+
+
+
+
+
+
+
+
+
+
 }
