@@ -25,7 +25,7 @@ export default function LoadingScreen(props: Props) {
     loadCancelFunction = props.props.cancelLoading;
     loadCancelBtn = true;
   } else {
-    loadcancelFunction = cancelNull;
+    loadCancelFunction = cancelNull;
   }
 
   return (
