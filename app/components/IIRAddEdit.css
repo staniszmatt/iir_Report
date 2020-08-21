@@ -4,14 +4,6 @@
 }
 
 .iir-container > div:first-child {
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-  margin: 10px 0;
-  background-color: #77d2ea4a;
-}
-
-.iir-container > div:nth-child(2) {
-  height: 100px;
+  height: 140px;
   display: flex;
 }

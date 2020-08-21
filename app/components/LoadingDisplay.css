@@ -1,16 +1,9 @@
-/* .loading-container {
-
-} */
+.loading-container {
+  display: flex;
+}
 
 .loading-container > div {
   margin: auto;
-  text-align: center;
-}
-
-.loading-container > div:last-child > div > button {
-  font-size: 18px;
-  font-weight: bold;
-  color: red;
 }
 
 .loader {

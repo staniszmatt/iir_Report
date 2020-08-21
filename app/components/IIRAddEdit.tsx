@@ -7,7 +7,6 @@ import styles from './IIRAddEdit.css';
 interface Props {
   postOrUpdateIIRReport: () => {};
   getIIRData: () => {};
-  handleReviewIIRPDF: () => {};
   iir: {
     loadingScreen: boolean;
     iirFormDisplay: boolean;
@@ -21,7 +20,7 @@ interface Props {
 }
 
 export default function IIRAddEdit(props: Props) {
-  const { postOrUpdateIIRReport, getIIRData, handleReviewIIRPDF } = props;
+  const { postOrUpdateIIRReport, getIIRData } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, iirFormDisplay, workOrderInfo } = props.iir;
 
@@ -33,17 +32,15 @@ export default function IIRAddEdit(props: Props) {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
-    workedPerformedNote: workOrderInfo.workedPerformed,
-    handleReviewIIRPDF
+    workedPerformedNote: workOrderInfo.workedPerformed
   };
 
   return (
     <div className={styles['iir-container']}>
-      <div>ADD/EDIT TEAR DOWN NOTES</div>
       <div>
         <WorkOrderSearchForm onSubmit={getIIRData} />
       </div>
-      {loadingScreen && <LoadingScreen props={null} />}
+      {loadingScreen && <LoadingScreen />}
       <div>
         {iirFormDisplay && (
           <IIRFormFields onSubmit={postOrUpdateIIRReport} props={iirProps} />
