@@ -25,6 +25,7 @@ interface Props {
       workOrderSearchLineItem: string;
     };
     workOrderInfo: {
+      Cert_type_Description: string;
       CustomerName: string;
       CustomerNumber: string;
       CustomerOrderNumber: string;
@@ -182,6 +183,12 @@ export default function TearDownSummery(props: Props) {
                         <div>Warranty:</div>
                         <div>{warrentyString}</div>
                       </div>
+
+                      <div>
+                        <div>Cert Type:</div>
+                        <div>{workOrderInfo.Cert_type_Description}</div>
+                      </div>
+
                     </div>
                     <div>
                       <IIRFromFiledPDF
