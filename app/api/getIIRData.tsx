@@ -4,6 +4,8 @@
 import 'mssql/msnodesqlv8';
 import pool from '../config/config';
 
+const odbc = require('odbc');
+
 interface Request {
   workOrder: {
     workOrderSearch: string;
@@ -24,19 +26,35 @@ async function getWorkOrderData(request: Request) {
     success: false
   };
   const { workOrderSearch, workOrderSearchLineItem } = request.workOrder;
+
   try {
-    const dbIIR = await pool.connect();
-    const iirQuery = `SELECT *
-    FROM iir_report_dev AS i
-    WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
+    const db = await odbc.connect('DSN=AeroSuper');
+    const data = await db.query(`SELECT *
+      FROM sales_order_line
+      WHERE sales_order_line.SalesOrderNumber = '${workOrderSearch}' AND sales_order_line.ItemNumber = '${workOrderSearchLineItem}'`);
 
-    const getIIRData = await dbIIR.query(iirQuery);
+    if (data.length > 0) {
+      try {
+        const dbIIR = await pool.connect();
+        const iirQuery = `SELECT *
+        FROM iir_report_dev AS i
+        WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
 
-    if (getIIRData.recordset.length > 0) {
-      returnData.data = getIIRData.recordset[0];
-      returnData.success = true;
+        const getIIRData = await dbIIR.query(iirQuery);
+
+        if (getIIRData.recordset.length > 0) {
+          returnData.data = getIIRData.recordset[0];
+          returnData.success = true;
+        } else {
+          returnData.success = true;
+        }
+      } catch (error) {
+        returnData.error = error;
+      }
     } else {
-      returnData.success = true;
+      returnData.error = {
+        noWorkOrder: `Couldn't find WO: ${workOrderSearch}-${workOrderSearchLineItem}. Double check WO is correct.`
+      };
     }
   } catch (error) {
     returnData.error = error;

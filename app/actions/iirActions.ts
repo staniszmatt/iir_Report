@@ -203,6 +203,7 @@ export function getIIRData(workOrder: {
     ) => {
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenState());
+
       if (Object.keys(resp.error).length === 0) {
         // If there is no data and the postIIRNotes is false, set postIIRNotes to true
         if (resp.data.length === 0) {
@@ -211,6 +212,10 @@ export function getIIRData(workOrder: {
         dispatch(setWorkOrder(workOrder));
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
+      } else if (
+        Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
+      ) {
+        dispatch(toggleErrorModalState(resp.error));
       } else {
         const returnError = { error: '' };
         if (Object.keys(resp.error).length > 1) {
