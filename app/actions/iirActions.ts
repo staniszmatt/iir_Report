@@ -81,6 +81,9 @@ export function getWorkOrderData(workOrder: {
       resp: { error: { code: string; name: string }; data: object[] }
     ) => {
       dispatch(toggleLoadingScreenState());
+
+      console.log('Get PDF Data resp:', resp);
+
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
         // Checking if data is empty and the edit form search is false
