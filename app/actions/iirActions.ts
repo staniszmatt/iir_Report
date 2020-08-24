@@ -85,11 +85,11 @@ export function getWorkOrderData(workOrder: {
       if (Object.keys(resp.error).length === 0) {
         // Checking if data is empty and the edit form search is false
         if (resp.data.length === 0) {
-          dispatch(
-            toggleErrorModalState(
-              `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
-            )
-          );
+          const error = {
+            errorNotFound: `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
+          };
+
+          dispatch(toggleErrorModalState(error));
         } else {
           dispatch(setWorkOrder(workOrder));
           dispatch(setWorkOrderData(resp.data[0]));

@@ -15,7 +15,8 @@ export default function AlarmModal(props: Props) {
         <p>ERROR!</p>
       </div>
       <div>
-        <p>{props.props[errorKey]}</p>
+        <p>{`Error Key: ${errorKey}`}</p>
+        <p>{`Description: ${props.props[errorKey]}`}</p>
       </div>
     </div>
   );
