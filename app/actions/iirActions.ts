@@ -142,12 +142,12 @@ export function postOrUpdateIIRReport(iirNotes: {
       evalFindings: iirNotes.evalFindings,
       workedPerformed: iirNotes.workedPerformed
     };
+
     const handlePostIIRResp = (
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
     ) => {
       dispatch(toggleLoadingScreenState());
-
       if (Object.keys(resp.error).length === 0) {
         dispatch(toggleSuccessModalState('Success!'));
       } else {
