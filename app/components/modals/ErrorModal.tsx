@@ -1,18 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import styles from './modal.css';
 
 interface Props {
-  props: string;
+  props: {} | any;
 }
 
 export default function AlarmModal(props: Props) {
-
   const errorKey = Object.keys(props.props)[0];
-
-  console.log('Error modal props: ', props);
-  debugger;
-
   return (
     <div className={styles['error-modal-container']}>
       <div>

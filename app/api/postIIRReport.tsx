@@ -27,8 +27,6 @@ async function postIIRReport(request: Request) {
     workedPerformed
   } = request;
 
-  console.log('post tear down notes, request:', request);
-
   const returnData: ReturnData = {
     error: {},
     resp: {},
@@ -72,12 +70,6 @@ async function postIIRReport(request: Request) {
     return;
   });
 
-  console.log(
-    'DB Query: **********',
-    `INSERT INTO iir_report_dev (SalesOrderNumber, salesOrderNumberLine, ${keyName})
-  OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-  VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`)
-
   try {
     // TODO: Add line item to query!
     const db = await pool.connect();
@@ -86,8 +78,6 @@ async function postIIRReport(request: Request) {
     VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
 
     const postIIRReportData = await db.query(query);
-
-    console.log('Post tear down notes resp: ', postIIRReport);
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;
@@ -101,9 +91,6 @@ async function postIIRReport(request: Request) {
     }
   } catch (error) {
     returnData.error = error;
-
-    console.log('error resp: ', error);
-
   }
   return returnData;
 }

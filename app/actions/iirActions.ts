@@ -143,16 +143,11 @@ export function postOrUpdateIIRReport(iirNotes: {
       workedPerformed: iirNotes.workedPerformed
     };
 
-    console.log('Post teardown notes action, request:', mainRequest);
-
     const handlePostIIRResp = (
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
     ) => {
       dispatch(toggleLoadingScreenState());
-
-      console.log('handle actions post tear down resp: ', resp);
-
       if (Object.keys(resp.error).length === 0) {
         dispatch(toggleSuccessModalState('Success!'));
       } else {
