@@ -36,11 +36,17 @@ async function getWorkOrderData(request: Request) {
       FROM traveler_header
       WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
 
-      const { Manual_Combined, Work_Order_Number, Trv_Num } = secondData[0];
+      if (secondData.length > 0) {
+        const { Manual_Combined, Work_Order_Number, Trv_Num } = secondData[0];
 
-      returnData.data[0].Manual_Combined = Manual_Combined;
-      returnData.data[0].Work_Order_Number = Work_Order_Number;
-      returnData.data[0].Trv_Num = Trv_Num;
+        returnData.data[0].Manual_Combined = Manual_Combined;
+        returnData.data[0].Work_Order_Number = Work_Order_Number;
+        returnData.data[0].Trv_Num = Trv_Num;
+      } else {
+        returnData.data[0].Manual_Combined = 'N/A';
+        returnData.data[0].Work_Order_Number = 'N/A';
+        returnData.data[0].Trv_Num = 'N/A';
+      }
 
       db.close();
 
