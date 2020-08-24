@@ -71,10 +71,10 @@ export function getWorkOrderData(workOrder: {
       workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
     }
 
-    const workOrderNumber = `${workOrder.workOrderSearch}   ${workOrder.workOrderSearchLineItem}`;
     const mainRequest = {
       request: 'getWorkOrderData',
-      workOrderNumber
+      workOrderSearch: workOrder.workOrderSearch,
+      workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
     const handleGetWorkOrderDataResp = (
       _event: {},
