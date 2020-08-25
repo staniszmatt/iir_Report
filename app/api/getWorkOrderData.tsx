@@ -14,6 +14,16 @@ interface ReturnData {
   error: {};
   data: {} | any;
 }
+// Checking for empty string or null fields to return NONE string or return note
+function checkStringLength(stringToCheck: string) {
+  let returnString = '';
+  if (stringToCheck.length === 0 || stringToCheck === null) {
+    returnString = 'NONE';
+  } else {
+    returnString = stringToCheck;
+  }
+  return returnString;
+}
 
 async function getWorkOrderData(request: Request) {
   const returnData: ReturnData = {
@@ -91,10 +101,14 @@ async function getWorkOrderData(request: Request) {
           workedPerformed
         } = getIIRData.recordset[0];
 
-        returnData.data[0].customerReasonForRemoval = customerReasonForRemoval;
-        returnData.data[0].genConditionReceived = genConditionReceived;
-        returnData.data[0].evalFindings = evalFindings;
-        returnData.data[0].workedPerformed = workedPerformed;
+        returnData.data[0].customerReasonForRemoval = checkStringLength(
+          customerReasonForRemoval
+        );
+        returnData.data[0].genConditionReceived = checkStringLength(
+          genConditionReceived
+        );
+        returnData.data[0].evalFindings = checkStringLength(evalFindings);
+        returnData.data[0].workedPerformed = checkStringLength(workedPerformed);
       }
     }
   } catch (error) {

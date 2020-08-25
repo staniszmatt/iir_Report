@@ -77,7 +77,10 @@ export default function TearDownSummery(props: Props) {
     workedPerformed: workOrderInfo.Manual_Combined
   };
 
-  if (workOrderInfo.Manual_Combined === 'N/A') {
+  if (
+    workOrderInfo.Manual_Combined === 'N/A' ||
+    workOrderInfo.Manual_Combined === ''
+  ) {
     displayPDFBtn = false;
   }
 
