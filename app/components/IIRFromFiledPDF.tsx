@@ -40,9 +40,10 @@ const IIRForm = (
     background: 'none'
   };
 
-  const workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
+  let workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
 
-  if (workedPerformedFixString === 'N/A') {
+  if (workedPerformed === 'N/A' || workedPerformed === '') {
+    workPerformedDefault = 'WARNING - NO WORK HAS BEEN SETUP YET!';
     warningCheck.background = 'yellow';
   } else {
     warningCheck.background = 'none';

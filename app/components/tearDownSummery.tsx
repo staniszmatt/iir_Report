@@ -77,7 +77,10 @@ export default function TearDownSummery(props: Props) {
     workedPerformed: workOrderInfo.Manual_Combined
   };
 
-  if (workOrderInfo.Manual_Combined === 'N/A') {
+  if (
+    workOrderInfo.Manual_Combined === 'N/A' ||
+    workOrderInfo.Manual_Combined === ''
+  ) {
     displayPDFBtn = false;
   }
 
@@ -103,10 +106,6 @@ export default function TearDownSummery(props: Props) {
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
   };
-
-  // Getting todays date.
-  const today = new Date().toLocaleDateString();
-  const todayString = `Todays Date: ${today}`;
 
   return (
     <div className={styles['form-container']}>
@@ -209,8 +208,8 @@ export default function TearDownSummery(props: Props) {
                 </div>
               </div>
               <div className={styles['form-footer']}>
-                <div>FORM-X-XX-XXXX Rev.X</div>
-                <div>{todayString}</div>
+                <div>AeroParts Manufacturing & Repair, Inc.</div>
+                <div>Form 1230 Rev. NC</div>
               </div>
             </div>
           </div>
