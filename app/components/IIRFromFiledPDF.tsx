@@ -24,7 +24,6 @@ const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
   const { handleSubmit, onSubmit } = props;
-
   const {
     customerReasonForRemoval,
     evalFindings,
@@ -37,8 +36,18 @@ const IIRForm = (
     .replace('       ', ' ')
     .replace('           ', ' ')
     .replace('         ', ' ');
+  const warningCheck = {
+    background: 'none'
+  };
 
-  const workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
+  let workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
+
+  if (workedPerformed === 'N/A' || workedPerformed === '') {
+    workPerformedDefault = 'WARNING - NO WORK HAS BEEN SETUP YET!';
+    warningCheck.background = 'yellow';
+  } else {
+    warningCheck.background = 'none';
+  }
 
   return (
     <form
@@ -81,7 +90,7 @@ const IIRForm = (
           disabled={true}
         />
       </div>
-      <div className={styles['form-disabled']}>
+      <div className={styles['form-disabled']} style={warningCheck}>
         <Field
           label="WORK PERFORMED:"
           component={FormTextInput}

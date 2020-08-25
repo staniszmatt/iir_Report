@@ -71,10 +71,10 @@ export function getWorkOrderData(workOrder: {
       workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
     }
 
-    const workOrderNumber = `${workOrder.workOrderSearch}   ${workOrder.workOrderSearchLineItem}`;
     const mainRequest = {
       request: 'getWorkOrderData',
-      workOrderNumber
+      workOrderSearch: workOrder.workOrderSearch,
+      workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
     const handleGetWorkOrderDataResp = (
       _event: {},
@@ -85,11 +85,11 @@ export function getWorkOrderData(workOrder: {
       if (Object.keys(resp.error).length === 0) {
         // Checking if data is empty and the edit form search is false
         if (resp.data.length === 0) {
-          dispatch(
-            toggleErrorModalState(
-              `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
-            )
-          );
+          const error = {
+            errorNotFound: `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
+          };
+
+          dispatch(toggleErrorModalState(error));
         } else {
           dispatch(setWorkOrder(workOrder));
           dispatch(setWorkOrderData(resp.data[0]));
@@ -142,12 +142,12 @@ export function postOrUpdateIIRReport(iirNotes: {
       evalFindings: iirNotes.evalFindings,
       workedPerformed: iirNotes.workedPerformed
     };
+
     const handlePostIIRResp = (
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
     ) => {
       dispatch(toggleLoadingScreenState());
-
       if (Object.keys(resp.error).length === 0) {
         dispatch(toggleSuccessModalState('Success!'));
       } else {
@@ -203,6 +203,7 @@ export function getIIRData(workOrder: {
     ) => {
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenState());
+
       if (Object.keys(resp.error).length === 0) {
         // If there is no data and the postIIRNotes is false, set postIIRNotes to true
         if (resp.data.length === 0) {
@@ -211,6 +212,10 @@ export function getIIRData(workOrder: {
         dispatch(setWorkOrder(workOrder));
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
+      } else if (
+        Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
+      ) {
+        dispatch(toggleErrorModalState(resp.error));
       } else {
         const returnError = { error: '' };
         if (Object.keys(resp.error).length > 1) {

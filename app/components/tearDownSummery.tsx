@@ -25,6 +25,7 @@ interface Props {
       workOrderSearchLineItem: string;
     };
     workOrderInfo: {
+      Cert_type_Description: string;
       CustomerName: string;
       CustomerNumber: string;
       CustomerOrderNumber: string;
@@ -61,7 +62,7 @@ export default function TearDownSummery(props: Props) {
   } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
-
+  let displayPDFBtn = true;
   let warrentyString = 'No';
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
@@ -75,6 +76,13 @@ export default function TearDownSummery(props: Props) {
     workedPerformedNote: workOrderInfo.workedPerformed,
     workedPerformed: workOrderInfo.Manual_Combined
   };
+
+  if (
+    workOrderInfo.Manual_Combined === 'N/A' ||
+    workOrderInfo.Manual_Combined === ''
+  ) {
+    displayPDFBtn = false;
+  }
 
   const cancelProp = { cancelLoading };
   // Sets up the React component with the id to create a image and convert it to PNG then
@@ -91,7 +99,9 @@ export default function TearDownSummery(props: Props) {
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-      pdf.save('test.pdf');
+      // Seperated to make sure when the file saves, it saves it as a PDF.
+      const fileName = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}_TEAR_DOWN`;
+      pdf.save(`${fileName}.pdf`);
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
@@ -178,6 +188,10 @@ export default function TearDownSummery(props: Props) {
                         <div>Warranty:</div>
                         <div>{warrentyString}</div>
                       </div>
+                      <div>
+                        <div>Cert Type:</div>
+                        <div>{workOrderInfo.Cert_type_Description}</div>
+                      </div>
                     </div>
                     <div>
                       <IIRFromFiledPDF
@@ -194,8 +208,8 @@ export default function TearDownSummery(props: Props) {
                 </div>
               </div>
               <div className={styles['form-footer']}>
-                <div>FORM-X-XX-XXXX Rev.X</div>
-                <div>PRINT DATE: XX-XX-XXXX</div>
+                <div>AeroParts Manufacturing & Repair, Inc.</div>
+                <div>Form 1230 Rev. NC</div>
               </div>
             </div>
           </div>
@@ -208,9 +222,11 @@ export default function TearDownSummery(props: Props) {
               </Link>
             </div>
             <div>
-              <button onClick={getPDF} type="button">
-                Create PDF
-              </button>
+              {displayPDFBtn && (
+                <button onClick={getPDF} type="button">
+                  Create PDF
+                </button>
+              )}
             </div>
           </div>
         </div>

@@ -12,6 +12,7 @@
   left: 0;
   right: 0;
   border-radius: 3px;
+  z-index: 1;
 }
 
 .container a {
