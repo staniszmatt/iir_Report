@@ -104,10 +104,6 @@ export default function TearDownSummery(props: Props) {
     input.style.border = '1px solid black';
   };
 
-  // Getting todays date.
-  const today = new Date().toLocaleDateString();
-  const todayString = `Print Date: ${today}`;
-
   return (
     <div className={styles['form-container']}>
       <div>TEAR DONW FORM REVIEW</div>
@@ -209,8 +205,8 @@ export default function TearDownSummery(props: Props) {
                 </div>
               </div>
               <div className={styles['form-footer']}>
-                <div>FORM-X-XX-XXXX Rev.X</div>
-                <div>{todayString}</div>
+                <div>AeroParts Manufacturing & Repair, Inc.</div>
+                <div>Form 1230 Rev. NC</div>
               </div>
             </div>
           </div>

@@ -74,7 +74,7 @@ async function getWorkOrderData(request: Request) {
 
       const dbIIR = await pool.connect();
       const iirQuery = `SELECT *
-      FROM iir_report_dev AS i
+      FROM tear_down_notes AS i
       WHERE i.SalesOrderNumber = '${returnData.data[0].SalesOrderNumber}' AND i.salesOrderNumberLine = '${returnData.data[0].ItemNumber}'`;
       const getIIRData = await dbIIR.query(iirQuery);
 
