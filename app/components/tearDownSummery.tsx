@@ -96,11 +96,17 @@ export default function TearDownSummery(props: Props) {
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-      pdf.save('test.pdf');
+      // Seperated to make sure when the file saves, it saves it as a PDF.
+      const fileName = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}_TEAR_DOWN`;
+      pdf.save(`${fileName}.pdf`);
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
   };
+
+  // Getting todays date.
+  const today = new Date().toLocaleDateString();
+  const todayString = `Todays Date: ${today}`;
 
   return (
     <div className={styles['form-container']}>
@@ -183,12 +189,10 @@ export default function TearDownSummery(props: Props) {
                         <div>Warranty:</div>
                         <div>{warrentyString}</div>
                       </div>
-
                       <div>
                         <div>Cert Type:</div>
                         <div>{workOrderInfo.Cert_type_Description}</div>
                       </div>
-
                     </div>
                     <div>
                       <IIRFromFiledPDF
@@ -206,7 +210,7 @@ export default function TearDownSummery(props: Props) {
               </div>
               <div className={styles['form-footer']}>
                 <div>FORM-X-XX-XXXX Rev.X</div>
-                <div>PRINT DATE: XX-XX-XXXX</div>
+                <div>{todayString}</div>
               </div>
             </div>
           </div>
