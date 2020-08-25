@@ -106,7 +106,7 @@ export default function TearDownSummery(props: Props) {
 
   // Getting todays date.
   const today = new Date().toLocaleDateString();
-  const todayString = `Todays Date: ${today}`;
+  const todayString = `Print Date: ${today}`;
 
   return (
     <div className={styles['form-container']}>
