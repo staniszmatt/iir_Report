@@ -33,7 +33,7 @@ async function getWorkOrderData(request: Request) {
   } = request.workOrder;
 
   const config = {
-    // driver: '',
+    driver: '',
     server: 'AMR-FS1\\SQLEXPRESS',
     database: 'Repair',
     options: {
@@ -41,16 +41,21 @@ async function getWorkOrderData(request: Request) {
     }
   };
 
-  // if (connectionString.length > 0) {
-  //   config.driver = connectionString;
-  // }
+  if (connectionString.length > 0) {
+    config.driver = connectionString;
+  } else {
+    // config.driver = 'msnodesqlv8';
+  }
 
-  console.log('Config Setup: ', config);
+  console.log('Config: ', config);
 
-  const pool = new sql.ConnectionPool(config);
+  // const pool = new sql.ConnectionPool(config);
+
+
 
   try {
-    const dbIIR = await pool.connect();
+    // const dbIIR = await pool.connect();
+    const dbIIR = await sql.connect('DSN=AeroRepair');
     const iirQuery = `SELECT *
     FROM iir_report_dev AS i
     WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
@@ -60,18 +65,11 @@ async function getWorkOrderData(request: Request) {
     if (getIIRData.recordset.length > 0) {
       returnData.data = getIIRData.recordset[0];
       returnData.success = true;
-
-      await pool.close();
-      dbIIR.close();
-
     } else {
       returnData.success = true;
-      await pool.close();
-      dbIIR.close();
     }
   } catch (error) {
     returnData.error = error;
-    await pool.close();
   }
   return returnData;
 }
