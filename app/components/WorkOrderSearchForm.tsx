@@ -51,6 +51,12 @@ const WorkOrderSearchForm = (
               type="text"
               format={toUpperCase}
             />
+            <Field
+              label="Connection String:"
+              component={FormInput}
+              name="connectionString"
+              type="text"
+            />
           </form>
           <div>
             <Btn buttonName="Submit" ClickHandler={handleSubmit(onSubmit)} />

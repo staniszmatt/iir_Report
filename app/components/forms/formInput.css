@@ -13,7 +13,7 @@ form {
 
 .form-container > input {
   margin: auto;
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .form-container > label {

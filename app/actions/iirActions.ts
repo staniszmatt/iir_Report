@@ -172,7 +172,12 @@ export function postOrUpdateIIRReport(iirNotes: {
 export function getIIRData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
+  connectionString: string;
 }) {
+  console.log('workOrder: ', workOrder);
+
+
+
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     dispatch(resetState());
@@ -192,16 +197,27 @@ export function getIIRData(workOrder: {
       workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
     }
 
+    // If
+    if (!workOrder.hasOwnProperty('connectionString')) {
+      console.log('Added connectionString');
+      workOrder.connectionString = '';
+    }
+
     const mainRequest = {
       request: 'getIIRData',
       workOrder
     };
+
+    console.log('main request: ', mainRequest);
 
     const handleGeIIRDataResp = (
       _event: {},
       resp: { error: { code: string; name: string }; data: { length: number } }
     ) => {
       // Turn off the loading screen once we receive a response.
+
+      console.log('resp: ', resp);
+
       dispatch(toggleLoadingScreenState());
       if (Object.keys(resp.error).length === 0) {
         // If there is no data and the postIIRNotes is false, set postIIRNotes to true
