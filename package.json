@@ -1,6 +1,6 @@
 {
-  "name": "planning-app",
-  "productName": "Planning",
+  "name": "tear-down-app",
+  "productName": "Tear Down Report",
   "version": "1.1.0",
   "description": "Electron application based on React, React Router, Webpack, React Hot Loader to interface data and create specific work instructions based of inputs",
   "scripts": {
@@ -52,8 +52,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "TearDownReport",
+    "appId": "org.develar.TearDownReport",
     "files": [
       "dist/",
       "node_modules/",
@@ -189,6 +189,7 @@
     "@types/react-modal": "^3.11.2",
     "@types/react-redux": "^7.1.6",
     "@types/react-router": "^5.1.7",
+    "@types/electron-debug": "^3.1.0",
     "@types/react-router-dom": "^5.1.5",
     "@types/react-test-renderer": "^16.9.2",
     "@types/redux-form": "^8.3.6",
@@ -276,15 +277,13 @@
     "connected-react-router": "^6.8.0",
     "core-js": "^3.6.5",
     "devtron": "^1.4.0",
-    "electron-debug": "^3.0.1",
+    "electron-debug": "^3.1.0",
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
     "history": "^4.10.1",
     "image-type": "^4.1.0",
-    "jspdf": "^2.0.0",
-    "msnodesqlv8": "^2.0.0",
+    "jspdf": "^2.1.0",
     "mssql": "^6.2.0",
-    "odbc": "^2.3.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.19",

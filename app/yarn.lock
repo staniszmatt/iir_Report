@@ -198,9 +198,9 @@ bcrypt-pbkdf@^1.0.0:
     tweetnacl "^0.14.3"
 
 bl@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/bl/-/bl-3.0.0.tgz#3611ec00579fd18561754360b21e9f784500ff88"
-  integrity sha512-EUAyP5UHU5hxF8BPT0LKW8gjYLhq1DQIcneOX/pL/m2Alo+OYDQAJlHq+yseMP50Os2nHXOSic6Ss3vSQeyf4A==
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/bl/-/bl-3.0.1.tgz#1cbb439299609e419b5a74d7fce2f8b37d8e5c6f"
+  integrity sha512-jrCW5ZhfQ/Vt07WX1Ngs+yn9BDqPL/gw28S7s9H6QK/gupnizNzJAss5akW20ISgOrbLTlXOOCTJeNUQqruAWQ==
   dependencies:
     readable-stream "^3.0.1"
 
@@ -706,11 +706,12 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-msnodesqlv8@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/msnodesqlv8/-/msnodesqlv8-2.0.0.tgz#10967ec88d37bfde025e05c3310aecd0ad42c072"
-  integrity sha512-HTatAXOqZfGnSl4CXBvIe4OCHSxa4P1Gbldum6HPhr767Z4CK6/SdlqB+Dd0O7ekQoc3ZVxKOZqhaMaYxgIuSQ==
+msnodesqlv8@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/msnodesqlv8/-/msnodesqlv8-2.0.5.tgz#a02962c73d15d204da6ecb56a24d00f1e4bc66de"
+  integrity sha512-6kKZy8ZY1zLWOm6rg0G60Hz6qyPu1RQ+yUhvlpSzl/kXVyIgCJJPLjZQc0JAFkz3/YpZaG9SacgMkRjPIT/lfw==
   dependencies:
+    nan "^2.14.1"
     prebuild-install "^5.3.5"
 
 mssql@^6.2.0:
@@ -721,6 +722,11 @@ mssql@^6.2.0:
     debug "^4"
     tarn "^1.1.5"
     tedious "^6.6.2"
+
+nan@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
+  integrity sha512-isWHgVjnFjh2x2yuJ/tj3JbwoHu3UC2dX5G/88Cm24yB6YopVgxvBObDY7n5xW6ExmFhJpSEQqFPvq9zaXc8Jw==
 
 napi-build-utils@^1.0.1:
   version "1.0.2"
