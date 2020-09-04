@@ -3,6 +3,7 @@ import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFormFields from './IIRFormFields';
 import styles from './IIRAddEdit.css';
+import logo from '../img/logo.png';
 
 interface Props {
   postOrUpdateIIRReport: () => {};
@@ -38,16 +39,21 @@ export default function IIRAddEdit(props: Props) {
   };
 
   return (
-    <div className={styles['iir-container']}>
-      <div>ADD/EDIT TEAR DOWN NOTES</div>
-      <div>
-        <WorkOrderSearchForm onSubmit={getIIRData} />
+    <div>
+      <div className={styles['faded-backgroundImageContainer']}>
+        <img src={logo} alt="AeroParts Logo" />
       </div>
-      {loadingScreen && <LoadingScreen props={null} />}
-      <div>
-        {iirFormDisplay && (
-          <IIRFormFields onSubmit={postOrUpdateIIRReport} props={iirProps} />
-        )}
+      <div className={styles['iir-container']}>
+        <div>ADD/EDIT TEAR DOWN NOTES</div>
+        <div>
+          <WorkOrderSearchForm onSubmit={getIIRData} />
+        </div>
+        {loadingScreen && <LoadingScreen props={null} />}
+        <div>
+          {iirFormDisplay && (
+            <IIRFormFields onSubmit={postOrUpdateIIRReport} props={iirProps} />
+          )}
+        </div>
       </div>
     </div>
   );

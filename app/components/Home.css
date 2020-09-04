@@ -4,10 +4,26 @@
 }
 
 .backgroundImageContainer {
- margin: auto;
+  margin: auto;
 }
 
-.backgroundImageContainer img {
+.backgroundImageContainer > img {
   object-fit: contain;
+  width: 100%;
+}
+
+.faded-backgroundImageContainer {
+  z-index: -1;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  height: 100%;
+}
+
+.faded-backgroundImageContainer > img {
+  opacity: 0.05;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
   width: 100%;
 }
