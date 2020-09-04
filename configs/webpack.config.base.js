@@ -7,7 +7,11 @@ import webpack from 'webpack';
 import { dependencies as externals } from '../app/package.json';
 
 export default {
-  externals: [...Object.keys(externals || {})],
+  externals: [
+    ...Object.keys(externals || {})
+    // { 'electron-debug': 'electron-debug' },
+    // { jspdf: 'jspdf' }
+  ],
 
   module: {
     rules: [
