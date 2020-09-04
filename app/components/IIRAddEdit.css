@@ -15,3 +15,19 @@
   height: 100px;
   display: flex;
 }
+
+.faded-backgroundImageContainer {
+  width: 100%;
+  display: flex;
+  position: absolute;
+  height: 100%;
+  z-index: -1;
+}
+
+.faded-backgroundImageContainer > img {
+  opacity: 0.05;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  width: 100%;
+}

@@ -10,7 +10,7 @@ import LoadingScreen from './LoadingDisplay';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
-import logo from '../img/Logo.png';
+import logo from '../img/logo.png';
 
 interface Props {
   getWorkOrderData: () => {};
@@ -108,129 +108,134 @@ export default function TearDownSummery(props: Props) {
   };
 
   return (
-    <div className={styles['form-container']}>
-      <div>TEAR DONW FORM REVIEW</div>
-      <div>
-        <WorkOrderSearchForm onSubmit={getWorkOrderData} />
+    <div>
+      <div className={styles['faded-backgroundImageContainer']}>
+        <img src={logo} alt="AeroParts Logo" />
       </div>
-      {loadingScreen && <LoadingScreen props={cancelProp} />}
-      {loadPDF && (
-        <div className={styles['form-page-container']}>
-          <div className={styles['form-page']}>
-            <div id="capture">
-              <div className={styles['form-header']}>
-                <div>
-                  <img src={logo} alt="Aero Parts Logo" />
+      <div className={styles['form-container']}>
+        <div>TEAR DONW FORM REVIEW</div>
+        <div>
+          <WorkOrderSearchForm onSubmit={getWorkOrderData} />
+        </div>
+        {loadingScreen && <LoadingScreen props={cancelProp} />}
+        {loadPDF && (
+          <div className={styles['form-page-container']}>
+            <div className={styles['form-page']}>
+              <div id="capture">
+                <div className={styles['form-header']}>
+                  <div>
+                    <img src={logo} alt="Aero Parts Logo" />
+                  </div>
+                  <div>TEARDOWN REPORT</div>
+                  {/** Filler for centering as seen below */}
+                  <div />
                 </div>
-                <div>TEARDOWN REPORT</div>
-                {/** Filler for centering as seen below */}
-                <div />
-              </div>
-              <div className={styles['form-body']}>
-                <div>
+                <div className={styles['form-body']}>
                   <div>
                     <div>
                       <div>
-                        <div>Work Order:</div>
-                        <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
-                      </div>
-                      <div>
-                        <div>Customer:</div>
-                        <div>{workOrderInfo.CustomerName}</div>
-                      </div>
-                      <div>
-                        <div>Customer Order Number:</div>
-                        <div>{workOrderInfo.CustomerOrderNumber}</div>
-                      </div>
-                      <div>
-                        <div>Date Issued:</div>
-                        <div>{workOrderInfo.DateIssuedYYMMDD}</div>
-                      </div>
-                    </div>
-                    <div>
-                      <div>
-                        <div>Part Number:</div>
-                        <div>{workOrderInfo.PartNumber}</div>
-                      </div>
-                      <div>
-                        <div>Part Description:</div>
-                        <div>{workOrderInfo.PartDescription}</div>
-                      </div>
-                      <div>
-                        <div>Serial Number:</div>
-                        <div>{workOrderInfo.SerialNumber}</div>
-                      </div>
-                      <div>
-                        <div>Quantity:</div>
-                        <div>{workOrderInfo.Quantity}</div>
-                      </div>
-                    </div>
-                    <div>
-                      <div>
                         <div>
-                          <div>TSN:</div>
-                          <div>{workOrderInfo.TSN}</div>
+                          <div>Work Order:</div>
+                          <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
                         </div>
                         <div>
-                          <div>TSR:</div>
-                          <div>{workOrderInfo.TSR}</div>
+                          <div>Customer:</div>
+                          <div>{workOrderInfo.CustomerName}</div>
                         </div>
                         <div>
-                          <div>TSO:</div>
-                          <div>{workOrderInfo.TSO}</div>
+                          <div>Customer Order Number:</div>
+                          <div>{workOrderInfo.CustomerOrderNumber}</div>
+                        </div>
+                        <div>
+                          <div>Date Issued:</div>
+                          <div>{workOrderInfo.DateIssuedYYMMDD}</div>
                         </div>
                       </div>
                       <div>
-                        <div>Order Type:</div>
-                        <div>{workOrderInfo.OrderType}</div>
+                        <div>
+                          <div>Part Number:</div>
+                          <div>{workOrderInfo.PartNumber}</div>
+                        </div>
+                        <div>
+                          <div>Part Description:</div>
+                          <div>{workOrderInfo.PartDescription}</div>
+                        </div>
+                        <div>
+                          <div>Serial Number:</div>
+                          <div>{workOrderInfo.SerialNumber}</div>
+                        </div>
+                        <div>
+                          <div>Quantity:</div>
+                          <div>{workOrderInfo.Quantity}</div>
+                        </div>
                       </div>
                       <div>
-                        <div>Warranty:</div>
-                        <div>{warrentyString}</div>
+                        <div>
+                          <div>
+                            <div>TSN:</div>
+                            <div>{workOrderInfo.TSN}</div>
+                          </div>
+                          <div>
+                            <div>TSR:</div>
+                            <div>{workOrderInfo.TSR}</div>
+                          </div>
+                          <div>
+                            <div>TSO:</div>
+                            <div>{workOrderInfo.TSO}</div>
+                          </div>
+                        </div>
+                        <div>
+                          <div>Order Type:</div>
+                          <div>{workOrderInfo.OrderType}</div>
+                        </div>
+                        <div>
+                          <div>Warranty:</div>
+                          <div>{warrentyString}</div>
+                        </div>
+                        <div>
+                          <div>Cert Type:</div>
+                          <div>{workOrderInfo.Cert_type_Description}</div>
+                        </div>
                       </div>
                       <div>
-                        <div>Cert Type:</div>
-                        <div>{workOrderInfo.Cert_type_Description}</div>
+                        <IIRFromFiledPDF
+                          onSubmit={postOrUpdateIIRReport}
+                          props={iirProps}
+                        />
                       </div>
-                    </div>
-                    <div>
-                      <IIRFromFiledPDF
-                        onSubmit={postOrUpdateIIRReport}
-                        props={iirProps}
-                      />
                     </div>
                   </div>
                 </div>
-              </div>
-              <div>
                 <div>
-                  Athurized Signature: ______________________________________
+                  <div>
+                    Athurized Signature: ______________________________________
+                  </div>
+                </div>
+                <div className={styles['form-footer']}>
+                  <div>AeroParts Manufacturing & Repair, Inc.</div>
+                  <div>Form 1230 Rev. NC</div>
                 </div>
               </div>
-              <div className={styles['form-footer']}>
-                <div>AeroParts Manufacturing & Repair, Inc.</div>
-                <div>Form 1230 Rev. NC</div>
+            </div>
+            <div>
+              <div>
+                <Link to={routes.EDITFORM}>
+                  <button onClick={handleEditIIRPDF} type="button">
+                    Edit Form
+                  </button>
+                </Link>
+              </div>
+              <div>
+                {displayPDFBtn && (
+                  <button onClick={getPDF} type="button">
+                    Create PDF
+                  </button>
+                )}
               </div>
             </div>
           </div>
-          <div>
-            <div>
-              <Link to={routes.EDITFORM}>
-                <button onClick={handleEditIIRPDF} type="button">
-                  Edit Form
-                </button>
-              </Link>
-            </div>
-            <div>
-              {displayPDFBtn && (
-                <button onClick={getPDF} type="button">
-                  Create PDF
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
