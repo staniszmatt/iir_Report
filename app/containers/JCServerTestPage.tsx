@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import Home from '../components/Home';
-import { testDB } from '../actions/iirActions';
+import JCServerTest from '../components/JCServerTest';
+import { testJobCostDB } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
 function mapStateToProps(state: iirStateType) {
@@ -15,10 +15,10 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
   // Reset Search Form when loading the page.
   return bindActionCreators(
     {
-      testDB
+      testJobCostDB
     },
     dispatch
   );
 }
 // TODO: Fix typescript, either the rules or the interface.
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(JCServerTest);

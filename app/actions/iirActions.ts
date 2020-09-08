@@ -176,8 +176,6 @@ export function getIIRData(workOrder: {
 }) {
   console.log('workOrder: ', workOrder);
 
-
-
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     dispatch(resetState());
@@ -285,7 +283,7 @@ export function cancelLoading() {
 
 export function testDB(queryString: string) {
   console.log('test db clicked!, query:', queryString);
-  return (dispatch: Dispatch, getState: GetIIRState) => {
+  return (dispatch: Dispatch) => {
     const mainRequest = {
       request: 'testDB',
       query: queryString
@@ -302,23 +300,27 @@ export function testDB(queryString: string) {
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleTestDBResp);
-
-
-
-
-
-
-
-
   };
+}
 
+export function testJobCostDB(queryString: string) {
+  console.log('test JobCost db clicked!, query:', queryString);
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const mainRequest = {
+      request: 'testJobCostDB',
+      query: queryString
+    };
 
+    const handleTestDBResp = (_event: {}, resp: {}) => {
+      // Turn off the loading screen once we receive a response.
+      dispatch(toggleLoadingScreenState());
 
+      console.log('server Response: ', resp);
 
-
-
-
-
-
-
+      ipcRenderer.removeListener('asynchronous-reply', handleTestDBResp);
+    };
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', handleTestDBResp);
+  };
 }

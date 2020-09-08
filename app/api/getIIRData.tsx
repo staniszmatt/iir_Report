@@ -1,10 +1,10 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import 'mssql/msnodesqlv8';
-// import pool from '../config/config';
+import 'mssql/msnodesqlv8';
+import pool from '../config/config';
 
-const sql = require('mssql/msnodesqlv8');
+// const sql = require('mssql/msnodesqlv8');
 
 interface Request {
   workOrder: {
@@ -54,8 +54,8 @@ async function getWorkOrderData(request: Request) {
 
 
   try {
-    // const dbIIR = await pool.connect();
-    const dbIIR = await sql.connect('DSN=AeroRepair');
+    const dbIIR = await pool.connect();
+    // const dbIIR = await sql.connect('DSN=AeroRepair');
     const iirQuery = `SELECT *
     FROM iir_report_dev AS i
     WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;

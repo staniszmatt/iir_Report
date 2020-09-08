@@ -19,6 +19,7 @@ import getIIRData from './api/getIIRData';
 import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
 import testQuery from './api/testQueryToODCBDB';
+import testJobCostDB from './api/testJobCostDB';
 
 export default class AppUpdater {
   constructor() {
@@ -139,6 +140,9 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
   let switchFail = false;
 
   switch (arg.request) {
+    case 'testJobCostDB':
+      requestToSend = testJobCostDB;
+      break;
     case 'testDB':
       requestToSend = testQuery;
       break;

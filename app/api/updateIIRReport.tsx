@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import 'mssql/msnodesqlv8';
-// import pool from '../config/config';
+import 'mssql/msnodesqlv8';
+import pool from '../config/config';
 
 const sql = require('mssql/msnodesqlv8');
 
@@ -71,7 +71,7 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    const db = await sql.connect('DSN=AeroRepair');
+    const db = await pool.connect();
     const query = `UPDATE iir_report_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName

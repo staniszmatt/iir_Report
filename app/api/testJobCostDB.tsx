@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import 'mssql/msnodesqlv8';
-import pool from '../config/config';
+const odbc = require('odbc');
 
 interface ReturnData {
   error: {};
@@ -13,7 +12,7 @@ interface QueryString {
 
 async function testDB(queryString: QueryString) {
 
-  console.log('test qury string: ', queryString);
+  console.log('test JobCost query string: ', queryString.query);
 
   const returnData: ReturnData = {
     error: {},
@@ -22,7 +21,7 @@ async function testDB(queryString: QueryString) {
   const { query } = queryString;
   console.log('DB query string: ', query);
   try {
-    const db = await pool.connect();
+    const db = await odbc.connect('DSN=AeroSuper');
     const data = await db.query(query);
 
     console.log('return data resp:', data);
