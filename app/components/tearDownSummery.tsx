@@ -208,7 +208,7 @@ export default function TearDownSummery(props: Props) {
                 </div>
                 <div>
                   <div>
-                    Athurized Signature: ______________________________________
+                    Authorized Signature: ______________________________________
                   </div>
                 </div>
                 <div className={styles['form-footer']}>
