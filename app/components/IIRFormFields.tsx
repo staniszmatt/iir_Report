@@ -146,7 +146,7 @@ function validate(values: Values) {
   }
 
   if (workedPerformed) {
-    if (workedPerformed.length > 700) {
+    if (workedPerformed.length > 616) {
       errors.workedPerformed = 'Over max charictor limit!';
     }
   }
