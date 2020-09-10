@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
@@ -208,7 +209,7 @@ export default function TearDownSummery(props: Props) {
                 </div>
                 <div>
                   <div>
-                    Authorized Signature: ______________________________________
+                    Authorized Signature:_____________________________________   Date:___________________
                   </div>
                 </div>
                 <div className={styles['form-footer']}>
