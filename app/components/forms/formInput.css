@@ -69,7 +69,7 @@ form {
 }
 
 .textarea-container > div:nth-child(2) > textarea {
-  width: 100%;
+  width: 98%;
   vertical-align: top;
   resize: none;
   max-height: 120px;

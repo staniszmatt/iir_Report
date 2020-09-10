@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint global-require: off, no-console: off */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /**
  * This module executes inside of electron's main process. You can start
  * electron renderer process from here and communicate with the other processes

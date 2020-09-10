@@ -22,7 +22,7 @@
 div.form-footer > div {
   position: absolute;
   font-size: 10pt;
-  bottom: 10px;
+  bottom: 25px;
   margin-left: 30px;
 }
 
@@ -79,7 +79,8 @@ div.form-footer > div:last-child {
 }
 
 .form-page > div > div:nth-child(3) > div {
-  margin-left: 25px;
+  text-align: center;
+  white-space: pre-wrap;
 }
 
 .form-body > div > div > div:last-child {
