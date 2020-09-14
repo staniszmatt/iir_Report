@@ -124,9 +124,9 @@ export default function TearDownSummery(props: Props) {
         </div>
         {loadingScreen && <LoadingScreen props={cancelProp} />}
         {diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><Btn buttonName="Open Current PDF" ClickHandler={openPDF} /></div>}
-        {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
         {loadPDF && (
           <div className={styles['form-page-container']}>
+            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
