@@ -1,6 +1,7 @@
 .iir-container {
-  width: 100%;
+  width: 770px;
   padding-top: 40px;
+  margin: auto;
 }
 
 .open-pdf-btn {
@@ -10,6 +11,11 @@
 .open-pdf-btn > button {
   margin: auto;
   margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.open-pdf-btn > button:hover {
+  background-color: #50d33c;
 }
 
 .open-pdf-btn > div {
