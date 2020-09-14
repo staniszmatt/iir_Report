@@ -102,7 +102,7 @@ export default function TearDownSummery(props: Props) {
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
       // Seperated to make sure when the file saves, it saves it as a PDF.
       const fileName = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}_TEAR_DOWN`;
-      pdf.save(`${fileName}.pdf`);
+      const savedPDF = pdf.save(`${fileName}.pdf`);
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
