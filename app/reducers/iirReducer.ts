@@ -6,7 +6,8 @@ import {
   SET_WORK_ORDER,
   SET_WORK_ORDER_DATA,
   TOGGLE_IIR_EDIT_STATE,
-  TOGGLE_POST_IIR_NOTES
+  TOGGLE_POST_IIR_NOTES,
+  TOGGLE_DISPLAY_OPEN_PDF_BTN
 } from '../actions/iirActions';
 
 const IState = {
@@ -14,6 +15,7 @@ const IState = {
   iirFormDisplay: false,
   loadingScreen: false,
   postIIRNotes: false,
+  diplayOpenPDFBtn: false,
   workOrder: {},
   workOrderInfo: {}
 };
@@ -34,6 +36,11 @@ export default function iir(state = IState, action: CustomAction) {
       return {
         ...state,
         loadPDF: true
+      };
+    case TOGGLE_DISPLAY_OPEN_PDF_BTN:
+      return {
+        ...state,
+        diplayOpenPDFBtn: true
       };
     case TOGGLE_IIR_EDIT_STATE:
       return {
@@ -61,6 +68,7 @@ export default function iir(state = IState, action: CustomAction) {
         loadPDF: false,
         iirFormDisplay: false,
         postIIRNotes: false,
+        diplayOpenPDFBtn: false,
         workOrder: {},
         workOrderInfo: {}
       };

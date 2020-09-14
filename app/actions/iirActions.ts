@@ -1,5 +1,6 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
+import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
 import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
 
@@ -10,6 +11,7 @@ export const TOGGLE_IIR_EDIT_STATE = 'TOGGLE_IIR_EDIT_STATE';
 export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 export const TOGGLE_POST_IIR_NOTES = 'SET_POST_IIR_NOTES';
+export const TOGGLE_DISPLAY_OPEN_PDF_BTN = 'TOGGLE_DISPLAY_OPEN_PDF_BTN';
 
 // Sets state booleans to false so to turn on only what is needed.
 export function resetState() {
@@ -21,6 +23,12 @@ export function resetState() {
 export function toggleDisplayPDFFormState() {
   return {
     type: TOGGLE_PDF_DISPLAY
+  };
+}
+
+export function toggleDisplayOpenPDFBTnState() {
+  return {
+    type: TOGGLE_DISPLAY_OPEN_PDF_BTN
   };
 }
 
@@ -53,6 +61,26 @@ export function setWorkOrderData(resp: {}) {
   return {
     type: SET_WORK_ORDER_DATA,
     resp
+  };
+}
+// This will only be exacutable if checkForPDFFile finds the file and sets the display open pdf btn to true.
+export function openPDF() {
+  return (_dispatch: Dispatch, getState: GetIIRState) => {
+    console.log('Open pdf clicked!');
+    const state = getState().iir;
+    const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+    shell.openItem(filePath);
+  };
+}
+
+export function checkForPDFFile(workOrderString: string) {
+  return (dispatch: Dispatch) => {
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+    // If the file is already created and saved in the correct location, then display the open pdf button.
+    if (fs.existsSync(filePath)) {
+      dispatch(toggleDisplayOpenPDFBTnState());
+    }
   };
 }
 
@@ -88,12 +116,13 @@ export function getWorkOrderData(workOrder: {
           const error = {
             errorNotFound: `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
           };
-
           dispatch(toggleErrorModalState(error));
         } else {
+          const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
           dispatch(setWorkOrder(workOrder));
           dispatch(setWorkOrderData(resp.data[0]));
           dispatch(toggleDisplayPDFFormState());
+          dispatch(checkForPDFFile(workOrderString));
         }
       } else {
         dispatch(reset('iirFormDisabled'));

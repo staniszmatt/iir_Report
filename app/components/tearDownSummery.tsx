@@ -8,6 +8,7 @@ import html2canvas from '@nidi/html2canvas';
 import JsPDF from 'jspdf';
 import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
+import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
@@ -18,9 +19,11 @@ interface Props {
   postOrUpdateIIRReport: () => {};
   handleEditIIRPDF: () => {};
   cancelLoading: () => {};
+  openPDF: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
+    diplayOpenPDFBtn: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
@@ -59,10 +62,11 @@ export default function TearDownSummery(props: Props) {
     getWorkOrderData,
     postOrUpdateIIRReport,
     handleEditIIRPDF,
-    cancelLoading
+    cancelLoading,
+    openPDF
   } = props;
   // eslint-disable-next-line react/destructuring-assignment
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
+  const { loadingScreen, loadPDF, workOrder, workOrderInfo, diplayOpenPDFBtn } = props.iir;
   let displayPDFBtn = true;
   let warrentyString = 'No';
 
@@ -119,8 +123,10 @@ export default function TearDownSummery(props: Props) {
           <WorkOrderSearchForm onSubmit={getWorkOrderData} />
         </div>
         {loadingScreen && <LoadingScreen props={cancelProp} />}
+        {diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><Btn buttonName="Open Current PDF" ClickHandler={openPDF} /></div>}
         {loadPDF && (
           <div className={styles['form-page-container']}>
+            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
