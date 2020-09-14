@@ -65,7 +65,8 @@ export function setWorkOrderData(resp: {}) {
 }
 // This will only be exacutable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
-  return (getState: GetIIRState) => {
+  return (_dispatch: Dispatch, getState: GetIIRState) => {
+    console.log('Open pdf clicked!');
     const state = getState().iir;
     const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
