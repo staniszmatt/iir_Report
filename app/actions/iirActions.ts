@@ -1,7 +1,9 @@
 import { ipcRenderer } from 'electron';
 import { reset } from 'redux-form';
+import fs, { stat } from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
 import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
+import { shell } from 'electron';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -10,6 +12,7 @@ export const TOGGLE_IIR_EDIT_STATE = 'TOGGLE_IIR_EDIT_STATE';
 export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 export const TOGGLE_POST_IIR_NOTES = 'SET_POST_IIR_NOTES';
+export const TOGGLE_DISPLAY_OPEN_PDF_BTN = 'TOGGLE_DISPLAY_OPEN_PDF_BTN';
 
 // Sets state booleans to false so to turn on only what is needed.
 export function resetState() {
@@ -21,6 +24,12 @@ export function resetState() {
 export function toggleDisplayPDFFormState() {
   return {
     type: TOGGLE_PDF_DISPLAY
+  };
+}
+
+export function toggleDisplayOpenPDFBTnState() {
+  return {
+    type: TOGGLE_DISPLAY_OPEN_PDF_BTN
   };
 }
 
@@ -56,6 +65,35 @@ export function setWorkOrderData(resp: {}) {
   };
 }
 
+export function openPDF() {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    console.log('Current state at open pdf: ', state);
+    const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+    shell.openItem(filePath);
+  };
+}
+
+export function checkForPDFFile(workOrderString: string) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+
+    console.log('filePath string: ', filePath);
+
+
+    if (fs.existsSync(filePath)) {
+      console.log('File Exists! ');
+      dispatch(toggleDisplayOpenPDFBTnState());
+      console.log('Changed display open pdf btn state: ', state.diplayOpenPDFBtn);
+    } else {
+      console.log('File Doesn\'t exist! ');
+    }
+    console.log('display open pdf btn state: ', state.diplayOpenPDFBtn);
+  };
+}
+
 export function getWorkOrderData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
@@ -88,12 +126,13 @@ export function getWorkOrderData(workOrder: {
           const error = {
             errorNotFound: `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
           };
-
           dispatch(toggleErrorModalState(error));
         } else {
+          const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
           dispatch(setWorkOrder(workOrder));
           dispatch(setWorkOrderData(resp.data[0]));
           dispatch(toggleDisplayPDFFormState());
+          dispatch(checkForPDFFile(workOrderString));
         }
       } else {
         dispatch(reset('iirFormDisabled'));
@@ -269,5 +308,27 @@ export function cancelLoading() {
     dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.removeAllListeners('asynchronous-reply');
+  };
+}
+
+export function savingPDF(pdf: any){
+  console.log('Saving PDF Called')
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    console.log('PDF', pdf);
+
+    const mainRequest = {
+      request: 'savePDF',
+      pdf
+    };
+
+    const handleSavePDFResp = (_event, resp) => {
+      console.log('save pdf resp', resp);
+      ipcRenderer.removeListener('asynchronous-reply', handleSavePDFResp);
+    };
+
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    ipcRenderer.on('asynchronous-reply', handleSavePDFResp);
+
   };
 }

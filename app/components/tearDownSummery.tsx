@@ -8,6 +8,7 @@ import html2canvas from '@nidi/html2canvas';
 import JsPDF from 'jspdf';
 import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
+import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
@@ -18,9 +19,11 @@ interface Props {
   postOrUpdateIIRReport: () => {};
   handleEditIIRPDF: () => {};
   cancelLoading: () => {};
+  openPDF: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
+    diplayOpenPDFBtn: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
@@ -59,10 +62,11 @@ export default function TearDownSummery(props: Props) {
     getWorkOrderData,
     postOrUpdateIIRReport,
     handleEditIIRPDF,
-    cancelLoading
+    cancelLoading,
+    openPDF
   } = props;
   // eslint-disable-next-line react/destructuring-assignment
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
+  const { loadingScreen, loadPDF, workOrder, workOrderInfo, diplayOpenPDFBtn } = props.iir;
   let displayPDFBtn = true;
   let warrentyString = 'No';
 
@@ -102,7 +106,7 @@ export default function TearDownSummery(props: Props) {
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
       // Seperated to make sure when the file saves, it saves it as a PDF.
       const fileName = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}_TEAR_DOWN`;
-      const savedPDF = pdf.save(`${fileName}.pdf`);
+      pdf.save(`${fileName}.pdf`);
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
@@ -119,6 +123,7 @@ export default function TearDownSummery(props: Props) {
           <WorkOrderSearchForm onSubmit={getWorkOrderData} />
         </div>
         {loadingScreen && <LoadingScreen props={cancelProp} />}
+        {diplayOpenPDFBtn && <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />}
         {loadPDF && (
           <div className={styles['form-page-container']}>
             <div className={styles['form-page']}>
