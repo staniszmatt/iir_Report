@@ -123,7 +123,8 @@ export default function TearDownSummery(props: Props) {
           <WorkOrderSearchForm onSubmit={getWorkOrderData} />
         </div>
         {loadingScreen && <LoadingScreen props={cancelProp} />}
-        {diplayOpenPDFBtn && <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />}
+        {diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><Btn buttonName="Open Current PDF" ClickHandler={openPDF} /></div>}
+        {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
         {loadPDF && (
           <div className={styles['form-page-container']}>
             <div className={styles['form-page']}>

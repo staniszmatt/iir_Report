@@ -1,9 +1,8 @@
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
-import fs, { stat } from 'fs';
+import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
 import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
-import { shell } from 'electron';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -64,11 +63,10 @@ export function setWorkOrderData(resp: {}) {
     resp
   };
 }
-
+// This will only be exacutable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
+  return (getState: GetIIRState) => {
     const state = getState().iir;
-    console.log('Current state at open pdf: ', state);
     const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
     shell.openItem(filePath);
@@ -76,21 +74,12 @@ export function openPDF() {
 }
 
 export function checkForPDFFile(workOrderString: string) {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    const state = getState().iir;
+  return (dispatch: Dispatch) => {
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
-
-    console.log('filePath string: ', filePath);
-
-
+    // If the file is already created and saved in the correct location, then display the open pdf button.
     if (fs.existsSync(filePath)) {
-      console.log('File Exists! ');
       dispatch(toggleDisplayOpenPDFBTnState());
-      console.log('Changed display open pdf btn state: ', state.diplayOpenPDFBtn);
-    } else {
-      console.log('File Doesn\'t exist! ');
     }
-    console.log('display open pdf btn state: ', state.diplayOpenPDFBtn);
   };
 }
 
@@ -308,27 +297,5 @@ export function cancelLoading() {
     dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.removeAllListeners('asynchronous-reply');
-  };
-}
-
-export function savingPDF(pdf: any){
-  console.log('Saving PDF Called')
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    console.log('PDF', pdf);
-
-    const mainRequest = {
-      request: 'savePDF',
-      pdf
-    };
-
-    const handleSavePDFResp = (_event, resp) => {
-      console.log('save pdf resp', resp);
-      ipcRenderer.removeListener('asynchronous-reply', handleSavePDFResp);
-    };
-
-
-    ipcRenderer.send('asynchronous-message', mainRequest);
-    ipcRenderer.on('asynchronous-reply', handleSavePDFResp);
-
   };
 }

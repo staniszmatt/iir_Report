@@ -19,6 +19,23 @@
   border: 1px solid black;
 }
 
+.open-pdf-btn {
+  display: flex;
+}
+
+.open-pdf-btn > button {
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.open-pdf-btn > div {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: red;
+}
+
 div.form-footer > div {
   position: absolute;
   font-size: 10pt;
