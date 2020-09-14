@@ -16,6 +16,26 @@ interface Props {
     iirFormDisplay: boolean;
     diplayOpenPDFBtn: boolean;
     workOrderInfo: {
+      Cert_type_Description: string;
+      CustomerName: string;
+      CustomerNumber: string;
+      CustomerOrderNumber: string;
+      DateIssuedYYMMDD: string;
+      ItemNumber: string;
+      Manual_Combined: string;
+      OrderType: string;
+      PartDescription: string;
+      PartNumber: string;
+      Quantity: number;
+      SalesOrderAndLineNumber: string;
+      SalesOrderNumber: string;
+      SerialNumber: string;
+      TSN: number;
+      TSO: number;
+      TSR: number;
+      Trv_Num: string;
+      Warrenty_Y_N: string;
+      Work_Order_Number: string;
       customerReasonForRemoval: string;
       evalFindings: string;
       genConditionReceived: string;
@@ -40,9 +60,7 @@ export default function IIRAddEdit(props: Props) {
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir;
 
-  // TODO: Remove when done with testing, this is the dummy data setup.
-  // const data = dummyData();
-  // const { loadingScreen, iirFormDisplay, workOrder, workOrderInfo } = data;
+  console.log('edit page data: ', workOrderInfo);
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
@@ -76,6 +94,9 @@ export default function IIRAddEdit(props: Props) {
                   <div>PDF Needs Saved In Scanned Directory.</div>
                 </div>
               )}
+              <div className={styles['header-info']}>
+                <div>Setup Additional Info HERE!</div>
+              </div>
               <IIRFormFields
                 onSubmit={postOrUpdateIIRReport}
                 props={iirProps}

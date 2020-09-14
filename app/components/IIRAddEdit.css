@@ -26,6 +26,10 @@
   color: red;
 }
 
+.header-info {
+  background-color: yellow;
+}
+
 .iir-container > div:first-child {
   text-align: center;
   font-size: 30px;

@@ -229,8 +229,6 @@ export function getIIRData(workOrder: {
       _event: {},
       resp: { error: { code: string; name: string }; data: { length: number } }
     ) => {
-
-      console.log('Get IIR Resp: ', resp);
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenState());
 
