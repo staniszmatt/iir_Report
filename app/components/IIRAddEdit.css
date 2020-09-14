@@ -3,6 +3,23 @@
   padding-top: 40px;
 }
 
+.open-pdf-btn {
+  display: flex;
+}
+
+.open-pdf-btn > button {
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.open-pdf-btn > div {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: red;
+}
+
 .iir-container > div:first-child {
   text-align: center;
   font-size: 30px;

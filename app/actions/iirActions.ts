@@ -238,9 +238,11 @@ export function getIIRData(workOrder: {
         if (resp.data.length === 0) {
           dispatch(togglePostIIRNotes());
         }
+        const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
         dispatch(setWorkOrder(workOrder));
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
+        dispatch(checkForPDFFile(workOrderString));
       } else if (
         Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
       ) {
