@@ -96,6 +96,24 @@ export default function IIRAddEdit(props: Props) {
               )}
               <div className={styles['header-info']}>
                 <div>Setup Additional Info HERE!</div>
+                <div>
+                  <div>
+                    <div>Work Order:</div>
+                    <div>XXXX-XX</div>
+                  </div>
+                  <div>
+                    <div>Customer:</div>
+                    <div>TEST NAME</div>
+                  </div>
+                  <div>
+                    <div>Customer Order Number:</div>
+                    <div>123456</div>
+                  </div>
+                  <div>
+                    <div>Date Issued:</div>
+                    <div>0000-00-00</div>
+                  </div>
+                </div>
               </div>
               <IIRFormFields
                 onSubmit={postOrUpdateIIRReport}

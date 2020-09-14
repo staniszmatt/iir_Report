@@ -28,6 +28,19 @@
 
 .header-info {
   background-color: yellow;
+  border: 1px solid black;
+}
+
+.header-info > div {
+  text-align: center;
+}
+
+.header-info > div:last-child {
+  display: flex;
+}
+
+.header-info > div:last-child > div {
+  margin: auto;
 }
 
 .iir-container > div:first-child {
