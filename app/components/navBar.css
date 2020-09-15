@@ -25,13 +25,12 @@
   font-family: serif;
   border-radius: 3px;
   filter: drop-shadow(1.5px 1.5px 1.5px black);
-  background-color: white;
+  background-color: #c5eafa;
 }
 
 .container button:hover {
-  background-color: cornflowerblue;
+  background-color: #50a2ff;
   cursor: pointer;
-  transform: scale(1.01);
 }
 
 .container button:active {

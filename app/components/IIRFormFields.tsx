@@ -25,7 +25,7 @@ interface DispatchProps {
 const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  let btnText = 'Update IIR Notes';
+  let btnText = 'UPDATE IIR NOTES';
   const { handleSubmit, onSubmit } = props;
 
   const {
@@ -42,7 +42,7 @@ const IIRForm = (
     genConditionReceived === undefined &&
     workedPerformedNote === undefined
   ) {
-    btnText = 'Add New IIR Notes';
+    btnText = 'ADD NEW IIR NOTES';
   }
 
   return (

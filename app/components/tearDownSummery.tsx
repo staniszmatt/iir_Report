@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable promise/always-return */
@@ -226,18 +227,23 @@ export default function TearDownSummery(props: Props) {
             </div>
             <div>
               <div>
-                <Link to={routes.EDITFORM}>
-                  <button onClick={handleEditIIRPDF} type="button">
-                    Edit Form
-                  </button>
-                </Link>
+                <div>
+                  <Link to={routes.EDITFORM}>
+                    <button onClick={handleEditIIRPDF} type="button">
+                      EDIT NOTES
+                    </button>
+                  </Link>
+                </div>
+                <div>
+                  {displayPDFBtn && (
+                    <button onClick={getPDF} type="button">
+                      SAVE PDF
+                    </button>
+                  )}
+                </div>
               </div>
               <div>
-                {displayPDFBtn && (
-                  <button onClick={getPDF} type="button">
-                    Create PDF
-                  </button>
-                )}
+                <div>SAVE ALL PDF FILES IN: "scanned(\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns"</div>
               </div>
             </div>
           </div>

@@ -30,6 +30,11 @@
 .form-container > div:last-child > div > div > button {
   margin: 0 20px;
   font-size: 16px;
+  background-color: #c5eafa;
+}
+
+.form-container > div:last-child > div > div > button:hover {
+  background-color: #50a2ff;
 }
 
 .form-container > div:last-child > div > form {

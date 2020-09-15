@@ -53,7 +53,7 @@ const WorkOrderSearchForm = (
             />
           </form>
           <div>
-            <Btn buttonName="Submit" ClickHandler={handleSubmit(onSubmit)} />
+            <Btn buttonName="SEARCH" ClickHandler={handleSubmit(onSubmit)} />
           </div>
         </div>
       </div>

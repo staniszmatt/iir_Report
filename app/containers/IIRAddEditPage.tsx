@@ -7,7 +7,8 @@ import {
   postOrUpdateIIRReport,
   getIIRData,
   resetState,
-  handleReviewIIRPDF
+  handleReviewIIRPDF,
+  openPDF
 } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
@@ -26,7 +27,8 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
     {
       postOrUpdateIIRReport,
       getIIRData,
-      handleReviewIIRPDF
+      handleReviewIIRPDF,
+      openPDF
     },
     dispatch
   );
