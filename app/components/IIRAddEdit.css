@@ -27,19 +27,19 @@
 }
 
 .header-info {
-  background-color: yellow;
-  border: 1px solid black;
+  margin-bottom: 20px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .header-info > div {
   text-align: center;
-}
-
-.header-info > div:last-child {
   display: flex;
+  margin: 10px 0;
+  font-size: 16px;
 }
 
-.header-info > div:last-child > div {
+.header-info > div > div {
   margin: auto;
 }
 
@@ -54,6 +54,10 @@
 .iir-container > div:nth-child(2) {
   height: 100px;
   display: flex;
+}
+
+.header-info > div:first-child > div {
+  border-bottom: 1px solid black;
 }
 
 .faded-backgroundImageContainer {

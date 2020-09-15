@@ -60,8 +60,6 @@ export default function IIRAddEdit(props: Props) {
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir;
 
-  console.log('edit page data: ', workOrderInfo);
-
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
@@ -95,23 +93,43 @@ export default function IIRAddEdit(props: Props) {
                 </div>
               )}
               <div className={styles['header-info']}>
-                <div>Setup Additional Info HERE!</div>
+                <div>
+                  <div>Work Order Information:</div>
+                </div>
                 <div>
                   <div>
                     <div>Work Order:</div>
-                    <div>XXXX-XX</div>
+                    <div>{`${workOrderInfo.SalesOrderNumber}-${workOrderInfo.ItemNumber}`}</div>
                   </div>
                   <div>
                     <div>Customer:</div>
-                    <div>TEST NAME</div>
+                    <div>{`${workOrderInfo.CustomerName}`}</div>
                   </div>
                   <div>
                     <div>Customer Order Number:</div>
-                    <div>123456</div>
+                    <div>{`${workOrderInfo.CustomerOrderNumber}`}</div>
                   </div>
                   <div>
-                    <div>Date Issued:</div>
-                    <div>0000-00-00</div>
+                    <div>Part Number:</div>
+                    <div>{`${workOrderInfo.PartNumber}`}</div>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <div>Part Description:</div>
+                    <div>{`${workOrderInfo.PartDescription}`}</div>
+                  </div>
+                  <div>
+                    <div>Serial Number:</div>
+                    <div>{`${workOrderInfo.SerialNumber}`}</div>
+                  </div>
+                  <div>
+                    <div>Quantitiy:</div>
+                    <div>{`${workOrderInfo.Quantity}`}</div>
+                  </div>
+                  <div>
+                    <div>Cert Type:</div>
+                    <div>{`${workOrderInfo.Cert_type_Description}`}</div>
                   </div>
                 </div>
               </div>
