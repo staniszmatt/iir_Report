@@ -11,7 +11,16 @@ export type iirStateType = {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
     };
-    workOrderInfo: {};
+    workOrderInfo: {
+      SalesOrderNumber: string;
+      ItemNumber: string;
+      PartNumber: string;
+      CustomerName: string;
+      customerReasonForRemoval: string;
+      genConditionReceived: string;
+      evalFindings: string;
+      workedPerformed: string;
+    };
   };
 };
 

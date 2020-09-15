@@ -1,4 +1,5 @@
 import { Action } from 'redux';
+// eslint-disable-next-line import/no-cycle
 import {
   RESET_STATE,
   TOGGLE_PDF_DISPLAY,

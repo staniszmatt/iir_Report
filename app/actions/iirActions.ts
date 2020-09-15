@@ -3,6 +3,7 @@ import { reset } from 'redux-form';
 import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
 import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
+import iir from '../reducers/iirReducer';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -70,12 +71,27 @@ export function autoEmailer() {
 
     console.log('state: ', state);
 
+    const {
+      SalesOrderNumber,
+      ItemNumber,
+      PartNumber,
+      CustomerName,
+      customerReasonForRemoval,
+      genConditionReceived,
+      evalFindings,
+      workedPerformed
+    } = state.iir.workOrderInfo;
+
     const mainRequest = {
       request: 'emailer',
       testInfo: {
-        workOrder: 'CN101-01',
-        customer: 'Lufthansa',
-        partNumber: 'testPartNumber'
+        workOrder: `${SalesOrderNumber}-${ItemNumber}`,
+        CustomerName,
+        PartNumber,
+        customerReasonForRemoval,
+        genConditionReceived,
+        evalFindings,
+        workedPerformed
       }
     };
 
@@ -207,9 +223,14 @@ export function postOrUpdateIIRReport(iirNotes: {
     ) => {
       dispatch(toggleLoadingScreenState());
       if (Object.keys(resp.error).length === 0) {
-        dispatch(toggleSuccessModalState('Success!'));
+        const workOrder = {
+          workOrderSearch: state.workOrder.workOrderSearch,
+          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+        };
+        dispatch(getIIRData(workOrder));
         // TODO: Setup emailer here!
-        dispatch(autoEmailer())
+        dispatch(autoEmailer());
+        dispatch(toggleSuccessModalState('Success!'));
       } else {
         const returnError = { error: '' };
         if (Object.keys(resp.error).length > 1) {
