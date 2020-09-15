@@ -19,6 +19,7 @@ import getWorkOrderData from './api/getWorkOrderData';
 import getIIRData from './api/getIIRData';
 import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
+import emailer from './api/emailer';
 
 export default class AppUpdater {
   constructor() {
@@ -170,6 +171,9 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
   let switchFail = false;
 
   switch (arg.request) {
+    case 'emailer':
+      requestToSend = emailer;
+      break;
     case 'getWorkOrderData':
       requestToSend = getWorkOrderData;
       break;

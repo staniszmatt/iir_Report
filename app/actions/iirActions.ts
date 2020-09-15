@@ -63,6 +63,36 @@ export function setWorkOrderData(resp: {}) {
     resp
   };
 }
+
+export function autoEmailer() {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState();
+
+    console.log('state: ', state);
+
+    const mainRequest = {
+      request: 'emailer',
+      testInfo: {
+        workOrder: 'CN101-01',
+        customer: 'Lufthansa',
+        partNumber: 'testPartNumber'
+      }
+    };
+
+    const handleEmailerResp = (
+      _event: {},
+      resp: { error: { name: string; code: string }; data: {} }
+    ) => {
+      console.log('Emailer Response: ', resp);
+
+      ipcRenderer.removeListener('asynchronous-reply', handleEmailerResp);
+    }
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    ipcRenderer.on('asynchronous-reply', handleEmailerResp);
+  };
+}
+
 // This will only be exacutable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
   return (_dispatch: Dispatch, getState: GetIIRState) => {
@@ -178,6 +208,8 @@ export function postOrUpdateIIRReport(iirNotes: {
       dispatch(toggleLoadingScreenState());
       if (Object.keys(resp.error).length === 0) {
         dispatch(toggleSuccessModalState('Success!'));
+        // TODO: Setup emailer here!
+        dispatch(autoEmailer())
       } else {
         const returnError = { error: '' };
         if (Object.keys(resp.error).length > 1) {
