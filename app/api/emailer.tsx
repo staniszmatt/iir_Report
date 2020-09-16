@@ -65,37 +65,30 @@ async function emailer(request: Request) {
       //   \n
       //   \t Worked Performed: \n
       //   ${workedPerformed}`
-      // html: `
-      //   <div>
-      //     <div>HTML Tear Down has been updated by: ${user} For WO: ${workOrder}.</div>
-      //     <div />
-      //     <div>Current notes:</div>
-      //     <div />
-      //     <div>Reason for Removal:</div>
-      //     <div>${customerReasonForRemoval}</div>
-      //     <div />
-      //     <div>General Condition:</div>
-      //     <div>${genConditionReceived}</div>
-      //     <div />
-      //     <div>Evaluation Findings:</div>
-      //     <div>${evalFindings}</div>
-      //     <div />
-      //     <div>Worked Performed:</div>
-      //     <div>${workedPerformed}</div>
-      //   </div>
-      // `
-      amp: `<!doctype html>
-      <html ⚡4email>
-        <head>
-          <meta charset="utf-8">
-          <style amp4email-boilerplate>body{visibility:hidden}</style>
-          <script async src="https://cdn.ampproject.org/v0.js"></script>
-          <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
-        </head>
+      html: `<!DOCUMENT html>
+      <html>
+        <head></head>
         <body>
-          <>
+          <div style="font-size:14pt">
+            <div>Tear Down has been updated by: ${user} For WO: ${workOrder}.</div>
+            <pre> </pre>
+            <div>Current notes:</div>
+            <pre> </pre>
+            <div style="text-decoration:underline">Reason for Removal:</div>
+            <pre style="margin-left:10px; font-family:serif; font-size:10pt">${customerReasonForRemoval}</pre>
+            <pre> </pre>
+            <div style="text-decoration:underline">General Condition:</div>
+            <pre style="margin-left:10px; font-family:serif; font-size:10pt">${genConditionReceived}</pre>
+            <pre> </pre>
+            <div style="text-decoration:underline">Evaluation Findings:</div>
+            <pre style="margin-left:10px; font-family:serif; font-size:10pt">${evalFindings}</pre>
+            <pre> </pre>
+            <div style="text-decoration:underline">Worked Performed:</div>
+            <pre style="margin-left:10px; font-family:serif; font-size:10pt">${workedPerformed}</pre>
+          </div>
         </body>
-      </html>`
+      </html>
+      `
     });
 
     // TODO: For none logging in emailing, restricted tho.

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
@@ -128,8 +129,8 @@ export function getIIRData(workOrder: {
         dispatch(checkForPDFFile(workOrderString));
 
         if (typeof workOrder.callAutoEmailer === 'function') {
-          workOrder.callAutoEmailer();
           workOrder.callSuccessModal('Success');
+          workOrder.callAutoEmailer();
         }
       } else if (
         Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
@@ -155,7 +156,7 @@ export function getIIRData(workOrder: {
 }
 
 export function autoEmailer() {
-  return (_dispatch: Dispatch, getState: GetIIRState) => {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState();
     const {
       SalesOrderNumber,
@@ -190,13 +191,19 @@ export function autoEmailer() {
       }
     ) => {
       if (!resp.success) {
-        // const error = {
-        //   errorNotFound: `Couldn't send RepairCS Update Email, Please send an email if successfully Added or Updated Notes!`
-        // };
-        console.log('modal state check ', state);
-        // dispatch(toggleErrorModalState(error));
-      }
+        const error = {
+          errorNotFound: `Couldn't send RepairCS Update Email, Please send an email if successfully Added or Updated Notes!`
+        };
 
+        const checkModalStatus = () => {
+          const modalState: any = getState();
+          if (!modalState.modals.successModalState) {
+            dispatch(toggleErrorModalState(error));
+            clearInterval(timerCheck);
+          }
+        };
+        const timerCheck = setInterval(checkModalStatus, 1000);
+      }
       ipcRenderer.removeListener('asynchronous-reply', handleEmailerResp);
     };
 
@@ -293,9 +300,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       request = 'postIIRReport';
     }
 
-    console.log('State at post/update notes: ', state);
-
-    // TODO: SETUP updateIIRReport api.
     const mainRequest = {
       request,
       SalesOrderNumber: state.workOrder.workOrderSearch,
@@ -305,9 +309,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       evalFindings: iirNotes.evalFindings,
       workedPerformed: iirNotes.workedPerformed
     };
-
-    console.log('request update/post notes: ', mainRequest);
-
     const handlePostIIRResp = (
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
