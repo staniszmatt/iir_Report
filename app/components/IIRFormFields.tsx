@@ -37,10 +37,10 @@ const IIRForm = (
   } = props.props;
 
   if (
-    customerReasonForRemoval === undefined &&
-    evalFindings === undefined &&
-    genConditionReceived === undefined &&
-    workedPerformedNote === undefined
+    customerReasonForRemoval === null &&
+    evalFindings === null &&
+    genConditionReceived === null &&
+    workedPerformedNote === null
   ) {
     btnText = 'ADD NEW IIR NOTES';
   }

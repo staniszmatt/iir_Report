@@ -133,10 +133,19 @@ async function getWorkOrderData(request: Request) {
 
         const getIIRData = await dbIIR.query(iirQuery);
 
-        returnData.data.customerReasonForRemoval = '';
-        returnData.data.genConditionReceived = '';
-        returnData.data.evalFindings = '';
-        returnData.data.workedPerformed = '';
+        console.log('Get Notes Data Resp: ', getIIRData);
+
+        if (getIIRData. recordset.length === 0) {
+          returnData.data.customerReasonForRemoval = null;
+          returnData.data.genConditionReceived = null;
+          returnData.data.evalFindings = null;
+          returnData.data.workedPerformed = null;
+        } else {
+          returnData.data.customerReasonForRemoval = '';
+          returnData.data.genConditionReceived = '';
+          returnData.data.evalFindings = '';
+          returnData.data.workedPerformed = '';
+        }
 
         if (getIIRData.recordset.length > 0) {
           const {

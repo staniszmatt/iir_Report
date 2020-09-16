@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
 import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
 import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
-import iir from '../reducers/iirReducer';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -65,12 +65,99 @@ export function setWorkOrderData(resp: {}) {
   };
 }
 
+export function checkForPDFFile(workOrderString: string) {
+  return (dispatch: Dispatch) => {
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+    // If the file is already created and saved in the correct location, then display the open pdf button.
+    if (fs.existsSync(filePath)) {
+      dispatch(toggleDisplayOpenPDFBTnState());
+    }
+  };
+}
+
+export function getIIRData(workOrder: {
+  workOrderSearch: string;
+  workOrderSearchLineItem: string;
+  // AutoEmailer sent to be called when Adding or Updating notes and why is optional.
+  callAutoEmailer?: any;
+}) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    dispatch(resetState());
+    dispatch(reset('iirForm'));
+    // // Reset to default false state posting Notes
+    // if (state.postIIRNotes) {
+    //   dispatch(togglePostIIRNotes());
+    // }
+    // // Reset display off if IIR form if sate its on
+    // if (state.iirFormDisplay) {
+    //   dispatch(toggleIIRAddEditState());
+    // }
+
+    if (workOrder.workOrderSearchLineItem.length === 1) {
+      // Disabled here because we need to keep it at a two char of 0x where x is a number.
+      // eslint-disable-next-line no-param-reassign
+      workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
+    }
+
+    const mainRequest = {
+      request: 'getIIRData',
+      workOrder
+    };
+
+    const handleGeIIRDataResp = (
+      _event: {},
+      resp: {
+        error: { code: string; name: string };
+        data: { length: number; customerReasonForRemoval: string | null };
+      }
+    ) => {
+      // Turn off the loading screen once we receive a response.
+      dispatch(toggleLoadingScreenState());
+
+      console.log('get notes data resp: ', resp);
+
+      if (Object.keys(resp.error).length === 0) {
+        // If there is no note data and set to null, set postIIRNotes to true
+        if (resp.data.customerReasonForRemoval === null) {
+          dispatch(togglePostIIRNotes());
+        }
+        const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
+        dispatch(setWorkOrder(workOrder));
+        dispatch(setWorkOrderData(resp.data));
+        dispatch(toggleIIRAddEditState());
+        dispatch(checkForPDFFile(workOrderString));
+
+        if (typeof workOrder.callAutoEmailer === 'function') {
+          workOrder.callAutoEmailer();
+        }
+      } else if (
+        Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
+      ) {
+        dispatch(toggleErrorModalState(resp.error));
+      } else {
+        const returnError = { error: '' };
+        if (Object.keys(resp.error).length > 1) {
+          returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        } else {
+          returnError.error =
+            'Something went wrong updating or adding IIR notes!';
+        }
+        dispatch(toggleErrorModalState(returnError));
+      }
+      ipcRenderer.removeListener('asynchronous-reply', handleGeIIRDataResp);
+    };
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(reset('iirForm'));
+    dispatch(resetState());
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
+  };
+}
+
 export function autoEmailer() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState();
-
-    console.log('state: ', state);
-
     const {
       SalesOrderNumber,
       ItemNumber,
@@ -97,12 +184,23 @@ export function autoEmailer() {
 
     const handleEmailerResp = (
       _event: {},
-      resp: { error: { name: string; code: string }; data: {} }
+      resp: {
+        error: { name: string; code: string };
+        data: {};
+        success: boolean;
+      }
     ) => {
-      console.log('Emailer Response: ', resp);
+      console.log('resp success check: ', resp.success);
+      if (!resp.success) {
+        const error = {
+          errorNotFound: `Couldn't send RepairCS Update Email, Please send an email if successfully Added or Updated Notes!`
+        };
+        console.log('modal state check ', state);
+        // dispatch(toggleErrorModalState(error));
+      }
 
       ipcRenderer.removeListener('asynchronous-reply', handleEmailerResp);
-    }
+    };
 
     ipcRenderer.send('asynchronous-message', mainRequest);
     ipcRenderer.on('asynchronous-reply', handleEmailerResp);
@@ -116,16 +214,6 @@ export function openPDF() {
     const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
     shell.openItem(filePath);
-  };
-}
-
-export function checkForPDFFile(workOrderString: string) {
-  return (dispatch: Dispatch) => {
-    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
-    // If the file is already created and saved in the correct location, then display the open pdf button.
-    if (fs.existsSync(filePath)) {
-      dispatch(toggleDisplayOpenPDFBTnState());
-    }
   };
 }
 
@@ -206,6 +294,9 @@ export function postOrUpdateIIRReport(iirNotes: {
     if (state.postIIRNotes) {
       request = 'postIIRReport';
     }
+
+    console.log('State at post/update notes: ', state);
+
     // TODO: SETUP updateIIRReport api.
     const mainRequest = {
       request,
@@ -217,6 +308,8 @@ export function postOrUpdateIIRReport(iirNotes: {
       workedPerformed: iirNotes.workedPerformed
     };
 
+    console.log('request update/post notes: ', mainRequest);
+
     const handlePostIIRResp = (
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
@@ -225,11 +318,11 @@ export function postOrUpdateIIRReport(iirNotes: {
       if (Object.keys(resp.error).length === 0) {
         const workOrder = {
           workOrderSearch: state.workOrder.workOrderSearch,
-          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
+          callAutoEmailer: dispatch(autoEmailer())
         };
+        // Callback for autoEmailer to call emailer only if the updated workOrder Info succuessfully updates state
         dispatch(getIIRData(workOrder));
-        // TODO: Setup emailer here!
-        dispatch(autoEmailer());
         dispatch(toggleSuccessModalState('Success!'));
       } else {
         const returnError = { error: '' };
@@ -247,76 +340,6 @@ export function postOrUpdateIIRReport(iirNotes: {
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
-  };
-}
-
-export function getIIRData(workOrder: {
-  workOrderSearch: string;
-  workOrderSearchLineItem: string;
-}) {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    const state = getState().iir;
-    dispatch(resetState());
-    dispatch(reset('iirForm'));
-    // Reset to default false state posting Notes
-    if (state.postIIRNotes) {
-      dispatch(togglePostIIRNotes());
-    }
-    // Reset display off if IIR form if sate its on
-    if (state.iirFormDisplay) {
-      dispatch(toggleIIRAddEditState());
-    }
-
-    if (workOrder.workOrderSearchLineItem.length === 1) {
-      // Disabled here because we need to keep it at a two char of 0x where x is a number.
-      // eslint-disable-next-line no-param-reassign
-      workOrder.workOrderSearchLineItem = `0${workOrder.workOrderSearchLineItem}`;
-    }
-
-    const mainRequest = {
-      request: 'getIIRData',
-      workOrder
-    };
-
-    const handleGeIIRDataResp = (
-      _event: {},
-      resp: { error: { code: string; name: string }; data: { length: number } }
-    ) => {
-      // Turn off the loading screen once we receive a response.
-      dispatch(toggleLoadingScreenState());
-
-      if (Object.keys(resp.error).length === 0) {
-        // If there is no data and the postIIRNotes is false, set postIIRNotes to true
-        if (resp.data.length === 0) {
-          dispatch(togglePostIIRNotes());
-        }
-        const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
-        dispatch(setWorkOrder(workOrder));
-        dispatch(setWorkOrderData(resp.data));
-        dispatch(toggleIIRAddEditState());
-        dispatch(checkForPDFFile(workOrderString));
-      } else if (
-        Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
-      ) {
-        dispatch(toggleErrorModalState(resp.error));
-      } else {
-        const returnError = { error: '' };
-        if (Object.keys(resp.error).length > 1) {
-          returnError.error = `${resp.error.code}: ${resp.error.name}`;
-        } else {
-          returnError.error =
-            'Something went wrong updating or adding IIR notes!';
-        }
-        dispatch(toggleErrorModalState(returnError));
-      }
-
-      ipcRenderer.removeListener('asynchronous-reply', handleGeIIRDataResp);
-    };
-    ipcRenderer.send('asynchronous-message', mainRequest);
-    dispatch(reset('iirForm'));
-    dispatch(resetState());
-    dispatch(toggleLoadingScreenState());
-    ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
   };
 }
 
