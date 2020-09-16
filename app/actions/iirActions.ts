@@ -7,7 +7,10 @@ import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
-export const TOGGLE_LOADING_SCREEN_DISPLAY = 'TOGGLE_LOADING_SCREEN_DISPLAY';
+// eslint-disable-next-line prettier/prettier
+export const TOGGLE_LOADING_SCREEN_DISPLAY_ON = 'TOGGLE_LOADING_SCREEN_DISPLAY_ON';
+// eslint-disable-next-line prettier/prettier
+export const TOGGLE_LOADING_SCREEN_DISPLAY_OFF = 'TOGGLE_LOADING_SCREEN_DISPLAY_OFF';
 export const TOGGLE_IIR_EDIT_STATE = 'TOGGLE_IIR_EDIT_STATE';
 export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
@@ -41,7 +44,13 @@ export function togglePostIIRNotes() {
 
 export function toggleLoadingScreenState() {
   return {
-    type: TOGGLE_LOADING_SCREEN_DISPLAY
+    type: TOGGLE_LOADING_SCREEN_DISPLAY_ON
+  };
+}
+
+export function toggleLoadingScreenStateOff() {
+  return {
+    type: TOGGLE_LOADING_SCREEN_DISPLAY_OFF
   };
 }
 
@@ -80,19 +89,11 @@ export function getIIRData(workOrder: {
   workOrderSearchLineItem: string;
   // AutoEmailer sent to be called when Adding or Updating notes and why is optional.
   callAutoEmailer?: any;
+  callSuccessModal?: any;
 }) {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    const state = getState().iir;
+  return (dispatch: Dispatch) => {
     dispatch(resetState());
     dispatch(reset('iirForm'));
-    // // Reset to default false state posting Notes
-    // if (state.postIIRNotes) {
-    //   dispatch(togglePostIIRNotes());
-    // }
-    // // Reset display off if IIR form if sate its on
-    // if (state.iirFormDisplay) {
-    //   dispatch(toggleIIRAddEditState());
-    // }
 
     if (workOrder.workOrderSearchLineItem.length === 1) {
       // Disabled here because we need to keep it at a two char of 0x where x is a number.
@@ -113,9 +114,7 @@ export function getIIRData(workOrder: {
       }
     ) => {
       // Turn off the loading screen once we receive a response.
-      dispatch(toggleLoadingScreenState());
-
-      console.log('get notes data resp: ', resp);
+      dispatch(toggleLoadingScreenStateOff());
 
       if (Object.keys(resp.error).length === 0) {
         // If there is no note data and set to null, set postIIRNotes to true
@@ -130,6 +129,7 @@ export function getIIRData(workOrder: {
 
         if (typeof workOrder.callAutoEmailer === 'function') {
           workOrder.callAutoEmailer();
+          workOrder.callSuccessModal('Success');
         }
       } else if (
         Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
@@ -149,14 +149,13 @@ export function getIIRData(workOrder: {
     };
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(reset('iirForm'));
-    dispatch(resetState());
     dispatch(toggleLoadingScreenState());
     ipcRenderer.on('asynchronous-reply', handleGeIIRDataResp);
   };
 }
 
 export function autoEmailer() {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
+  return (_dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState();
     const {
       SalesOrderNumber,
@@ -190,11 +189,10 @@ export function autoEmailer() {
         success: boolean;
       }
     ) => {
-      console.log('resp success check: ', resp.success);
       if (!resp.success) {
-        const error = {
-          errorNotFound: `Couldn't send RepairCS Update Email, Please send an email if successfully Added or Updated Notes!`
-        };
+        // const error = {
+        //   errorNotFound: `Couldn't send RepairCS Update Email, Please send an email if successfully Added or Updated Notes!`
+        // };
         console.log('modal state check ', state);
         // dispatch(toggleErrorModalState(error));
       }
@@ -241,7 +239,7 @@ export function getWorkOrderData(workOrder: {
       _event: {},
       resp: { error: { code: string; name: string }; data: object[] }
     ) => {
-      dispatch(toggleLoadingScreenState());
+      dispatch(toggleLoadingScreenStateOff());
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
         // Checking if data is empty and the edit form search is false
@@ -314,16 +312,20 @@ export function postOrUpdateIIRReport(iirNotes: {
       _event: {},
       resp: { error: { name: string; code: string }; data: {} }
     ) => {
-      dispatch(toggleLoadingScreenState());
+      dispatch(toggleLoadingScreenStateOff());
       if (Object.keys(resp.error).length === 0) {
         const workOrder = {
           workOrderSearch: state.workOrder.workOrderSearch,
           workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
-          callAutoEmailer: dispatch(autoEmailer())
+          callAutoEmailer: () => {
+            dispatch(autoEmailer());
+          },
+          callSuccessModal: () => {
+            dispatch(toggleSuccessModalState('Successfully updated notes!'));
+          }
         };
-        // Callback for autoEmailer to call emailer only if the updated workOrder Info succuessfully updates state
+        // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
         dispatch(getIIRData(workOrder));
-        dispatch(toggleSuccessModalState('Success!'));
       } else {
         const returnError = { error: '' };
         if (Object.keys(resp.error).length > 1) {
@@ -373,7 +375,6 @@ export function cancelLoading() {
   // a loading state.
   return (dispatch: Dispatch) => {
     dispatch(resetState());
-    dispatch(toggleLoadingScreenState());
     ipcRenderer.removeAllListeners('asynchronous-reply');
   };
 }

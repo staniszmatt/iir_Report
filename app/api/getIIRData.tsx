@@ -133,9 +133,7 @@ async function getWorkOrderData(request: Request) {
 
         const getIIRData = await dbIIR.query(iirQuery);
 
-        console.log('Get Notes Data Resp: ', getIIRData);
-
-        if (getIIRData. recordset.length === 0) {
+        if (getIIRData.recordset.length === 0) {
           returnData.data.customerReasonForRemoval = null;
           returnData.data.genConditionReceived = null;
           returnData.data.evalFindings = null;

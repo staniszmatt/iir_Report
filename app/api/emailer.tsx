@@ -1,5 +1,3 @@
-import React from 'react';
-
 const userName = require('username');
 const nodemailer = require('nodemailer');
 // const sendmail = require('sendmail')();
@@ -44,7 +42,7 @@ async function emailer(request: Request) {
       secure: false,
       auth: {
         user: `mstaniszewski@aeroparts.aero`,
-        pass: 'Izybell199*'
+        pass: ''
       }
     });
 
@@ -52,25 +50,52 @@ async function emailer(request: Request) {
       from: '"My Self" <mstaniszewski@aeroparts.aero>',
       to: 'mstaniszewski@aeroparts.aero',
       subject: `TEAR DOWN UPDATE: ${CustomerName}, WO: ${workOrder}, PN: ${PartNumber}`,
-      html: (
-        <div>
-          <div>{`Tear Down has been updated by: ${user} For WO: ${workOrder}.`}</div>
-          <div />
-          <div>Current notes:</div>
-          <div />
-          <div>Reason for Removal:</div>
-          <div>{`${customerReasonForRemoval}`}</div>
-          <div />
-          <div>General Condition:</div>
-          <div>{`${genConditionReceived}`}</div>
-          <div />
-          <div>Evaluation Findings:</div>
-          <div>{`${evalFindings}`}</div>
-          <div />
-          <div>Worked Performed:</div>
-          <div>{`${workedPerformed}`}</div>
-        </div>
-      )
+      // text: `Text Tear Down has been updated by: ${user} For WO: ${workOrder}. \n
+      //   \n
+      //   Current notes: \n
+      //   \n
+      //   \t Reason for Removal: \n
+      //   ${customerReasonForRemoval} \n
+      //   \n
+      //   \t General Condition: \n
+      //   ${genConditionReceived} \n
+      //   \n
+      //   \t Evaluation Findings: \n
+      //   ${evalFindings} \n
+      //   \n
+      //   \t Worked Performed: \n
+      //   ${workedPerformed}`
+      // html: `
+      //   <div>
+      //     <div>HTML Tear Down has been updated by: ${user} For WO: ${workOrder}.</div>
+      //     <div />
+      //     <div>Current notes:</div>
+      //     <div />
+      //     <div>Reason for Removal:</div>
+      //     <div>${customerReasonForRemoval}</div>
+      //     <div />
+      //     <div>General Condition:</div>
+      //     <div>${genConditionReceived}</div>
+      //     <div />
+      //     <div>Evaluation Findings:</div>
+      //     <div>${evalFindings}</div>
+      //     <div />
+      //     <div>Worked Performed:</div>
+      //     <div>${workedPerformed}</div>
+      //   </div>
+      // `
+      amp: `<!doctype html>
+      <html ⚡4email>
+        <head>
+          <meta charset="utf-8">
+          <style amp4email-boilerplate>body{visibility:hidden}</style>
+          <script async src="https://cdn.ampproject.org/v0.js"></script>
+          <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
+        </head>
+        <body>
+          <>
+        </body>
+      </html>`
     });
 
     // TODO: For none logging in emailing, restricted tho.
