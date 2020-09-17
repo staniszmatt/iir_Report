@@ -1,8 +1,10 @@
 import { Action } from 'redux';
+// eslint-disable-next-line import/no-cycle
 import {
   RESET_STATE,
   TOGGLE_PDF_DISPLAY,
-  TOGGLE_LOADING_SCREEN_DISPLAY,
+  TOGGLE_LOADING_SCREEN_DISPLAY_ON,
+  TOGGLE_LOADING_SCREEN_DISPLAY_OFF,
   SET_WORK_ORDER,
   SET_WORK_ORDER_DATA,
   TOGGLE_IIR_EDIT_STATE,
@@ -27,10 +29,15 @@ export interface CustomAction extends Action {
 
 export default function iir(state = IState, action: CustomAction) {
   switch (action.type) {
-    case TOGGLE_LOADING_SCREEN_DISPLAY:
+    case TOGGLE_LOADING_SCREEN_DISPLAY_ON:
       return {
         ...state,
-        loadingScreen: !state.loadingScreen
+        loadingScreen: true
+      };
+    case TOGGLE_LOADING_SCREEN_DISPLAY_OFF:
+      return {
+        ...state,
+        loadingScreen: false
       };
     case TOGGLE_PDF_DISPLAY:
       return {
@@ -65,6 +72,7 @@ export default function iir(state = IState, action: CustomAction) {
     case RESET_STATE:
       return {
         ...state,
+        loadingScreen: false,
         loadPDF: false,
         iirFormDisplay: false,
         postIIRNotes: false,
