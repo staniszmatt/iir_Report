@@ -327,6 +327,9 @@ export function postOrUpdateIIRReport(iirNotes: {
         };
         // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
         dispatch(getIIRData(workOrder));
+
+        // TODO: Setup move PDF if it exists.
+        // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
       } else {
         const returnError = { error: '' };
         if (Object.keys(resp.error).length > 1) {
