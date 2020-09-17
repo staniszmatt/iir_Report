@@ -1,6 +1,7 @@
+import getPass from '../config/configEmail';
+
 const userName = require('username');
 const nodemailer = require('nodemailer');
-// const sendmail = require('sendmail')();
 
 interface Request {
   testInfo: {
@@ -10,7 +11,6 @@ interface Request {
     customerReasonForRemoval: string;
     genConditionReceived: string;
     evalFindings: string;
-    workedPerformed: string;
   };
 }
 
@@ -21,8 +21,7 @@ async function emailer(request: Request) {
     PartNumber,
     customerReasonForRemoval,
     genConditionReceived,
-    evalFindings,
-    workedPerformed
+    evalFindings
   } = request.testInfo;
 
   const returnData = {
@@ -31,6 +30,7 @@ async function emailer(request: Request) {
     infoResp: {},
     user: ''
   };
+  const emailPass = getPass();
 
   try {
     const user = await userName();
@@ -41,30 +41,15 @@ async function emailer(request: Request) {
       port: 587,
       secure: false,
       auth: {
-        user: `mstaniszewski@aeroparts.aero`,
-        pass: ''
+        user: `NODEMON@aeroparts.aero`,
+        pass: `${emailPass}`
       }
     });
 
     const info = await transporter.sendMail({
-      from: '"My Self" <mstaniszewski@aeroparts.aero>',
+      from: '"NODEMON" <NODEMON@aeroparts.aero>',
       to: 'mstaniszewski@aeroparts.aero',
       subject: `TEAR DOWN UPDATE: ${CustomerName}, WO: ${workOrder}, PN: ${PartNumber}`,
-      // text: `Text Tear Down has been updated by: ${user} For WO: ${workOrder}. \n
-      //   \n
-      //   Current notes: \n
-      //   \n
-      //   \t Reason for Removal: \n
-      //   ${customerReasonForRemoval} \n
-      //   \n
-      //   \t General Condition: \n
-      //   ${genConditionReceived} \n
-      //   \n
-      //   \t Evaluation Findings: \n
-      //   ${evalFindings} \n
-      //   \n
-      //   \t Worked Performed: \n
-      //   ${workedPerformed}`
       html: `<!DOCUMENT html>
       <html>
         <head></head>
@@ -82,26 +67,11 @@ async function emailer(request: Request) {
             <pre> </pre>
             <div style="text-decoration:underline">Evaluation Findings:</div>
             <pre style="margin-left:10px; font-family:serif; font-size:10pt">${evalFindings}</pre>
-            <pre> </pre>
-            <div style="text-decoration:underline">Worked Performed:</div>
-            <pre style="margin-left:10px; font-family:serif; font-size:10pt">${workedPerformed}</pre>
           </div>
         </body>
       </html>
       `
     });
-
-    // TODO: For none logging in emailing, restricted tho.
-    // TODO: This is working but requires email settings to be trusted.
-    // const info = await sendmail({
-    //   // from: '"NODEMON" <no-reply@aeroparts.aero>',
-    //   from: '"Matthew Staniszewski" <mstaniszewski@aeroparts.aero>',
-    //   to: 'mstaniszewski@aeroparts.aero',
-    //   subject: 'Test Auto Email',
-    //   text: 'Testing Auto Emailer'
-    //   // Link not good because the updates do not update pdf.
-    //   // html: '<p>CLICK <a href="T:CPLT_TRAVELERS\\TearDowns\\CN101-01_TEAR_DOWN.pdf"> HERE </a> to open PDF</p>'
-    // });
 
     if (info.rejected.length === 0) {
       returnData.infoResp = info;
