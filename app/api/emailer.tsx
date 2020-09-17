@@ -42,7 +42,7 @@ async function emailer(request: Request) {
       secure: false,
       auth: {
         user: `mstaniszewski@aeroparts.aero`,
-        pass: ''
+        pass: 'Izybell199*'
       }
     });
 

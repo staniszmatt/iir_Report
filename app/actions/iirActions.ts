@@ -292,6 +292,19 @@ export function postOrUpdateIIRReport(iirNotes: {
   genConditionReceived: string | null;
   workedPerformed: string | null;
 }) {
+  // Cancel out if nothing was changed.
+  debugger;
+  if (
+    iirNotes.customerReasonForRemoval === null &&
+    iirNotes.evalFindings === null &&
+    iirNotes.genConditionReceived === null &&
+    iirNotes.workedPerformed === null
+  ) {
+    return;
+  }
+
+  console.log('update notes request notes change: ', iirNotes);
+
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     let request = 'updateIIRReport';
