@@ -113,6 +113,14 @@ div.form-footer > div:last-child {
   display: flex;
 }
 
+.form-page-container > div > div > a {
+  opacity: unset;
+}
+
+.form-page-container > div:last-child > div:first-child > div > a {
+  opacity: unset;
+}
+
 .form-page-container > div:last-child > div:first-child > div > button,
 .form-page-container > div:last-child > div:first-child > div > a > button {
   font-size: 20px;
@@ -175,10 +183,6 @@ div.form-footer > div:last-child {
   > div:nth-child(odd) {
   font-size: 11pt;
   font-weight: bold;
-}
-
-.form-page-container > div > div > a {
-  opacity: unset;
 }
 
 .form-page {
