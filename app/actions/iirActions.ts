@@ -18,6 +18,13 @@ export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 export const TOGGLE_POST_IIR_NOTES = 'SET_POST_IIR_NOTES';
 export const TOGGLE_DISPLAY_OPEN_PDF_BTN = 'TOGGLE_DISPLAY_OPEN_PDF_BTN';
 
+interface WorkOrder {
+  callAutoEmailer?: () => {} | any;
+  callSuccessModal?: () => {} | any;
+  workOrderSearch: string;
+  workOrderSearchLineItem: string;
+}
+
 // Sets state booleans to false so to turn on only what is needed.
 export function resetState() {
   return {
@@ -165,8 +172,7 @@ export function autoEmailer() {
       CustomerName,
       customerReasonForRemoval,
       genConditionReceived,
-      evalFindings,
-      workedPerformed
+      evalFindings
     } = state.iir.workOrderInfo;
 
     const mainRequest = {
@@ -177,8 +183,7 @@ export function autoEmailer() {
         PartNumber,
         customerReasonForRemoval,
         genConditionReceived,
-        evalFindings,
-        workedPerformed
+        evalFindings
       }
     };
 
@@ -287,28 +292,37 @@ export function getWorkOrderData(workOrder: {
 }
 
 export function postOrUpdateIIRReport(iirNotes: {
-  customerReasonForRemoval: string | null;
-  evalFindings: string | null;
-  genConditionReceived: string | null;
-  workedPerformed: string | null;
+  customerReasonForRemoval: string | any;
+  evalFindings: string | any;
+  genConditionReceived: string | any;
+  workedPerformed: string | any;
 }) {
-
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     // If values are not changed, then set them to null
-    const valueChangeCheck = (stateValue, recievedValue) => {
-
+    const valueChangeCheck = (stateValue: string, recievedValue: string) => {
       if (stateValue === recievedValue || recievedValue === null) {
         return null;
-      } else {
-        return recievedValue;
       }
-    }
+      return recievedValue;
+    };
     // Setup value checks to use for comparing and returning null values.
-    const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(state.workOrderInfo.customerReasonForRemoval, iirNotes.customerReasonForRemoval);
-    const valueChangeCheckEvalFindings = valueChangeCheck(state.workOrderInfo.evalFindings, iirNotes.evalFindings);
-    const valueChangeCheckGenConditionReceived = valueChangeCheck(state.workOrderInfo.genConditionReceived, iirNotes.genConditionReceived);
-    const valueChangeCheckWorkedPerformed = valueChangeCheck(state.workOrderInfo.workedPerformed, iirNotes.workedPerformed);
+    const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
+      state.workOrderInfo.customerReasonForRemoval,
+      iirNotes.customerReasonForRemoval
+    );
+    const valueChangeCheckEvalFindings = valueChangeCheck(
+      state.workOrderInfo.evalFindings,
+      iirNotes.evalFindings
+    );
+    const valueChangeCheckGenConditionReceived = valueChangeCheck(
+      state.workOrderInfo.genConditionReceived,
+      iirNotes.genConditionReceived
+    );
+    const valueChangeCheckWorkedPerformed = valueChangeCheck(
+      state.workOrderInfo.workedPerformed,
+      iirNotes.workedPerformed
+    );
     // Cancel out if nothing was changed.
     if (
       valueChangeCheckCustomerReasonForRemoval === null &&
@@ -318,7 +332,8 @@ export function postOrUpdateIIRReport(iirNotes: {
     ) {
       const returnError = {
         error: 'Nothing was changed! Please make changes to submit.'
-      }
+      };
+
       dispatch(toggleErrorModalState(returnError));
       return;
     }
@@ -344,7 +359,7 @@ export function postOrUpdateIIRReport(iirNotes: {
     ) => {
       dispatch(toggleLoadingScreenStateOff());
       if (Object.keys(resp.error).length === 0) {
-        const workOrder = {
+        const workOrder: WorkOrder = {
           workOrderSearch: state.workOrder.workOrderSearch,
           workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
           callSuccessModal: () => {
@@ -352,10 +367,14 @@ export function postOrUpdateIIRReport(iirNotes: {
           }
         };
         // Add emailer callback only if one of the first three values change
-        if (valueChangeCheckCustomerReasonForRemoval !== null || valueChangeCheckEvalFindings !== null || valueChangeCheckGenConditionReceived !== null) {
+        if (
+          valueChangeCheckCustomerReasonForRemoval !== null ||
+          valueChangeCheckEvalFindings !== null ||
+          valueChangeCheckGenConditionReceived !== null
+        ) {
           workOrder.callAutoEmailer = () => {
             dispatch(autoEmailer());
-          }
+          };
         }
         // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
         dispatch(getIIRData(workOrder));

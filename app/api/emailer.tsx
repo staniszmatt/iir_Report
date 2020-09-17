@@ -1,4 +1,4 @@
-import getPass from '../config/configEmail'
+import getPass from '../config/configEmail';
 
 const userName = require('username');
 const nodemailer = require('nodemailer');
@@ -11,7 +11,6 @@ interface Request {
     customerReasonForRemoval: string;
     genConditionReceived: string;
     evalFindings: string;
-    workedPerformed: string;
   };
 }
 
@@ -22,8 +21,7 @@ async function emailer(request: Request) {
     PartNumber,
     customerReasonForRemoval,
     genConditionReceived,
-    evalFindings,
-    workedPerformed
+    evalFindings
   } = request.testInfo;
 
   const returnData = {
@@ -69,9 +67,6 @@ async function emailer(request: Request) {
             <pre> </pre>
             <div style="text-decoration:underline">Evaluation Findings:</div>
             <pre style="margin-left:10px; font-family:serif; font-size:10pt">${evalFindings}</pre>
-            <pre> </pre>
-            <div style="text-decoration:underline">Worked Performed:</div>
-            <pre style="margin-left:10px; font-family:serif; font-size:10pt">${workedPerformed}</pre>
           </div>
         </body>
       </html>
