@@ -27,7 +27,6 @@ const IIRForm = (
 ) => {
   let btnText = 'UPDATE IIR NOTES';
   const { handleSubmit, onSubmit } = props;
-
   const {
     customerReasonForRemoval,
     evalFindings,

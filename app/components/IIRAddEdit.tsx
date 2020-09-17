@@ -11,6 +11,7 @@ interface Props {
   getIIRData: () => {};
   handleReviewIIRPDF: () => {};
   openPDF: () => {};
+  cancelLoading: () => {};
   iir: {
     loadingScreen: boolean;
     iirFormDisplay: boolean;
@@ -49,7 +50,8 @@ export default function IIRAddEdit(props: Props) {
     postOrUpdateIIRReport,
     getIIRData,
     handleReviewIIRPDF,
-    openPDF
+    openPDF,
+    cancelLoading
   } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const {
@@ -67,6 +69,7 @@ export default function IIRAddEdit(props: Props) {
     workedPerformedNote: workOrderInfo.workedPerformed,
     handleReviewIIRPDF
   };
+  const cancelProp = { cancelLoading };
 
   return (
     <div>
@@ -78,7 +81,7 @@ export default function IIRAddEdit(props: Props) {
         <div>
           <WorkOrderSearchForm onSubmit={getIIRData} />
         </div>
-        {loadingScreen && <LoadingScreen props={null} />}
+        {loadingScreen && <LoadingScreen props={cancelProp} />}
         {diplayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
             <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />

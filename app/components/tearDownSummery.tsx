@@ -229,9 +229,7 @@ export default function TearDownSummery(props: Props) {
               <div>
                 <div>
                   <Link to={routes.EDITFORM}>
-                    <button onClick={handleEditIIRPDF} type="button">
-                      EDIT NOTES
-                    </button>
+                    <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
                   </Link>
                 </div>
                 <div>
