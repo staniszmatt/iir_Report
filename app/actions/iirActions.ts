@@ -336,6 +336,22 @@ export function postOrUpdateIIRReport(iirNotes: {
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
+    // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
+    if (state.diplayOpenPDFBtn) {
+      const dateTime = Date.now();
+      const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
+      const oldPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+      const newPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\old\\${workOrderString}_TEAR_DOWN_${dateTime}.pdf`;
+
+      fs.rename(oldPath, newPath, err => {
+        if (err) {
+          const returnError = {
+            error: `FILE ${workOrderString}_TEAR_DOWN is currently open, please close first before you can submit changes!`
+          };
+          dispatch(toggleErrorModalState(returnError));
+        }
+      });
+    }
     // If values are not changed, then set them to null
     const valueChangeCheck = (stateValue: string, recievedValue: string) => {
       if (stateValue === recievedValue || recievedValue === null) {
@@ -412,22 +428,6 @@ export function postOrUpdateIIRReport(iirNotes: {
           workOrder.callAutoEmailer = () => {
             dispatch(autoEmailer());
           };
-        }
-        // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
-        if (state.diplayOpenPDFBtn) {
-          const dateTime = Date.now();
-          const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
-          const oldPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
-          const newPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\old\\${workOrderString}_TEAR_DOWN_${dateTime}.pdf`;
-
-          fs.rename(oldPath, newPath, err => {
-            if (err) {
-              const returnError = {
-                error: `Couldn't move ${workOrderString}_TEAR_DOWN! Please move PDF to old folder!`
-              };
-              dispatch(toggleErrorModalState(returnError));
-            }
-          });
         }
         // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
         dispatch(getIIRData(workOrder));
