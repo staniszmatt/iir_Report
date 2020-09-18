@@ -136,8 +136,10 @@ export function getIIRData(workOrder: {
         dispatch(checkForPDFFile(workOrderString));
 
         if (typeof workOrder.callAutoEmailer === 'function') {
-          workOrder.callSuccessModal('Success');
           workOrder.callAutoEmailer();
+        }
+        if (typeof workOrder.callSuccessModal === 'function') {
+          workOrder.callSuccessModal('Succesfully updated notes!');
         }
       } else if (
         Object.prototype.hasOwnProperty.call(resp.error, 'noWorkOrder')
