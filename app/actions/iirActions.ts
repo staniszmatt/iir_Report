@@ -336,6 +336,7 @@ export function postOrUpdateIIRReport(iirNotes: {
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
+    let checkError = false;
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
     if (state.diplayOpenPDFBtn) {
       const dateTime = Date.now();
@@ -349,8 +350,15 @@ export function postOrUpdateIIRReport(iirNotes: {
             error: `FILE ${workOrderString}_TEAR_DOWN is currently open, please close first before you can submit changes!`
           };
           dispatch(toggleErrorModalState(returnError));
+          checkError = true;
         }
       });
+    }
+
+    // TODO: Sync issue with setting return, need to setup callback and maybe check as a seperate function
+    console.log('errorCheck: ', checkError);
+    if (checkError) {
+      return;
     }
     // If values are not changed, then set them to null
     const valueChangeCheck = (stateValue: string, recievedValue: string) => {
