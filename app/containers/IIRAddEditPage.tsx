@@ -6,8 +6,9 @@ import IIRAddEdit from '../components/IIRAddEdit';
 import {
   postOrUpdateIIRReport,
   getIIRData,
-  resetState,
-  handleReviewIIRPDF
+  handleReviewIIRPDF,
+  openPDF,
+  cancelLoading
 } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
@@ -20,13 +21,13 @@ function mapStateToProps(state: iirStateType) {
 function mapDispatchToProps(dispatch: Dispatch<any>) {
   // Reset Search Form when loading the page.
   dispatch(reset('workOrderSearchForm'));
-  dispatch(reset('iirForm'));
-  dispatch(resetState());
   return bindActionCreators(
     {
       postOrUpdateIIRReport,
       getIIRData,
-      handleReviewIIRPDF
+      handleReviewIIRPDF,
+      openPDF,
+      cancelLoading
     },
     dispatch
   );

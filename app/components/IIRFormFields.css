@@ -10,6 +10,16 @@
   margin: 10px auto;
 }
 
+.form-btn-container > div > button,
+.form-btn-container > div > a > button {
+  background-color: #bfffbf;
+}
+
+.form-btn-container > div > button:hover,
+.form-btn-container > div > a > button:hover {
+  background-color: #50d33c;
+}
+
 .form-container > div > div {
   width: 715px;
   margin: auto;
@@ -22,11 +32,4 @@
 
 .form-btn-container > div > a {
   opacity: unset;
-}
-
-.form-disabled > div > div:last-child > textarea {
-  box-shadow: unset;
-  outline: none;
-  border: none;
-  width: 98%;
 }

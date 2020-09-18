@@ -1,6 +1,7 @@
 .form-container {
-  width: 100%;
+  width: 770px;
   padding-top: 40px;
+  margin: auto;
 }
 
 .form-header > div {
@@ -19,10 +20,32 @@
   border: 1px solid black;
 }
 
+.open-pdf-btn {
+  display: flex;
+}
+
+.open-pdf-btn > button {
+  margin: auto;
+  margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.open-pdf-btn > button:hover {
+  background-color: #50d33c;
+}
+
+.open-pdf-btn > div {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: red;
+}
+
 div.form-footer > div {
   position: absolute;
   font-size: 10pt;
-  bottom: 10px;
+  bottom: 25px;
   margin-left: 30px;
 }
 
@@ -57,12 +80,7 @@ div.form-footer > div {
 }
 
 .form-page-container > div:last-child {
-  display: flex;
   margin: 20px 0;
-}
-
-.form-page-container > div:last-child > div {
-  margin: auto;
 }
 
 div.form-footer > div:last-child {
@@ -78,12 +96,55 @@ div.form-footer > div:last-child {
   margin: auto;
 }
 
+.form-page-container > div:last-child > div {
+  display: flex;
+}
+
+.form-page-container > div:last-child > div > div {
+  margin: auto;
+}
+
 .form-page > div > div:nth-child(3) > div {
-  margin-left: 25px;
+  text-align: center;
+  white-space: pre-wrap;
 }
 
 .form-body > div > div > div:last-child {
   display: flex;
+}
+
+.form-page-container > div > div > a {
+  opacity: unset;
+}
+
+.form-page-container > div:last-child > div:first-child > div > a {
+  opacity: unset;
+}
+
+.form-page-container > div:last-child > div:first-child > div > button,
+.form-page-container > div:last-child > div:first-child > div > a > button {
+  font-size: 20px;
+  background-color: #bfffbf;
+}
+
+.form-page-container > div:last-child > div:first-child > div > button:hover,
+.form-page-container
+  > div:last-child
+  > div:first-child
+  > div
+  > a
+  > button:hover {
+  background-color: #50d33c;
+}
+
+.form-page-container > div:last-child > div:last-child {
+  margin: 20px 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.form-page-container > div:last-child > div:last-child > div {
+  border-bottom: 1px solid black;
 }
 
 .form-body > div > div > div:nth-child(3) > div:first-child > div {
@@ -122,10 +183,6 @@ div.form-footer > div:last-child {
   > div:nth-child(odd) {
   font-size: 11pt;
   font-weight: bold;
-}
-
-.form-page-container > div > div > a {
-  opacity: unset;
 }
 
 .form-page {

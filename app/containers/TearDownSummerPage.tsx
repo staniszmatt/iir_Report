@@ -7,7 +7,8 @@ import {
   getWorkOrderData,
   postOrUpdateIIRReport,
   handleEditIIRPDF,
-  cancelLoading
+  cancelLoading,
+  openPDF
 } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
@@ -25,7 +26,8 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
       getWorkOrderData,
       postOrUpdateIIRReport,
       handleEditIIRPDF,
-      cancelLoading
+      cancelLoading,
+      openPDF
     },
     dispatch
   );

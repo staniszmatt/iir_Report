@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
@@ -7,6 +9,7 @@ import html2canvas from '@nidi/html2canvas';
 import JsPDF from 'jspdf';
 import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
+import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
@@ -17,9 +20,11 @@ interface Props {
   postOrUpdateIIRReport: () => {};
   handleEditIIRPDF: () => {};
   cancelLoading: () => {};
+  openPDF: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
+    diplayOpenPDFBtn: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
@@ -58,10 +63,11 @@ export default function TearDownSummery(props: Props) {
     getWorkOrderData,
     postOrUpdateIIRReport,
     handleEditIIRPDF,
-    cancelLoading
+    cancelLoading,
+    openPDF
   } = props;
   // eslint-disable-next-line react/destructuring-assignment
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo } = props.iir;
+  const { loadingScreen, loadPDF, workOrder, workOrderInfo, diplayOpenPDFBtn } = props.iir;
   let displayPDFBtn = true;
   let warrentyString = 'No';
 
@@ -118,8 +124,10 @@ export default function TearDownSummery(props: Props) {
           <WorkOrderSearchForm onSubmit={getWorkOrderData} />
         </div>
         {loadingScreen && <LoadingScreen props={cancelProp} />}
+        {diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><Btn buttonName="Open Current PDF" ClickHandler={openPDF} /></div>}
         {loadPDF && (
           <div className={styles['form-page-container']}>
+            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
@@ -208,7 +216,7 @@ export default function TearDownSummery(props: Props) {
                 </div>
                 <div>
                   <div>
-                    Athurized Signature: ______________________________________
+                    Authorized Signature:_____________________________________   Date:___________________
                   </div>
                 </div>
                 <div className={styles['form-footer']}>
@@ -219,18 +227,21 @@ export default function TearDownSummery(props: Props) {
             </div>
             <div>
               <div>
-                <Link to={routes.EDITFORM}>
-                  <button onClick={handleEditIIRPDF} type="button">
-                    Edit Form
-                  </button>
-                </Link>
+                <div>
+                  <Link to={routes.EDITFORM}>
+                    <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
+                  </Link>
+                </div>
+                <div>
+                  {displayPDFBtn && (
+                    <button onClick={getPDF} type="button">
+                      SAVE PDF
+                    </button>
+                  )}
+                </div>
               </div>
               <div>
-                {displayPDFBtn && (
-                  <button onClick={getPDF} type="button">
-                    Create PDF
-                  </button>
-                )}
+                <div>SAVE ALL PDF FILES IN: "scanned(\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns"</div>
               </div>
             </div>
           </div>
