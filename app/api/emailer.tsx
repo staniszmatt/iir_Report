@@ -48,7 +48,7 @@ async function emailer(request: Request) {
 
     const info = await transporter.sendMail({
       from: '"NODEMON" <NODEMON@aeroparts.aero>',
-      to: 'RepairCS@aeroparts.aero; mstaniszewski@aeroparts.aero',
+      to: 'mstaniszewski@aeroparts.aero',
       subject: `TEAR DOWN UPDATE: ${CustomerName}, WO: ${workOrder}, PN: ${PartNumber}`,
       html: `<!DOCUMENT html>
       <html>

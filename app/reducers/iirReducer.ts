@@ -9,7 +9,8 @@ import {
   SET_WORK_ORDER_DATA,
   TOGGLE_IIR_EDIT_STATE,
   TOGGLE_POST_IIR_NOTES,
-  TOGGLE_DISPLAY_OPEN_PDF_BTN
+  TOGGLE_DISPLAY_OPEN_PDF_BTN,
+  RESET_DISPLAY_STATE
 } from '../actions/iirActions';
 
 const IState = {
@@ -79,6 +80,15 @@ export default function iir(state = IState, action: CustomAction) {
         diplayOpenPDFBtn: false,
         workOrder: {},
         workOrderInfo: {}
+      };
+    case RESET_DISPLAY_STATE:
+      return {
+        ...state,
+        loadingScreen: true,
+        loadPDF: false,
+        iirFormDisplay: false,
+        postIIRNotes: false,
+        diplayOpenPDFBtn: false
       };
     default:
       return state;

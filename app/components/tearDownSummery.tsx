@@ -21,6 +21,8 @@ interface Props {
   handleEditIIRPDF: () => {};
   cancelLoading: () => {};
   openPDF: () => {};
+  savePDF: (data: {}) => {};
+  softResetState: () => {};
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
@@ -64,7 +66,9 @@ export default function TearDownSummery(props: Props) {
     postOrUpdateIIRReport,
     handleEditIIRPDF,
     cancelLoading,
-    openPDF
+    openPDF,
+    savePDF,
+    softResetState
   } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo, diplayOpenPDFBtn } = props.iir;
@@ -95,6 +99,7 @@ export default function TearDownSummery(props: Props) {
   // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
   // create a PDF from a component.
   const getPDF = () => {
+    softResetState();
     const input: any = document.getElementById('capture');
     input.style.margin = '0';
     input.style.border = 'unset';
@@ -104,10 +109,9 @@ export default function TearDownSummery(props: Props) {
       const pdf = new JsPDF('p', 'mm', 'a4');
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
+
       pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
-      // Seperated to make sure when the file saves, it saves it as a PDF.
-      const fileName = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}_TEAR_DOWN`;
-      pdf.save(`${fileName}.pdf`);
+      savePDF(pdf.output('arraybuffer'));
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
@@ -232,16 +236,15 @@ export default function TearDownSummery(props: Props) {
                     <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
                   </Link>
                 </div>
-                <div>
-                  {displayPDFBtn && (
+                {!diplayOpenPDFBtn && (
+                  <div>
+                    {displayPDFBtn  && (
                     <button onClick={getPDF} type="button">
                       SAVE PDF
                     </button>
                   )}
-                </div>
-              </div>
-              <div>
-                <div>SAVE ALL PDF FILES IN: "scanned(\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns"</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

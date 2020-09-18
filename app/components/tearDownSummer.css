@@ -137,16 +137,6 @@ div.form-footer > div:last-child {
   background-color: #50d33c;
 }
 
-.form-page-container > div:last-child > div:last-child {
-  margin: 20px 0;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.form-page-container > div:last-child > div:last-child > div {
-  border-bottom: 1px solid black;
-}
-
 .form-body > div > div > div:nth-child(3) > div:first-child > div {
   display: flex;
 }

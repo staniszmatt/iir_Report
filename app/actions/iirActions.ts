@@ -17,6 +17,7 @@ export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 export const TOGGLE_POST_IIR_NOTES = 'SET_POST_IIR_NOTES';
 export const TOGGLE_DISPLAY_OPEN_PDF_BTN = 'TOGGLE_DISPLAY_OPEN_PDF_BTN';
+export const RESET_DISPLAY_STATE = 'RESET_DISPLAY_STATE';
 
 interface WorkOrder {
   callAutoEmailer?: () => {} | any;
@@ -29,6 +30,12 @@ interface WorkOrder {
 export function resetState() {
   return {
     type: RESET_STATE
+  };
+}
+
+export function softResetState() {
+  return {
+    type: RESET_DISPLAY_STATE
   };
 }
 
@@ -89,6 +96,34 @@ export function checkForPDFFile(workOrderString: string) {
     if (fs.existsSync(filePath)) {
       dispatch(toggleDisplayOpenPDFBTnState());
     }
+  };
+}
+
+export function savePDF(pdfData: []) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    const workOrder = {
+      workOrderSearch: state.workOrder.workOrderSearch,
+      workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+    };
+
+    const u8 = new Uint8Array(pdfData);
+    const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+
+    if (fs.existsSync(filePath)) {
+      const error = {
+        errorNotFound: `WO: ${workOrderString} has already been saved!`
+      };
+      dispatch(toggleErrorModalState(error));
+      return;
+    }
+
+    fs.writeFileSync(
+      `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`,
+      u8
+    );
+    dispatch(getWorkOrderData(workOrder));
   };
 }
 
@@ -378,7 +413,6 @@ export function postOrUpdateIIRReport(iirNotes: {
             dispatch(autoEmailer());
           };
         }
-        // TODO: Setup move PDF if it exists.
         // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
         if (state.diplayOpenPDFBtn) {
           const dateTime = Date.now();
