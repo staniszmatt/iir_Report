@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -30,7 +31,7 @@ function checkStringLength(stringToCheck: string) {
   return returnString;
 }
 
-async function getWorkOrderData(request: Request) {
+async function getIIRDataAPI(request: Request) {
   const returnData: ReturnData = {
     error: {},
     data: {},
@@ -90,47 +91,43 @@ async function getWorkOrderData(request: Request) {
           INNER JOIN sales_cust_8130_types ON traveler_header.CustomerName = sales_cust_8130_types.CustomerName
             WHERE traveler_header.Work_Order_Number = '${workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${workOrderSearchLineItem}'`);
 
-      if (
-        secondData.length > 0 &&
-        Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
-      ) {
-        const {
-          Manual_Combined,
-          Work_Order_Number,
-          Trv_Num,
-          Cert_type_Description
-        } = secondData[0];
+      if (secondData.length > 0) {
+        if (Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')) {
+          const {
+            Manual_Combined,
+            Work_Order_Number,
+            Trv_Num
+          } = secondData[0];
 
-        returnData.data.Manual_Combined = Manual_Combined;
-        returnData.data.Work_Order_Number = Work_Order_Number;
-        returnData.data.Trv_Num = Trv_Num;
-        returnData.data.Cert_type_Description = Cert_type_Description;
+          returnData.data.Manual_Combined = Manual_Combined;
+          returnData.data.Work_Order_Number = Work_Order_Number;
+          returnData.data.Trv_Num = Trv_Num;
+          if (
+            Object.prototype.hasOwnProperty.call(
+              secondData[0],
+              'Cert_type_Description'
+            )
+          ) {
+            returnData.data.Cert_type_Description =
+              secondData[0].Cert_type_Description;
+          } else {
+            returnData.data.Cert_type_Description = 'N/A';
+          }
+        }
       } else {
         returnData.data.Manual_Combined = 'N/A';
         returnData.data.Work_Order_Number = 'N/A';
         returnData.data.Trv_Num = 'N/A';
-        if (
-          Object.prototype.hasOwnProperty.call(
-            secondData[0],
-            'Cert_type_Description'
-          )
-        ) {
-          returnData.data.Cert_type_Description =
-            secondData[0].Cert_type_Description;
-        } else {
-          returnData.data.Cert_type_Description = 'N/A';
-        }
+        returnData.data.Cert_type_Description = 'N/A'
       }
       db.close();
     }
-
     if (data.length > 0) {
       try {
         const dbIIR = await pool.connect();
         const iirQuery = `SELECT *
         FROM tear_down_notes AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
-
         const getIIRData = await dbIIR.query(iirQuery);
 
         if (getIIRData.recordset.length === 0) {
@@ -180,4 +177,4 @@ async function getWorkOrderData(request: Request) {
   return returnData;
 }
 
-export default getWorkOrderData;
+export default getIIRDataAPI;
