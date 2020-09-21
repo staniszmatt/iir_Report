@@ -1,6 +1,51 @@
 .iir-container {
-  width: 100%;
+  width: 770px;
   padding-top: 40px;
+  margin: auto;
+}
+
+.open-pdf-btn > div {
+  text-align: center;
+}
+
+.header-info > div {
+  text-align: center;
+  display: flex;
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.header-info > div > div {
+  margin: auto;
+}
+
+.open-pdf-btn > div > div {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: red;
+}
+
+.open-pdf-btn > div:first-child {
+  margin-bottom: 20px;
+  color: red;
+}
+
+.open-pdf-btn > div > button {
+  margin: auto;
+  margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.open-pdf-btn > div > button:hover {
+  background-color: #50d33c;
+}
+
+.header-info {
+  margin-bottom: 20px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
 }
 
 .iir-container > div:first-child {
@@ -13,5 +58,24 @@
 
 .iir-container > div:nth-child(2) {
   height: 100px;
+}
+
+.header-info > div:first-child > div {
+  border-bottom: 1px solid black;
+}
+
+.faded-backgroundImageContainer {
+  width: 100%;
   display: flex;
+  position: absolute;
+  height: 100%;
+  z-index: -1;
+}
+
+.faded-backgroundImageContainer > img {
+  opacity: 0.05;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  width: 100%;
 }

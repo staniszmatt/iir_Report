@@ -1,6 +1,7 @@
 .form-container {
-  width: 100%;
+  width: 770px;
   padding-top: 40px;
+  margin: auto;
 }
 
 .form-header > div {
@@ -19,10 +20,22 @@
   border: 1px solid black;
 }
 
+.open-pdf-btn > div {
+  text-align: center;
+}
+
+.open-pdf-btn > div > div {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: red;
+}
+
 div.form-footer > div {
   position: absolute;
   font-size: 10pt;
-  bottom: 10px;
+  bottom: 25px;
   margin-left: 30px;
 }
 
@@ -36,6 +49,21 @@ div.form-footer > div {
   text-align: center;
 }
 
+.open-pdf-btn > div:first-child {
+  margin-bottom: 20px;
+  color: red;
+}
+
+.open-pdf-btn > div > button {
+  margin: auto;
+  margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.open-pdf-btn > div > button:hover {
+  background-color: #50d33c;
+}
+
 .form-container > div:first-child {
   text-align: center;
   font-size: 30px;
@@ -46,7 +74,6 @@ div.form-footer > div {
 
 .form-container > div:nth-child(2) {
   height: 100px;
-  display: flex;
 }
 
 .form-header > div:first-child,
@@ -57,12 +84,7 @@ div.form-footer > div {
 }
 
 .form-page-container > div:last-child {
-  display: flex;
   margin: 20px 0;
-}
-
-.form-page-container > div:last-child > div {
-  margin: auto;
 }
 
 div.form-footer > div:last-child {
@@ -78,12 +100,45 @@ div.form-footer > div:last-child {
   margin: auto;
 }
 
+.form-page-container > div:last-child > div {
+  display: flex;
+}
+
+.form-page-container > div:last-child > div > div {
+  margin: auto;
+}
+
 .form-page > div > div:nth-child(3) > div {
-  margin-left: 25px;
+  text-align: center;
+  white-space: pre-wrap;
 }
 
 .form-body > div > div > div:last-child {
   display: flex;
+}
+
+.form-page-container > div > div > a {
+  opacity: unset;
+}
+
+.form-page-container > div:last-child > div:first-child > div > a {
+  opacity: unset;
+}
+
+.form-page-container > div:last-child > div:first-child > div > button,
+.form-page-container > div:last-child > div:first-child > div > a > button {
+  font-size: 20px;
+  background-color: #bfffbf;
+}
+
+.form-page-container > div:last-child > div:first-child > div > button:hover,
+.form-page-container
+  > div:last-child
+  > div:first-child
+  > div
+  > a
+  > button:hover {
+  background-color: #50d33c;
 }
 
 .form-body > div > div > div:nth-child(3) > div:first-child > div {
@@ -111,15 +166,17 @@ div.form-footer > div:last-child {
   > div
   > div
   > div:nth-child(3)
+  > div:nth-child(3)
+  > div:nth-child(odd),
+.form-body
+  > div
+  > div
+  > div:nth-child(3)
   > div:first-child
   > div
   > div:nth-child(odd) {
   font-size: 11pt;
   font-weight: bold;
-}
-
-.form-page-container > div > div > a {
-  opacity: unset;
 }
 
 .form-page {
@@ -133,6 +190,22 @@ div.form-footer > div:last-child {
   width: 100%;
   height: 1in;
   display: flex;
+}
+
+.faded-backgroundImageContainer {
+  width: 100%;
+  display: flex;
+  position: absolute;
+  height: 100%;
+  z-index: -1;
+}
+
+.faded-backgroundImageContainer > img {
+  opacity: 0.05;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  width: 100%;
 }
 
 .form-header > div:first-child > img {

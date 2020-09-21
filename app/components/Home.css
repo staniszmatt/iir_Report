@@ -4,10 +4,10 @@
 }
 
 .backgroundImageContainer {
- margin: auto;
+  margin: auto;
 }
 
-.backgroundImageContainer img {
+.backgroundImageContainer > img {
   object-fit: contain;
   width: 100%;
 }

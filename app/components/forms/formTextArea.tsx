@@ -15,6 +15,10 @@ interface Props {
   };
   rows: number;
   label: string;
+  meta: {
+    error: {};
+    touched: {};
+  };
 }
 
 interface ValueState {
@@ -22,7 +26,14 @@ interface ValueState {
 }
 
 export default function FormTextArea(props: Props) {
-  const { defaultValue, disabled, input, rows, label } = props;
+  const {
+    defaultValue,
+    disabled,
+    input,
+    rows,
+    label,
+    meta: { error, touched }
+  } = props;
 
   const [valueState, setValueState] = useState<ValueState>({
     inputValue: defaultValue
@@ -30,6 +41,7 @@ export default function FormTextArea(props: Props) {
 
   const valueChange = (event: { currentTarget: { value: string } }) => {
     const changeCharString = event.currentTarget.value
+      .replace(/  +/g, ' ')
       .replace(/[`]/g, '"')
       .replace(/[']/g, '"')
       .replace(/["]/g, '"');
@@ -56,6 +68,7 @@ export default function FormTextArea(props: Props) {
           rows={rows}
         />
       </div>
+      <p className="red-text darken-2">{touched && error}</p>
     </div>
   );
 }

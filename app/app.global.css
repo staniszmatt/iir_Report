@@ -10,14 +10,6 @@ body {
   margin: unset;
 }
 
-.backgroundImageContainer {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  position: absolute;
-  z-index: -1;
-}
-
 .mainBackground {
   opacity: 0.05;
   object-fit: contain;
@@ -55,6 +47,13 @@ a:hover {
   opacity: 1;
   text-decoration: none;
   cursor: pointer;
+}
+
+button {
+  font-family: serif;
+  border-radius: 3px;
+  filter: drop-shadow(1.5px 1.5px 1.5px black);
+  background-color: white;
 }
 
 button:hover {

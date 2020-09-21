@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint global-require: off, no-console: off */
 /**
@@ -10,7 +11,7 @@
  */
 import 'mssql/msnodesqlv8';
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, MenuItem } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -20,6 +21,7 @@ import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
 import testQuery from './api/testQueryToODCBDB';
 import testJobCostDB from './api/testJobCostDB';
+import emailer from './api/emailer';
 
 export default class AppUpdater {
   constructor() {
@@ -76,12 +78,12 @@ const createWindow = async () => {
     webPreferences:
       process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
         ? {
-            webSecurity: false,
-            nodeIntegration: true
+            nodeIntegration: true,
+            spellcheck: true
           }
         : {
-            webSecurity: false,
-            preload: path.join(__dirname, 'dist/renderer.prod.js')
+            preload: path.join(__dirname, 'dist/renderer.prod.js'),
+            spellcheck: true
           }
   });
 
@@ -113,6 +115,37 @@ const createWindow = async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+
+  mainWindow.webContents.on('context-menu', (_event, params) => {
+    const menu = new Menu();
+
+    // Add each spelling suggestion
+    // eslint-disable-next-line no-restricted-syntax
+    for (const suggestion of params.dictionarySuggestions) {
+      menu.append(
+        new MenuItem({
+          label: suggestion,
+          // eslint-disable-next-line no-loop-func
+          click: () => mainWindow!.webContents.replaceMisspelling(suggestion)
+        })
+      );
+    }
+
+    // Allow users to add the misspelled word to the dictionary
+    if (params.misspelledWord) {
+      menu.append(
+        new MenuItem({
+          label: 'Add to dictionary',
+          click: () =>
+            mainWindow!.webContents.session.addWordToSpellCheckerDictionary(
+              params.misspelledWord
+            )
+        })
+      );
+    }
+
+    menu.popup();
+  });
 };
 
 /**
@@ -140,6 +173,9 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
   let switchFail = false;
 
   switch (arg.request) {
+    case 'emailer':
+      requestToSend = emailer;
+      break;
     case 'testJobCostDB':
       requestToSend = testJobCostDB;
       break;

@@ -29,7 +29,7 @@ function mapStateToProps(state: modalStateType) {
   };
 }
 
-function mapDispatchToProps(dispatch: Dispatch<null>) {
+function mapDispatchToProps(dispatch: Dispatch<any>) {
   return bindActionCreators(
     {
       toggleModalState

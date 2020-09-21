@@ -25,9 +25,8 @@ interface DispatchProps {
 const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  let btnText = 'Update IIR Notes';
+  let btnText = 'UPDATE IIR NOTES';
   const { handleSubmit, onSubmit } = props;
-
   const {
     customerReasonForRemoval,
     evalFindings,
@@ -37,12 +36,12 @@ const IIRForm = (
   } = props.props;
 
   if (
-    customerReasonForRemoval === undefined &&
-    evalFindings === undefined &&
-    genConditionReceived === undefined &&
-    workedPerformedNote === undefined
+    customerReasonForRemoval === null &&
+    evalFindings === null &&
+    genConditionReceived === null &&
+    workedPerformedNote === null
   ) {
-    btnText = 'Add New IIR Notes';
+    btnText = 'ADD NEW IIR NOTES';
   }
 
   return (
@@ -75,7 +74,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="EVALUATION FINDINGS:"
+            label="EVALUATION FINDINGS (PLANNING):"
             component={FormTextInput}
             name="evalFindings"
             type="textarea"
@@ -86,7 +85,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="Worked Performed:"
+            label="Worked Performed (FINAL TABLE):"
             component={FormTextInput}
             name="workedPerformed"
             type="textarea"
@@ -110,8 +109,52 @@ const IIRForm = (
   );
 };
 
+interface Values {
+  customerReasonForRemoval: string;
+  evalFindings: string;
+  genConditionReceived: string;
+  workedPerformed: string;
+}
+
+function validate(values: Values) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const errors: any = {};
+  const {
+    customerReasonForRemoval,
+    evalFindings,
+    genConditionReceived,
+    workedPerformed
+  } = values;
+
+  if (customerReasonForRemoval) {
+    if (customerReasonForRemoval.length > 700) {
+      errors.customerReasonForRemoval = 'Over max charictor limit!';
+    }
+  }
+
+  if (evalFindings) {
+    if (evalFindings.length > 700) {
+      errors.evalFindings = 'Over max charictor limit!';
+    }
+  }
+
+  if (genConditionReceived) {
+    if (genConditionReceived.length > 700) {
+      errors.genConditionReceived = 'Over max charictor limit!';
+    }
+  }
+
+  if (workedPerformed) {
+    if (workedPerformed.length > 616) {
+      errors.workedPerformed = 'Over max charictor limit!';
+    }
+  }
+  return errors;
+}
+
 export default reduxForm<FormProps, DispatchProps>({
   form: 'iirForm',
+  validate,
   // Set Initial values to null so returns null if no changes are made.
   initialValues: {
     customerReasonForRemoval: null,
