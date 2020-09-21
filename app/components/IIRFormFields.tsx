@@ -74,7 +74,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="EVALUATION FINDINGS:"
+            label="EVALUATION FINDINGS (PLANNING):"
             component={FormTextInput}
             name="evalFindings"
             type="textarea"
@@ -85,7 +85,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="Worked Performed:"
+            label="Worked Performed (FINAL TABLE):"
             component={FormTextInput}
             name="workedPerformed"
             type="textarea"

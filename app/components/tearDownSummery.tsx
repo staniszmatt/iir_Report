@@ -130,7 +130,16 @@ export default function TearDownSummery(props: Props) {
           </div>
         )}
         {loadingScreen && <LoadingScreen props={cancelProp} />}
-        {diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><Btn buttonName="Open Current PDF" ClickHandler={openPDF} /></div>}
+        {diplayOpenPDFBtn && (
+          <div className={styles['open-pdf-btn']}>
+            <div>
+              File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
+            </div>
+            <div>
+              <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />
+            </div>
+          </div>
+        )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
             {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
