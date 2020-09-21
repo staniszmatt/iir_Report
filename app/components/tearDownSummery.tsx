@@ -124,9 +124,11 @@ export default function TearDownSummery(props: Props) {
       </div>
       <div className={styles['form-container']}>
         <div>TEAR DONW FORM REVIEW</div>
-        <div>
-          <WorkOrderSearchForm onSubmit={getWorkOrderData} />
-        </div>
+        {!loadingScreen && (
+          <div>
+            <WorkOrderSearchForm onSubmit={getWorkOrderData} />
+          </div>
+        )}
         {loadingScreen && <LoadingScreen props={cancelProp} />}
         {diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><Btn buttonName="Open Current PDF" ClickHandler={openPDF} /></div>}
         {loadPDF && (

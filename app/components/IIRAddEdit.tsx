@@ -78,13 +78,20 @@ export default function IIRAddEdit(props: Props) {
       </div>
       <div className={styles['iir-container']}>
         <div>ADD/EDIT TEAR DOWN NOTES</div>
-        <div>
-          <WorkOrderSearchForm onSubmit={getIIRData} />
-        </div>
+        {!loadingScreen && (
+          <div>
+            <WorkOrderSearchForm onSubmit={getIIRData} />
+          </div>
+        )}
         {loadingScreen && <LoadingScreen props={cancelProp} />}
         {diplayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
-            <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />
+            <div>
+              File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
+            </div>
+            <div>
+              <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />
+            </div>
           </div>
         )}
         <div>
