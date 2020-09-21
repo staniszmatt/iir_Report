@@ -4,32 +4,8 @@
   margin: auto;
 }
 
-.open-pdf-btn {
-  display: flex;
-}
-
-.open-pdf-btn > button {
-  margin: auto;
-  margin-bottom: 20px;
-  background-color: #bfffbf;
-}
-
-.open-pdf-btn > button:hover {
-  background-color: #50d33c;
-}
-
 .open-pdf-btn > div {
   text-align: center;
-  margin: auto;
-  margin-bottom: 20px;
-  font-size: 20px;
-  color: red;
-}
-
-.header-info {
-  margin-bottom: 20px;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
 }
 
 .header-info > div {
@@ -43,6 +19,35 @@
   margin: auto;
 }
 
+.open-pdf-btn > div > div {
+  text-align: center;
+  margin: auto;
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: red;
+}
+
+.open-pdf-btn > div:first-child {
+  margin-bottom: 20px;
+  color: red;
+}
+
+.open-pdf-btn > div > button {
+  margin: auto;
+  margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.open-pdf-btn > div > button:hover {
+  background-color: #50d33c;
+}
+
+.header-info {
+  margin-bottom: 20px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
 .iir-container > div:first-child {
   text-align: center;
   font-size: 30px;
@@ -53,7 +58,6 @@
 
 .iir-container > div:nth-child(2) {
   height: 100px;
-  display: flex;
 }
 
 .header-info > div:first-child > div {

@@ -8,7 +8,9 @@ import {
   postOrUpdateIIRReport,
   handleEditIIRPDF,
   cancelLoading,
-  openPDF
+  openPDF,
+  savePDF,
+  softResetState
 } from '../actions/iirActions';
 import { iirStateType } from '../reducers/types';
 
@@ -27,7 +29,9 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
       postOrUpdateIIRReport,
       handleEditIIRPDF,
       cancelLoading,
-      openPDF
+      openPDF,
+      savePDF,
+      softResetState
     },
     dispatch
   );

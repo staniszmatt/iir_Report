@@ -17,6 +17,7 @@ export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 export const TOGGLE_POST_IIR_NOTES = 'SET_POST_IIR_NOTES';
 export const TOGGLE_DISPLAY_OPEN_PDF_BTN = 'TOGGLE_DISPLAY_OPEN_PDF_BTN';
+export const RESET_DISPLAY_STATE = 'RESET_DISPLAY_STATE';
 
 interface WorkOrder {
   callAutoEmailer?: () => {} | any;
@@ -29,6 +30,12 @@ interface WorkOrder {
 export function resetState() {
   return {
     type: RESET_STATE
+  };
+}
+
+export function softResetState() {
+  return {
+    type: RESET_DISPLAY_STATE
   };
 }
 
@@ -89,6 +96,34 @@ export function checkForPDFFile(workOrderString: string) {
     if (fs.existsSync(filePath)) {
       dispatch(toggleDisplayOpenPDFBTnState());
     }
+  };
+}
+
+export function savePDF(pdfData: []) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    const workOrder = {
+      workOrderSearch: state.workOrder.workOrderSearch,
+      workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
+    };
+
+    const u8 = new Uint8Array(pdfData);
+    const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
+    const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+
+    if (fs.existsSync(filePath)) {
+      const error = {
+        errorNotFound: `WO: ${workOrderString} has already been saved!`
+      };
+      dispatch(toggleErrorModalState(error));
+      return;
+    }
+
+    fs.writeFileSync(
+      `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`,
+      u8
+    );
+    dispatch(getWorkOrderData(workOrder));
   };
 }
 
@@ -301,118 +336,222 @@ export function postOrUpdateIIRReport(iirNotes: {
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
-    // If values are not changed, then set them to null
-    const valueChangeCheck = (stateValue: string, recievedValue: string) => {
-      if (stateValue === recievedValue || recievedValue === null) {
-        return null;
-      }
-      return recievedValue;
-    };
-    // Setup value checks to use for comparing and returning null values.
-    const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
-      state.workOrderInfo.customerReasonForRemoval,
-      iirNotes.customerReasonForRemoval
-    );
-    const valueChangeCheckEvalFindings = valueChangeCheck(
-      state.workOrderInfo.evalFindings,
-      iirNotes.evalFindings
-    );
-    const valueChangeCheckGenConditionReceived = valueChangeCheck(
-      state.workOrderInfo.genConditionReceived,
-      iirNotes.genConditionReceived
-    );
-    const valueChangeCheckWorkedPerformed = valueChangeCheck(
-      state.workOrderInfo.workedPerformed,
-      iirNotes.workedPerformed
-    );
-    // Cancel out if nothing was changed.
-    if (
-      valueChangeCheckCustomerReasonForRemoval === null &&
-      valueChangeCheckEvalFindings === null &&
-      valueChangeCheckGenConditionReceived === null &&
-      valueChangeCheckWorkedPerformed === null
-    ) {
-      const returnError = {
-        error: 'Nothing was changed! Please make changes to submit.'
-      };
+    // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
+    if (state.diplayOpenPDFBtn) {
+      const dateTime = Date.now();
+      const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
+      const oldPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
+      const newPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\old\\${workOrderString}_TEAR_DOWN_${dateTime}.pdf`;
 
-      dispatch(toggleErrorModalState(returnError));
-      return;
-    }
-
-    let request = 'updateIIRReport';
-    // Changes from updating IIR notes to Adding IIR notes if there was no record.
-    if (state.postIIRNotes) {
-      request = 'postIIRReport';
-    }
-
-    const mainRequest = {
-      request,
-      SalesOrderNumber: state.workOrder.workOrderSearch,
-      salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
-      customerReasonForRemoval: iirNotes.customerReasonForRemoval,
-      genConditionReceived: iirNotes.genConditionReceived,
-      evalFindings: iirNotes.evalFindings,
-      workedPerformed: iirNotes.workedPerformed
-    };
-    const handlePostIIRResp = (
-      _event: {},
-      resp: { error: { name: string; code: string }; data: {} }
-    ) => {
-      dispatch(toggleLoadingScreenStateOff());
-      if (Object.keys(resp.error).length === 0) {
-        const workOrder: WorkOrder = {
-          workOrderSearch: state.workOrder.workOrderSearch,
-          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
-          callSuccessModal: () => {
-            dispatch(toggleSuccessModalState('Successfully updated notes!'));
-          }
-        };
-        // Add emailer callback only if one of the first three values change
-        if (
-          valueChangeCheckCustomerReasonForRemoval !== null ||
-          valueChangeCheckEvalFindings !== null ||
-          valueChangeCheckGenConditionReceived !== null
-        ) {
-          workOrder.callAutoEmailer = () => {
-            dispatch(autoEmailer());
+      fs.rename(oldPath, newPath, err => {
+        if (err) {
+          const returnError = {
+            error: `FILE ${workOrderString}_TEAR_DOWN is currently open, please close first before you can submit changes!`
           };
-        }
-        // TODO: Setup move PDF if it exists.
-        // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
-        if (state.diplayOpenPDFBtn) {
-          const dateTime = Date.now();
-          const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
-          const oldPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
-          const newPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\old\\${workOrderString}_TEAR_DOWN_${dateTime}.pdf`;
+          dispatch(toggleErrorModalState(returnError));
+        } else {
+          // NOTE: Repeated below as part of the else statement inside this IF statement.
+          // TODO: Setup a way not to have to repeat this.
+          // If values are not changed, then set them to null
+          const valueChangeCheck = (
+            stateValue: string,
+            recievedValue: string
+          ) => {
+            if (stateValue === recievedValue || recievedValue === null) {
+              return null;
+            }
+            return recievedValue;
+          };
+          // Setup value checks to use for comparing and returning null values.
+          const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
+            state.workOrderInfo.customerReasonForRemoval,
+            iirNotes.customerReasonForRemoval
+          );
+          const valueChangeCheckEvalFindings = valueChangeCheck(
+            state.workOrderInfo.evalFindings,
+            iirNotes.evalFindings
+          );
+          const valueChangeCheckGenConditionReceived = valueChangeCheck(
+            state.workOrderInfo.genConditionReceived,
+            iirNotes.genConditionReceived
+          );
+          const valueChangeCheckWorkedPerformed = valueChangeCheck(
+            state.workOrderInfo.workedPerformed,
+            iirNotes.workedPerformed
+          );
+          // Cancel out if nothing was changed.
+          if (
+            valueChangeCheckCustomerReasonForRemoval === null &&
+            valueChangeCheckEvalFindings === null &&
+            valueChangeCheckGenConditionReceived === null &&
+            valueChangeCheckWorkedPerformed === null
+          ) {
+            const returnError = {
+              error: 'Nothing was changed! Please make changes to submit.'
+            };
 
-          fs.rename(oldPath, newPath, err => {
-            if (err) {
-              const returnError = {
-                error: `Couldn't move ${workOrderString}_TEAR_DOWN! Please move PDF to old folder!`
+            dispatch(toggleErrorModalState(returnError));
+            return;
+          }
+
+          let request = 'updateIIRReport';
+          // Changes from updating IIR notes to Adding IIR notes if there was no record.
+          if (state.postIIRNotes) {
+            request = 'postIIRReport';
+          }
+
+          const mainRequest = {
+            request,
+            SalesOrderNumber: state.workOrder.workOrderSearch,
+            salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
+            customerReasonForRemoval: iirNotes.customerReasonForRemoval,
+            genConditionReceived: iirNotes.genConditionReceived,
+            evalFindings: iirNotes.evalFindings,
+            workedPerformed: iirNotes.workedPerformed
+          };
+          const handlePostIIRResp = (
+            _event: {},
+            resp: { error: { name: string; code: string }; data: {} }
+          ) => {
+            dispatch(toggleLoadingScreenStateOff());
+            if (Object.keys(resp.error).length === 0) {
+              const workOrder: WorkOrder = {
+                workOrderSearch: state.workOrder.workOrderSearch,
+                workOrderSearchLineItem:
+                  state.workOrder.workOrderSearchLineItem,
+                callSuccessModal: () => {
+                  dispatch(
+                    toggleSuccessModalState('Successfully updated notes!')
+                  );
+                }
               };
+              // Add emailer callback only if one of the first three values change
+              if (
+                valueChangeCheckCustomerReasonForRemoval !== null ||
+                valueChangeCheckEvalFindings !== null ||
+                valueChangeCheckGenConditionReceived !== null
+              ) {
+                workOrder.callAutoEmailer = () => {
+                  dispatch(autoEmailer());
+                };
+              }
+              // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
+              dispatch(getIIRData(workOrder));
+            } else {
+              const returnError = { error: '' };
+              if (Object.keys(resp.error).length > 1) {
+                returnError.error = `${resp.error.code}: ${resp.error.name}`;
+              } else {
+                returnError.error =
+                  'Something went wrong updating or adding IIR notes!';
+              }
               dispatch(toggleErrorModalState(returnError));
             }
-          });
+
+            ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
+          };
+          ipcRenderer.send('asynchronous-message', mainRequest);
+          dispatch(toggleLoadingScreenState());
+          ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
         }
-        // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
-        dispatch(getIIRData(workOrder));
-      } else {
-        const returnError = { error: '' };
-        if (Object.keys(resp.error).length > 1) {
-          returnError.error = `${resp.error.code}: ${resp.error.name}`;
-        } else {
-          returnError.error =
-            'Something went wrong updating or adding IIR notes!';
+      });
+    } else {
+      // If values are not changed, then set them to null
+      const valueChangeCheck = (stateValue: string, recievedValue: string) => {
+        if (stateValue === recievedValue || recievedValue === null) {
+          return null;
         }
+        return recievedValue;
+      };
+      // Setup value checks to use for comparing and returning null values.
+      const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
+        state.workOrderInfo.customerReasonForRemoval,
+        iirNotes.customerReasonForRemoval
+      );
+      const valueChangeCheckEvalFindings = valueChangeCheck(
+        state.workOrderInfo.evalFindings,
+        iirNotes.evalFindings
+      );
+      const valueChangeCheckGenConditionReceived = valueChangeCheck(
+        state.workOrderInfo.genConditionReceived,
+        iirNotes.genConditionReceived
+      );
+      const valueChangeCheckWorkedPerformed = valueChangeCheck(
+        state.workOrderInfo.workedPerformed,
+        iirNotes.workedPerformed
+      );
+      // Cancel out if nothing was changed.
+      if (
+        valueChangeCheckCustomerReasonForRemoval === null &&
+        valueChangeCheckEvalFindings === null &&
+        valueChangeCheckGenConditionReceived === null &&
+        valueChangeCheckWorkedPerformed === null
+      ) {
+        const returnError = {
+          error: 'Nothing was changed! Please make changes to submit.'
+        };
+
         dispatch(toggleErrorModalState(returnError));
+        return;
       }
 
-      ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
-    };
-    ipcRenderer.send('asynchronous-message', mainRequest);
-    dispatch(toggleLoadingScreenState());
-    ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
+      let request = 'updateIIRReport';
+      // Changes from updating IIR notes to Adding IIR notes if there was no record.
+      if (state.postIIRNotes) {
+        request = 'postIIRReport';
+      }
+
+      const mainRequest = {
+        request,
+        SalesOrderNumber: state.workOrder.workOrderSearch,
+        salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
+        customerReasonForRemoval: iirNotes.customerReasonForRemoval,
+        genConditionReceived: iirNotes.genConditionReceived,
+        evalFindings: iirNotes.evalFindings,
+        workedPerformed: iirNotes.workedPerformed
+      };
+      const handlePostIIRResp = (
+        _event: {},
+        resp: { error: { name: string; code: string }; data: {} }
+      ) => {
+        dispatch(toggleLoadingScreenStateOff());
+        if (Object.keys(resp.error).length === 0) {
+          const workOrder: WorkOrder = {
+            workOrderSearch: state.workOrder.workOrderSearch,
+            workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
+            callSuccessModal: () => {
+              dispatch(toggleSuccessModalState('Successfully updated notes!'));
+            }
+          };
+          // Add emailer callback only if one of the first three values change
+          if (
+            valueChangeCheckCustomerReasonForRemoval !== null ||
+            valueChangeCheckEvalFindings !== null ||
+            valueChangeCheckGenConditionReceived !== null
+          ) {
+            workOrder.callAutoEmailer = () => {
+              dispatch(autoEmailer());
+            };
+          }
+          // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
+          dispatch(getIIRData(workOrder));
+        } else {
+          const returnError = { error: '' };
+          if (Object.keys(resp.error).length > 1) {
+            returnError.error = `${resp.error.code}: ${resp.error.name}`;
+          } else {
+            returnError.error =
+              'Something went wrong updating or adding IIR notes!';
+          }
+          dispatch(toggleErrorModalState(returnError));
+        }
+
+        ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
+      };
+      ipcRenderer.send('asynchronous-message', mainRequest);
+      dispatch(toggleLoadingScreenState());
+      ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
+    }
   };
 }
 

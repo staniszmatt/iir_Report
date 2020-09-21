@@ -13,6 +13,8 @@
   display: flex;
   flex-flow: column;
   background-color: #bdbdbd;
+  max-width: 500px;
+  margin: auto;
 }
 
 .modal-container > div:nth-child(2) {
