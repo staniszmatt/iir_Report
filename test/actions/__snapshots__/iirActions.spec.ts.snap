@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`actions should reset iir state 1`] = `
+Object {
+  "type": "RESET_STATE",
+}
+`;
+
+exports[`actions should set the workOrder data state 1`] = `
+Object {
+  "resp": Object {},
+  "type": "SET_WORK_ORDER",
+}
+`;
+
+exports[`actions should set the workOrderData data state 1`] = `
+Object {
+  "resp": Object {},
+  "type": "SET_WORK_ORDER_DATA",
+}
+`;
+
+exports[`actions should toggle IIR form field display state 1`] = `
+Object {
+  "type": "TOGGLE_IIR_EDIT_STATE",
+}
+`;
+
+exports[`actions should toggle PDF form display state 1`] = `
+Object {
+  "type": "TOGGLE_PDF_DISPLAY",
+}
+`;
+
+exports[`actions should toggle loading screen display state 1`] = `
+Object {
+  "type": "TOGGLE_LOADING_SCREEN_DISPLAY",
+}
+`;
+
+exports[`actions should toggle to post iir notes state 1`] = `
+Object {
+  "type": "SET_POST_IIR_NOTES",
+}
+`;

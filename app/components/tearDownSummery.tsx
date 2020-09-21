@@ -95,6 +95,7 @@ export default function TearDownSummery(props: Props) {
   }
 
   const cancelProp = { cancelLoading };
+  // TODO: If selecectable content is requred, try using @progress/kendo-react-pdf.
   // Sets up the React component with the id to create a image and convert it to PNG then
   // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
   // create a PDF from a component.
