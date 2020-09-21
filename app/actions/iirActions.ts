@@ -336,7 +336,6 @@ export function postOrUpdateIIRReport(iirNotes: {
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
-    let checkError = false;
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
     if (state.diplayOpenPDFBtn) {
       const dateTime = Date.now();
@@ -350,111 +349,209 @@ export function postOrUpdateIIRReport(iirNotes: {
             error: `FILE ${workOrderString}_TEAR_DOWN is currently open, please close first before you can submit changes!`
           };
           dispatch(toggleErrorModalState(returnError));
-          checkError = true;
+        } else {
+          // NOTE: Repeated below as part of the else statement inside this IF statement.
+          // TODO: Setup a way not to have to repeat this.
+          // If values are not changed, then set them to null
+          const valueChangeCheck = (
+            stateValue: string,
+            recievedValue: string
+          ) => {
+            if (stateValue === recievedValue || recievedValue === null) {
+              return null;
+            }
+            return recievedValue;
+          };
+          // Setup value checks to use for comparing and returning null values.
+          const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
+            state.workOrderInfo.customerReasonForRemoval,
+            iirNotes.customerReasonForRemoval
+          );
+          const valueChangeCheckEvalFindings = valueChangeCheck(
+            state.workOrderInfo.evalFindings,
+            iirNotes.evalFindings
+          );
+          const valueChangeCheckGenConditionReceived = valueChangeCheck(
+            state.workOrderInfo.genConditionReceived,
+            iirNotes.genConditionReceived
+          );
+          const valueChangeCheckWorkedPerformed = valueChangeCheck(
+            state.workOrderInfo.workedPerformed,
+            iirNotes.workedPerformed
+          );
+          // Cancel out if nothing was changed.
+          if (
+            valueChangeCheckCustomerReasonForRemoval === null &&
+            valueChangeCheckEvalFindings === null &&
+            valueChangeCheckGenConditionReceived === null &&
+            valueChangeCheckWorkedPerformed === null
+          ) {
+            const returnError = {
+              error: 'Nothing was changed! Please make changes to submit.'
+            };
+
+            dispatch(toggleErrorModalState(returnError));
+            return;
+          }
+
+          let request = 'updateIIRReport';
+          // Changes from updating IIR notes to Adding IIR notes if there was no record.
+          if (state.postIIRNotes) {
+            request = 'postIIRReport';
+          }
+
+          const mainRequest = {
+            request,
+            SalesOrderNumber: state.workOrder.workOrderSearch,
+            salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
+            customerReasonForRemoval: iirNotes.customerReasonForRemoval,
+            genConditionReceived: iirNotes.genConditionReceived,
+            evalFindings: iirNotes.evalFindings,
+            workedPerformed: iirNotes.workedPerformed
+          };
+          const handlePostIIRResp = (
+            _event: {},
+            resp: { error: { name: string; code: string }; data: {} }
+          ) => {
+            dispatch(toggleLoadingScreenStateOff());
+            if (Object.keys(resp.error).length === 0) {
+              const workOrder: WorkOrder = {
+                workOrderSearch: state.workOrder.workOrderSearch,
+                workOrderSearchLineItem:
+                  state.workOrder.workOrderSearchLineItem,
+                callSuccessModal: () => {
+                  dispatch(
+                    toggleSuccessModalState('Successfully updated notes!')
+                  );
+                }
+              };
+              // Add emailer callback only if one of the first three values change
+              if (
+                valueChangeCheckCustomerReasonForRemoval !== null ||
+                valueChangeCheckEvalFindings !== null ||
+                valueChangeCheckGenConditionReceived !== null
+              ) {
+                workOrder.callAutoEmailer = () => {
+                  dispatch(autoEmailer());
+                };
+              }
+              // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
+              dispatch(getIIRData(workOrder));
+            } else {
+              const returnError = { error: '' };
+              if (Object.keys(resp.error).length > 1) {
+                returnError.error = `${resp.error.code}: ${resp.error.name}`;
+              } else {
+                returnError.error =
+                  'Something went wrong updating or adding IIR notes!';
+              }
+              dispatch(toggleErrorModalState(returnError));
+            }
+
+            ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
+          };
+          ipcRenderer.send('asynchronous-message', mainRequest);
+          dispatch(toggleLoadingScreenState());
+          ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
         }
       });
-    }
-
-    // TODO: Sync issue with setting return, need to setup callback and maybe check as a seperate function
-    console.log('errorCheck: ', checkError);
-    if (checkError) {
-      return;
-    }
-    // If values are not changed, then set them to null
-    const valueChangeCheck = (stateValue: string, recievedValue: string) => {
-      if (stateValue === recievedValue || recievedValue === null) {
-        return null;
-      }
-      return recievedValue;
-    };
-    // Setup value checks to use for comparing and returning null values.
-    const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
-      state.workOrderInfo.customerReasonForRemoval,
-      iirNotes.customerReasonForRemoval
-    );
-    const valueChangeCheckEvalFindings = valueChangeCheck(
-      state.workOrderInfo.evalFindings,
-      iirNotes.evalFindings
-    );
-    const valueChangeCheckGenConditionReceived = valueChangeCheck(
-      state.workOrderInfo.genConditionReceived,
-      iirNotes.genConditionReceived
-    );
-    const valueChangeCheckWorkedPerformed = valueChangeCheck(
-      state.workOrderInfo.workedPerformed,
-      iirNotes.workedPerformed
-    );
-    // Cancel out if nothing was changed.
-    if (
-      valueChangeCheckCustomerReasonForRemoval === null &&
-      valueChangeCheckEvalFindings === null &&
-      valueChangeCheckGenConditionReceived === null &&
-      valueChangeCheckWorkedPerformed === null
-    ) {
-      const returnError = {
-        error: 'Nothing was changed! Please make changes to submit.'
+    } else {
+      // If values are not changed, then set them to null
+      const valueChangeCheck = (stateValue: string, recievedValue: string) => {
+        if (stateValue === recievedValue || recievedValue === null) {
+          return null;
+        }
+        return recievedValue;
       };
-
-      dispatch(toggleErrorModalState(returnError));
-      return;
-    }
-
-    let request = 'updateIIRReport';
-    // Changes from updating IIR notes to Adding IIR notes if there was no record.
-    if (state.postIIRNotes) {
-      request = 'postIIRReport';
-    }
-
-    const mainRequest = {
-      request,
-      SalesOrderNumber: state.workOrder.workOrderSearch,
-      salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
-      customerReasonForRemoval: iirNotes.customerReasonForRemoval,
-      genConditionReceived: iirNotes.genConditionReceived,
-      evalFindings: iirNotes.evalFindings,
-      workedPerformed: iirNotes.workedPerformed
-    };
-    const handlePostIIRResp = (
-      _event: {},
-      resp: { error: { name: string; code: string }; data: {} }
-    ) => {
-      dispatch(toggleLoadingScreenStateOff());
-      if (Object.keys(resp.error).length === 0) {
-        const workOrder: WorkOrder = {
-          workOrderSearch: state.workOrder.workOrderSearch,
-          workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
-          callSuccessModal: () => {
-            dispatch(toggleSuccessModalState('Successfully updated notes!'));
-          }
+      // Setup value checks to use for comparing and returning null values.
+      const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
+        state.workOrderInfo.customerReasonForRemoval,
+        iirNotes.customerReasonForRemoval
+      );
+      const valueChangeCheckEvalFindings = valueChangeCheck(
+        state.workOrderInfo.evalFindings,
+        iirNotes.evalFindings
+      );
+      const valueChangeCheckGenConditionReceived = valueChangeCheck(
+        state.workOrderInfo.genConditionReceived,
+        iirNotes.genConditionReceived
+      );
+      const valueChangeCheckWorkedPerformed = valueChangeCheck(
+        state.workOrderInfo.workedPerformed,
+        iirNotes.workedPerformed
+      );
+      // Cancel out if nothing was changed.
+      if (
+        valueChangeCheckCustomerReasonForRemoval === null &&
+        valueChangeCheckEvalFindings === null &&
+        valueChangeCheckGenConditionReceived === null &&
+        valueChangeCheckWorkedPerformed === null
+      ) {
+        const returnError = {
+          error: 'Nothing was changed! Please make changes to submit.'
         };
-        // Add emailer callback only if one of the first three values change
-        if (
-          valueChangeCheckCustomerReasonForRemoval !== null ||
-          valueChangeCheckEvalFindings !== null ||
-          valueChangeCheckGenConditionReceived !== null
-        ) {
-          workOrder.callAutoEmailer = () => {
-            dispatch(autoEmailer());
-          };
-        }
-        // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
-        dispatch(getIIRData(workOrder));
-      } else {
-        const returnError = { error: '' };
-        if (Object.keys(resp.error).length > 1) {
-          returnError.error = `${resp.error.code}: ${resp.error.name}`;
-        } else {
-          returnError.error =
-            'Something went wrong updating or adding IIR notes!';
-        }
+
         dispatch(toggleErrorModalState(returnError));
+        return;
       }
 
-      ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
-    };
-    ipcRenderer.send('asynchronous-message', mainRequest);
-    dispatch(toggleLoadingScreenState());
-    ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
+      let request = 'updateIIRReport';
+      // Changes from updating IIR notes to Adding IIR notes if there was no record.
+      if (state.postIIRNotes) {
+        request = 'postIIRReport';
+      }
+
+      const mainRequest = {
+        request,
+        SalesOrderNumber: state.workOrder.workOrderSearch,
+        salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
+        customerReasonForRemoval: iirNotes.customerReasonForRemoval,
+        genConditionReceived: iirNotes.genConditionReceived,
+        evalFindings: iirNotes.evalFindings,
+        workedPerformed: iirNotes.workedPerformed
+      };
+      const handlePostIIRResp = (
+        _event: {},
+        resp: { error: { name: string; code: string }; data: {} }
+      ) => {
+        dispatch(toggleLoadingScreenStateOff());
+        if (Object.keys(resp.error).length === 0) {
+          const workOrder: WorkOrder = {
+            workOrderSearch: state.workOrder.workOrderSearch,
+            workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem,
+            callSuccessModal: () => {
+              dispatch(toggleSuccessModalState('Successfully updated notes!'));
+            }
+          };
+          // Add emailer callback only if one of the first three values change
+          if (
+            valueChangeCheckCustomerReasonForRemoval !== null ||
+            valueChangeCheckEvalFindings !== null ||
+            valueChangeCheckGenConditionReceived !== null
+          ) {
+            workOrder.callAutoEmailer = () => {
+              dispatch(autoEmailer());
+            };
+          }
+          // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
+          dispatch(getIIRData(workOrder));
+        } else {
+          const returnError = { error: '' };
+          if (Object.keys(resp.error).length > 1) {
+            returnError.error = `${resp.error.code}: ${resp.error.name}`;
+          } else {
+            returnError.error =
+              'Something went wrong updating or adding IIR notes!';
+          }
+          dispatch(toggleErrorModalState(returnError));
+        }
+
+        ipcRenderer.removeListener('asynchronous-reply', handlePostIIRResp);
+      };
+      ipcRenderer.send('asynchronous-message', mainRequest);
+      dispatch(toggleLoadingScreenState());
+      ipcRenderer.on('asynchronous-reply', handlePostIIRResp);
+    }
   };
 }
 
