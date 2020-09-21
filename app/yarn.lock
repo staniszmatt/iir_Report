@@ -31,19 +31,19 @@
     adal-node "^0.1.28"
 
 "@types/node@*":
-  version "14.10.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.10.0.tgz#15815dff82c8dc30827f6b1286f865902945095a"
-  integrity sha512-SOIyrdADB4cq6eY1F+9iU48iIomFAPltu11LCvA9PKcyEwHadjCFzNVPotAR+oEJA0bCP4Xvvgy+vwu1ZjVh8g==
+  version "14.11.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.1.tgz#56af902ad157e763f9ba63d671c39cda3193c835"
+  integrity sha512-oTQgnd0hblfLsJ6BvJzzSL+Inogp3lq9fGgqRkMB/ziKMgEUaFl801OncOzUmalfzt14N0oPHMK47ipl+wbTIw==
 
 "@types/node@^12.12.17":
-  version "12.12.57"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.57.tgz#fa7bab1f5e5adc99df92d824ef75c3bbca929a22"
-  integrity sha512-Dg4fab0IP6ZtdJOkwTaMaOJA3PWw7bR6cUYh+nxkYe4+ZogiLBKhaEr9sHqVkCtREVLw92g3Fl1bt8++dHKavw==
+  version "12.12.62"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.62.tgz#733923d73669188d35950253dd18a21570085d2b"
+  integrity sha512-qAfo81CsD7yQIM9mVyh6B/U47li5g7cfpVQEDMfQeF8pSZVwzbhwU3crc0qG4DmpsebpJPR49AKOExQyJ05Cpg==
 
 "@types/node@^8.0.47":
-  version "8.10.63"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.63.tgz#f86775d576bc07a2992da244f41c23d3ba66d402"
-  integrity sha512-g+nSkeHFDd2WOQChfmy9SAXLywT47WZBrGS/NC5ym5PJ8c8RC6l4pbGaUW/X0+eZJnXw6/AVNEouXWhV4iz72Q==
+  version "8.10.64"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.64.tgz#0dddc4c53ca4819a32b7478232d8b446ca90e1c6"
+  integrity sha512-/EwBIb+imu8Qi/A3NF9sJ9iuKo7yV+pryqjmeRqaU0C4wBAOhas5mdvoYeJ5PCKrh6thRSJHdoasFqh3BQGILA==
 
 "@types/prop-types@*":
   version "15.7.3"
@@ -109,9 +109,9 @@ adal-node@^0.1.28:
     xpath.js "~1.1.0"
 
 ajv@^6.12.3:
-  version "6.12.4"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.4.tgz#0614facc4522127fa713445c6bfd3ebd376e2234"
-  integrity sha512-eienB2c9qVQs2KWexhkrdMLVDoIQCz5KSeLxwg9Lzk4DOfBtIK9PQwwufcsn1jjGuf9WZmqPMbGxOzfcuphJCQ==
+  version "6.12.5"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.5.tgz#19b0e8bae8f476e5ba666300387775fb1a00a4da"
+  integrity sha512-lRF8RORchjpKG50/WFf8xmg7sgCLFiYNNnqdKflk63whMQcWR5ngGjiSXkL9bjxy6B2npOK2HSMN49jEBMSkag==
   dependencies:
     fast-deep-equal "^3.1.1"
     fast-json-stable-stringify "^2.0.0"
@@ -303,11 +303,11 @@ debug@^3.2.6:
     ms "^2.1.1"
 
 debug@^4:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
-  integrity sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.2.0.tgz#7f150f93920e94c58f5574c2fd01a3110effe7f1"
+  integrity sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==
   dependencies:
-    ms "^2.1.1"
+    ms "2.1.2"
 
 decompress-response@^4.2.0:
   version "4.2.1"
@@ -701,7 +701,7 @@ ms@2.0.0:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
   integrity sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=
 
-ms@^2.1.1:
+ms@2.1.2, ms@^2.1.1:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
@@ -715,9 +715,9 @@ msnodesqlv8@^2.0.5:
     prebuild-install "^5.3.5"
 
 mssql@^6.2.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/mssql/-/mssql-6.2.1.tgz#4f18b8e2a29d67ee341dca84870d5de6234f7709"
-  integrity sha512-erINJ9EUPvPuWXifZfhum0CVEVrdvnFYlpgU6WKkQW69W4W7DWqJS2FHdedHnuJWlJ8x1WW1NcD8GFfF15O2aA==
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/mssql/-/mssql-6.2.2.tgz#b7136df2f24950262ee7f6f53eeedeb18f123463"
+  integrity sha512-+G/E2Xw801ep4O5p5SDuV0u2LDpCuGIvVCLCNhTjILpF5hKJovjRh8S3t+A1Fwlly7zVx9rckEVo5c0cXo+BPQ==
   dependencies:
     debug "^4"
     tarn "^1.1.5"
@@ -835,9 +835,9 @@ object-assign@^4.1.0:
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
 
 odbc@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/odbc/-/odbc-2.3.4.tgz#50df0a930cd82b9c6ded3b604cdb1cba05a52f27"
-  integrity sha512-wE5FvE1JMAsXFHhbAytqJtkUG7ILnJbdE2SQxC2UxVbvds7r42DqbL/SAb9ZKgVjYZZDZtQl40bGUWG2ocQp5g==
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/odbc/-/odbc-2.3.5.tgz#aeb13d43416c7ce3619d4f3d285b941c832832a5"
+  integrity sha512-OTEc0g7fYShaU8B6T00usCuhS/vRC3ULzxLydXc53MOab8dTC2IoF237b74ZhLHZfk8nlkOziT9DkDoMR8jFwA==
   dependencies:
     async "^3.0.1"
     node-addon-api "^1.7.1"

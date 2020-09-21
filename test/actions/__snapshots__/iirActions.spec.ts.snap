@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actions should reset iir state 1`] = `
+exports[`actions should reset iir state to all false states and clear data 1`] = `
 Object {
   "type": "RESET_STATE",
 }
@@ -34,7 +34,7 @@ Object {
 
 exports[`actions should toggle loading screen display state 1`] = `
 Object {
-  "type": "TOGGLE_LOADING_SCREEN_DISPLAY",
+  "type": "TOGGLE_LOADING_SCREEN_DISPLAY_ON",
 }
 `;
 

@@ -23,7 +23,7 @@ jest.mock(
 );
 
 describe('actions', () => {
-  it('should reset iir state', () => {
+  it('should reset iir state to all false states and clear data', () => {
     expect(actions.resetState()).toMatchSnapshot();
   });
 
@@ -58,8 +58,8 @@ describe('actions', () => {
     fn(dispatch);
     expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(true);
     expect(
-      dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY })
-    ).toBe(true);
+      dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY_OFF })
+    ).toBe(false);
     expect(ipcRenderer.removeAllListeners).toBeCalledWith('asynchronous-reply');
   });
   // Actions getWorkOrderData testing.
@@ -92,7 +92,7 @@ describe('actions', () => {
     fn(dispatch);
     // Testing
     expect(
-      dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY })
+      dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY_ON })
     ).toBe(true);
     // TODO: Setup test to verify redux-form reset runs/complete
     expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(true);
@@ -156,7 +156,7 @@ it('should pass two values to use for searching for info, setting loading screen
   });
 
   expect(
-    dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY })
+    dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY_ON })
   ).toBe(true);
 
   expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(true);
