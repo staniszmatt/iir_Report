@@ -284,48 +284,64 @@ export function getWorkOrderData(workOrder: {
       workOrderSearch: workOrder.workOrderSearch,
       workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
-    const handleGetWorkOrderDataResp = (
-      _event: {},
-      resp: { error: { code: string; name: string }; data: object[] }
-    ) => {
-      dispatch(toggleLoadingScreenStateOff());
-      // Checking no errors
-      if (Object.keys(resp.error).length === 0) {
-        // Checking if data is empty and the edit form search is false
-        if (resp.data.length === 0) {
-          const error = {
-            errorNotFound: `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
-          };
-          dispatch(toggleErrorModalState(error));
-        } else {
-          const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
-          dispatch(setWorkOrder(workOrder));
-          dispatch(setWorkOrderData(resp.data[0]));
-          dispatch(toggleDisplayPDFFormState());
-          dispatch(checkForPDFFile(workOrderString));
-        }
-      } else {
-        dispatch(reset('iirFormDisabled'));
-        dispatch(resetState());
-        const returnError = { error: '' };
-        if (Object.keys(resp.error).length > 1) {
-          returnError.error = `${resp.error.code}: ${resp.error.name}`;
-        } else {
-          returnError.error =
-            'Something went wrong updating or adding IIR notes!';
-        }
-        dispatch(toggleErrorModalState(returnError));
-      }
 
-      ipcRenderer.removeListener(
-        'asynchronous-reply',
-        handleGetWorkOrderDataResp
-      );
+    dispatch(setWorkOrder(workOrder));
+    // Setup call back to use dispatch and call the handleGetWorkOrderDataResp, otherwise breaks when dispatch is run inside ipcRenderer function call.
+    const callFunction = (event: {}, resp: {}) => {
+      dispatch(handleGetWorkOrderDataResp(event, resp));
+      ipcRenderer.removeListener('asynchronous-reply', callFunction);
     };
+
     ipcRenderer.send('asynchronous-message', mainRequest);
     dispatch(toggleLoadingScreenState());
-    ipcRenderer.on('asynchronous-reply', handleGetWorkOrderDataResp);
+    ipcRenderer.on('asynchronous-reply', callFunction);
   };
+}
+
+export function handleGetWorkOrderDataResp(
+  _event: {},
+  resp: { error: { code: string; name: string }; data: object[] }
+) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState();
+    const workOrder = {
+      workOrderSearch: state.iir.workOrder.workOrderSearch,
+      workOrderSearchLineItem: state.iir.workOrder.workOrderSearchLineItem
+    };
+
+    dispatch(toggleLoadingScreenStateOff());
+    // Checking no errors
+    if (Object.keys(resp.error).length === 0) {
+      // Checking if data is empty and the edit form search is false
+      if (resp.data.length === 0) {
+        const error = {
+          errorNotFound: `Could not find WO: ${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}. Double check WO is correct.`
+        };
+        dispatch(toggleErrorModalState(error));
+      } else {
+        const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
+        // dispatch(setWorkOrder(workOrder));
+        dispatch(setWorkOrderData(resp.data[0]));
+        dispatch(toggleDisplayPDFFormState());
+        dispatch(checkForPDFFile(workOrderString));
+      }
+    } else {
+      dispatch(reset('iirFormDisabled'));
+      dispatch(resetState());
+      const returnError = { error: '' };
+      if (Object.keys(resp.error).length > 1) {
+        returnError.error = `${resp.error.code}: ${resp.error.name}`;
+      } else {
+        returnError.error =
+          'Something went wrong updating or adding IIR notes!';
+      }
+      dispatch(toggleErrorModalState(returnError));
+    }
+    ipcRenderer.removeListener(
+      'asynchronous-reply',
+      handleGetWorkOrderDataResp
+    );
+  }
 }
 
 export function postOrUpdateIIRReport(iirNotes: {

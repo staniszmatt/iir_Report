@@ -1,44 +1,72 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`actions should reset iir state to all false states and clear data 1`] = `
+exports[`iirActions should reset iir state to all false states and clear data 1`] = `
 Object {
   "type": "RESET_STATE",
 }
 `;
 
-exports[`actions should set the workOrder data state 1`] = `
+exports[`iirActions should set the workOrder data state 1`] = `
 Object {
-  "resp": Object {},
+  "resp": Object {
+    "workOrderSearch": "string",
+    "workOrderSearchLineItem": "string",
+  },
   "type": "SET_WORK_ORDER",
 }
 `;
 
-exports[`actions should set the workOrderData data state 1`] = `
+exports[`iirActions should set the workOrderData data state 1`] = `
 Object {
-  "resp": Object {},
+  "resp": Object {
+    "Cert_type_Description": "string",
+    "CustomerName": "string",
+    "CustomerNumber": "string",
+    "CustomerOrderNumber": "string",
+    "DateIssuedYYMMDD": "string",
+    "ItemNumber": "string",
+    "Manual_Combined": "string",
+    "OrderType": "string",
+    "PartDescription": "string",
+    "PartNumber": "string",
+    "Quantity": 1,
+    "SalesOrderAndLineNumber": "string",
+    "SalesOrderNumber": "string",
+    "SerialNumber": "string",
+    "TSN": 0,
+    "TSO": 0,
+    "TSR": 0,
+    "Trv_Num": "string",
+    "Warrenty_Y_N": "N",
+    "Work_Order_Number": "string",
+    "customerReasonForRemoval": "NONE",
+    "evalFindings": "NONE",
+    "genConditionReceived": "NONE",
+    "workedPerformed": "NONE",
+  },
   "type": "SET_WORK_ORDER_DATA",
 }
 `;
 
-exports[`actions should toggle IIR form field display state 1`] = `
+exports[`iirActions should toggle IIR form field display state 1`] = `
 Object {
   "type": "TOGGLE_IIR_EDIT_STATE",
 }
 `;
 
-exports[`actions should toggle PDF form display state 1`] = `
+exports[`iirActions should toggle PDF form display state 1`] = `
 Object {
   "type": "TOGGLE_PDF_DISPLAY",
 }
 `;
 
-exports[`actions should toggle loading screen display state 1`] = `
+exports[`iirActions should toggle loading screen display state 1`] = `
 Object {
   "type": "TOGGLE_LOADING_SCREEN_DISPLAY_ON",
 }
 `;
 
-exports[`actions should toggle to post iir notes state 1`] = `
+exports[`iirActions should toggle to post iir notes state 1`] = `
 Object {
   "type": "SET_POST_IIR_NOTES",
 }
