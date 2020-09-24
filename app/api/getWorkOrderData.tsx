@@ -17,7 +17,7 @@ interface ReturnData {
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
   let returnString = '';
-  if (stringToCheck.length === 0 || stringToCheck === null) {
+  if (stringToCheck === null || stringToCheck.length === 0) {
     returnString = 'NONE';
   } else {
     returnString = stringToCheck;

@@ -158,7 +158,7 @@ export function getIIRData(workOrder: {
     ) => {
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenStateOff());
-
+      console.log('search get resp: ', resp);
       if (Object.keys(resp.error).length === 0) {
         // If there is no note data and set to null, set postIIRNotes to true
 
@@ -337,6 +337,8 @@ export function postOrUpdateIIRReport(iirNotes: {
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
+    console.log('state: ', state);
+    console.log('iirNote: ', iirNotes);
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
     if (state.diplayOpenPDFBtn) {
       const dateTime = Date.now();
