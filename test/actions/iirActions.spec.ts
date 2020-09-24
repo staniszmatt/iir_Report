@@ -7,7 +7,6 @@ import { spy } from 'sinon';
 // import expect from 'expect';
 import * as actions from '../../app/actions/iirActions';
 import * as modalActons from '../../app/actions/modalActions';
-import { GetState } from '../../app/reducers/types';
 
 const { ipcRenderer } = require('electron');
 
@@ -41,6 +40,25 @@ const mockData = {
 // For Async function dispatches
 // const middlewares = [thunk];
 // const mockStore = configureMockStore(middlewares);
+
+const thunk = ({ dispatch, getState }) => next => action => {
+  if (typeof action === 'function') {
+    return action(dispatch, getState)
+  }
+
+  return next(action)
+}
+const create = () => {
+  const store = {
+    getState: jest.fn(() => ({})),
+    dispatch: jest.fn()
+  }
+  const next = jest.fn()
+
+  const invoke = action => thunk(store)(next)(action)
+
+  return { store, next, invoke }
+}
 
 jest.mock(
   'electron',
