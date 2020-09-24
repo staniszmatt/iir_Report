@@ -48,36 +48,33 @@ async function getWorkOrderData(request: Request) {
           INNER JOIN sales_cust_8130_types ON traveler_header.CustomerName = sales_cust_8130_types.CustomerName
             WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
 
-      if (
-        secondData.length > 0 &&
-        Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
-      ) {
-        const {
-          Manual_Combined,
-          Work_Order_Number,
-          Trv_Num,
-          Cert_type_Description
-        } = secondData[0];
+      if (secondData.length > 0) {
+        if (
+          Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
+        ) {
+          const { Manual_Combined, Work_Order_Number, Trv_Num } = secondData[0];
 
-        returnData.data[0].Manual_Combined = Manual_Combined;
-        returnData.data[0].Work_Order_Number = Work_Order_Number;
-        returnData.data[0].Trv_Num = Trv_Num;
-        returnData.data[0].Cert_type_Description = Cert_type_Description;
+          returnData.data[0].Manual_Combined = Manual_Combined;
+          returnData.data[0].Work_Order_Number = Work_Order_Number;
+          returnData.data[0].Trv_Num = Trv_Num;
+
+          if (
+            Object.prototype.hasOwnProperty.call(
+              secondData[0],
+              'Cert_type_Description'
+            )
+          ) {
+            returnData.data[0].Cert_type_Description =
+              secondData[0].Cert_type_Description;
+          } else {
+            returnData.data[0].Cert_type_Description = 'N/A';
+          }
+        }
       } else {
         returnData.data[0].Manual_Combined = 'N/A';
         returnData.data[0].Work_Order_Number = 'N/A';
         returnData.data[0].Trv_Num = 'N/A';
-        if (
-          Object.prototype.hasOwnProperty.call(
-            secondData[0],
-            'Cert_type_Description'
-          )
-        ) {
-          returnData.data[0].Cert_type_Description =
-            secondData[0].Cert_type_Description;
-        } else {
-          returnData.data[0].Cert_type_Description = 'N/A';
-        }
+        returnData.data[0].Cert_type_Description = 'N/A';
       }
 
       db.close();

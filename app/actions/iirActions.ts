@@ -161,6 +161,7 @@ export function getIIRData(workOrder: {
 
       if (Object.keys(resp.error).length === 0) {
         // If there is no note data and set to null, set postIIRNotes to true
+
         if (resp.data.customerReasonForRemoval === null) {
           dispatch(togglePostIIRNotes());
         }

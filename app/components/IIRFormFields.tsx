@@ -34,6 +34,16 @@ const IIRForm = (
     workedPerformedNote,
     handleReviewIIRPDF
   } = props.props;
+  const custRemoval = `(INCOMING INSPECTION)
+  CUSTOMER REASON FOR REMOVAL:`;
+  const genCondition = `(INCOMING INSPECTION)
+  GENERAL CONDITION AS RECEIVED:
+  (OUT OF BOX VIEW EX: CLEAN, DIRTY, MISSING PARTS, DENTED, SCARTCHES)`;
+  const evalCondition = `(INCOMING INSPECTION)
+  EVALUATION FINDINGS:
+  (HIDDEN DAMAGE:  N/A, DENTED, DAMAGED FLANGE, LEAKS, CORRODED, CRACKED)`;
+  const workPerf = `(FINAL TABLE)
+  Worked Performed:`;
 
   if (
     customerReasonForRemoval === null &&
@@ -52,7 +62,7 @@ const IIRForm = (
       <div>
         <div>
           <Field
-            label="CUSTOMER REASON FOR REMOVAL:"
+            label={custRemoval}
             component={FormTextInput}
             name="customerReasonForRemoval"
             type="textarea"
@@ -63,7 +73,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="GENERAL CONDITION AS RECEIVED (HIDDEN DAMAGE):"
+            label={genCondition}
             component={FormTextInput}
             name="genConditionReceived"
             type="textarea"
@@ -74,7 +84,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="EVALUATION FINDINGS:"
+            label={evalCondition}
             component={FormTextInput}
             name="evalFindings"
             type="textarea"
@@ -85,7 +95,7 @@ const IIRForm = (
         </div>
         <div>
           <Field
-            label="Worked Performed:"
+            label={workPerf}
             component={FormTextInput}
             name="workedPerformed"
             type="textarea"
