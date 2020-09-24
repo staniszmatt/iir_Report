@@ -48,7 +48,7 @@ const thunk = ({ dispatch, getState }) => next => action => {
 
   return next(action)
 }
-const create = () => {
+const state = () => {
   const store = {
     getState: jest.fn(() => ({})),
     dispatch: jest.fn()
