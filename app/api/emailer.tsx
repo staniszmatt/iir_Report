@@ -15,9 +15,6 @@ interface Request {
 }
 
 async function emailer(request: Request) {
-
-  console.log('emailer request', request);
-
   const {
     workOrder,
     CustomerName,

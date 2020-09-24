@@ -48,6 +48,8 @@ async function getWorkOrderData(request: Request) {
           INNER JOIN sales_cust_8130_types ON traveler_header.CustomerName = sales_cust_8130_types.CustomerName
             WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
 
+console.log("manual data: ", secondData);
+
       if (secondData.length > 0) {
         if (
           Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')

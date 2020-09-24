@@ -158,15 +158,17 @@ export function getIIRData(workOrder: {
     ) => {
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenStateOff());
-      console.log('search get resp: ', resp);
       if (Object.keys(resp.error).length === 0) {
         // If there is no note data and set to null, set postIIRNotes to true
-
         if (resp.data.customerReasonForRemoval === null) {
           dispatch(togglePostIIRNotes());
         }
+
         const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
         dispatch(setWorkOrder(workOrder));
+        // TODO: Setup async for dispatch(setWorkOrderData(resp.data)); to call workOrder.callAutoEmailer(); when loaded.
+        // Once in a great while autoemailer runs before data is saved to state.
+        // Refernece https://redux.js.org/tutorials/essentials/part-5-async-logic on Detailed Explanation
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
         dispatch(checkForPDFFile(workOrderString));
@@ -289,6 +291,9 @@ export function getWorkOrderData(workOrder: {
       _event: {},
       resp: { error: { code: string; name: string }; data: object[] }
     ) => {
+
+      console.log('Get PDF Data resp: ', resp);
+
       dispatch(toggleLoadingScreenStateOff());
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
@@ -337,8 +342,6 @@ export function postOrUpdateIIRReport(iirNotes: {
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
-    console.log('state: ', state);
-    console.log('iirNote: ', iirNotes);
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
     if (state.diplayOpenPDFBtn) {
       const dateTime = Date.now();
