@@ -54,7 +54,7 @@ const IIRForm = (
       onSubmit={handleSubmit(onSubmit)}
       className={styles['form-container']}
     >
-      <div className={styles['form-disabled']}>
+      <div>
         <Field
           label="CUSTOMER REASON FOR REMOVAL:"
           component={FormTextInput}
@@ -66,7 +66,7 @@ const IIRForm = (
           disabled={true}
         />
       </div>
-      <div className={styles['form-disabled']}>
+      <div>
         <Field
           label="GENERAL CONDITION AS RECEIVED (HIDDEN DAMAGE):"
           component={FormTextInput}
@@ -78,7 +78,7 @@ const IIRForm = (
           disabled={true}
         />
       </div>
-      <div className={styles['form-disabled']}>
+      <div>
         <Field
           label="EVALUATION FINDINGS:"
           component={FormTextInput}
@@ -90,7 +90,7 @@ const IIRForm = (
           disabled={true}
         />
       </div>
-      <div className={styles['form-disabled']} style={warningCheck}>
+      <div style={warningCheck}>
         <Field
           label="WORK PERFORMED:"
           component={FormTextInput}
