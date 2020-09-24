@@ -288,7 +288,10 @@ export function getWorkOrderData(workOrder: {
 
     dispatch(setWorkOrder(workOrder));
     // Setup call back to use dispatch and call the handleGetWorkOrderDataResp, otherwise breaks when dispatch is run inside ipcRenderer function call.
-    const callFunction = (event: {}, resp: {}) => {
+    const callFunction = (
+      event: {},
+      resp: { error: { code: string; name: string }; data: object[] }
+    ) => {
       dispatch(handleGetWorkOrderDataResp(event, resp));
       ipcRenderer.removeListener('asynchronous-reply', callFunction);
     };
@@ -342,7 +345,7 @@ export function handleGetWorkOrderDataResp(
       'asynchronous-reply',
       handleGetWorkOrderDataResp
     );
-  }
+  };
 }
 
 export function postOrUpdateIIRReport(iirNotes: {
