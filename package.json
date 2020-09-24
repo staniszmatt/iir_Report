@@ -71,6 +71,11 @@
       ]
     },
     "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "include": "build/installer.nsh",
       "installerIcon": "aeropartsicon_1Jk_icon.ico",
       "installerHeaderIcon": "aeropartsicon_1Jk_icon.ico",
       "deleteAppDataOnUninstall": true
