@@ -66,6 +66,7 @@ form {
   text-align: center;
   font-size: 12pt;
   font-weight: bold;
+  white-space: pre-wrap;
 }
 
 .textarea-container > div:nth-child(2) > textarea {
