@@ -114,7 +114,6 @@ async function getWorkOrderData(request: Request) {
   } catch (error) {
     returnData.error = error;
   }
-  console.log("data: ", returnData);
   return returnData;
 }
 

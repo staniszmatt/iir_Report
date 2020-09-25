@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`iirActions Test error modal 1`] = `
+Object {
+  "resp": Object {
+    "error": "string",
+  },
+  "type": "TOGGLE_ERROR_MODAL_STATE",
+}
+`;
+
 exports[`iirActions should reset iir state to all false states and clear data 1`] = `
 Object {
   "type": "RESET_STATE",
