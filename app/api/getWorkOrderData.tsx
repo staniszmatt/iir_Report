@@ -17,7 +17,7 @@ interface ReturnData {
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
   let returnString = '';
-  if (stringToCheck.length === 0 || stringToCheck === null) {
+  if (stringToCheck === null || stringToCheck.length === 0) {
     returnString = 'NONE';
   } else {
     returnString = stringToCheck;
@@ -43,38 +43,41 @@ async function getWorkOrderData(request: Request) {
       returnData.data = data;
       // Can't get the server to do more than one join for some reason, work around is a second query.
       const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
-      sales_cust_8130_types.Cert_type_Description, sales_cust_8130_types.CustomerName
+      sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
         FROM traveler_header
-          INNER JOIN sales_cust_8130_types ON traveler_header.CustomerName = sales_cust_8130_types.CustomerName
+        INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
             WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
 
-      if (secondData.length > 0) {
-        if (
-          Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
-        ) {
-          const { Manual_Combined, Work_Order_Number, Trv_Num } = secondData[0];
+      if (
+        secondData.length > 0 &&
+        Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
+      ) {
+        const {
+          Manual_Combined,
+          Work_Order_Number,
+          Trv_Num,
+          Cert_type_Description
+        } = secondData[0];
 
-          returnData.data[0].Manual_Combined = Manual_Combined;
-          returnData.data[0].Work_Order_Number = Work_Order_Number;
-          returnData.data[0].Trv_Num = Trv_Num;
-
-          if (
-            Object.prototype.hasOwnProperty.call(
-              secondData[0],
-              'Cert_type_Description'
-            )
-          ) {
-            returnData.data[0].Cert_type_Description =
-              secondData[0].Cert_type_Description;
-          } else {
-            returnData.data[0].Cert_type_Description = 'N/A';
-          }
-        }
+        returnData.data[0].Manual_Combined = Manual_Combined;
+        returnData.data[0].Work_Order_Number = Work_Order_Number;
+        returnData.data[0].Trv_Num = Trv_Num;
+        returnData.data[0].Cert_type_Description = Cert_type_Description;
       } else {
         returnData.data[0].Manual_Combined = 'N/A';
         returnData.data[0].Work_Order_Number = 'N/A';
         returnData.data[0].Trv_Num = 'N/A';
-        returnData.data[0].Cert_type_Description = 'N/A';
+        if (
+          Object.prototype.hasOwnProperty.call(
+            secondData[0],
+            'Cert_type_Description'
+          )
+        ) {
+          returnData.data[0].Cert_type_Description =
+            secondData[0].Cert_type_Description;
+        } else {
+          returnData.data[0].Cert_type_Description = 'N/A';
+        }
       }
 
       db.close();
