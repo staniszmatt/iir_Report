@@ -326,7 +326,7 @@ export function handleGetWorkOrderDataResp(
         dispatch(toggleErrorModalState(error));
       } else {
         const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
-        // dispatch(setWorkOrder(workOrder));
+        dispatch(setWorkOrder(workOrder));
         dispatch(setWorkOrderData(resp.data[0]));
         dispatch(toggleDisplayPDFFormState());
         dispatch(checkForPDFFile(workOrderString));

@@ -1,14 +1,50 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { spy } from 'sinon';
-// For Async function dispatches
-// import configureMockStore from 'redux-mock-store';
-// import thunk from 'redux-thunk';
-// import fetchMock from 'fetch-mock';
-// import expect from 'expect';
 import * as actions from '../../app/actions/iirActions';
 import * as modalActons from '../../app/actions/modalActions';
 
 const { ipcRenderer } = require('electron');
+
+const mockState = {
+  // loadPDF: false,
+  // iirFormDisplay: false,
+  // loadingScreen: false,
+  // postIIRNotes: false,
+  // diplayOpenPDFBtn: false,
+  iir: {
+    workOrder: {
+      workOrderSearch: '',
+      workOrderSearchLineItem: ''
+    },
+    // workOrderInfo: {
+    //   CustomerName: '',
+    //   CustomerNumber: '',
+    //   CustomerOrderNumber: '',
+    //   DateIssuedYYMMDD: '',
+    //   ItemNumber: '',
+    //   Manual_Combined: '',
+    //   OrderType: '',
+    //   PartDescription: '',
+    //   PartNumber: '',
+    //   Quantity: '',
+    //   SalesOrderAndLineNumber: '',
+    //   SalesOrderNumber: '',
+    //   SerialNumber: '',
+    //   TSN: 0,
+    //   TSO: 0,
+    //   TSR: 0,
+    //   Trv_Num: '',
+    //   Warrenty_Y_N: '',
+    //   Work_Order_Number: '',
+    //   customerReasonForRemoval: '',
+    //   evalFindings: '',
+    //   genConditionReceived: '',
+    //   workedPerformed: '',
+    // }
+  }
+}
 
 const mockData = {
   SalesOrderAndLineNumber: 'string',
@@ -37,29 +73,6 @@ const mockData = {
   workedPerformed: 'NONE'
 }
 
-// For Async function dispatches
-// const middlewares = [thunk];
-// const mockStore = configureMockStore(middlewares);
-
-const thunk = ({ dispatch, getState }) => next => action => {
-  if (typeof action === 'function') {
-    return action(dispatch, getState)
-  }
-
-  return next(action)
-}
-const state = () => {
-  const store = {
-    getState: jest.fn(() => ({})),
-    dispatch: jest.fn()
-  }
-  const next = jest.fn()
-
-  const invoke = action => thunk(store)(next)(action)
-
-  return { store, next, invoke }
-}
-
 jest.mock(
   'electron',
   () => {
@@ -78,11 +91,7 @@ jest.mock(
 );
 
 describe('iirActions', () => {
-  // For Async function dispatches
-  // afterEach(() => {
-  //   fetchMock.reset();
-  //   fetchMock.restore();
-  // });
+
 
   it('should reset iir state to all false states and clear data', () => {
     expect(actions.resetState()).toMatchSnapshot();
@@ -130,32 +139,7 @@ describe('iirActions', () => {
   it('should pass two values to use for searching for info, setting loading screen and saving work order search', () => {
     const dataResp = {
       error: {},
-      data: {
-        SalesOrderAndLineNumber: 'string',
-        ItemNumber: 'string',
-        PartNumber: 'string',
-        PartDescription: 'string',
-        SerialNumber: 'string',
-        Quantity: 1,
-        TSN: 0,
-        TSR: 0,
-        TSO: 0,
-        SalesOrderNumber: 'string',
-        CustomerNumber: 'string',
-        CustomerName: 'string',
-        CustomerOrderNumber: 'string',
-        DateIssuedYYMMDD: 'string',
-        Warrenty_Y_N: 'string',
-        OrderType: 'string',
-        Manual_Combined: 'string',
-        Work_Order_Number: 'string',
-        Trv_Num: 'string',
-        Cert_type_Description: 'string',
-        customerReasonForRemoval: 'string',
-        genConditionReceived: 'string',
-        evalFindings: 'string',
-        workedPerformed: 'string'
-      }
+      data: { mockData }
     };
     const dataArg = {
       workOrderSearch: 'string',
@@ -187,25 +171,50 @@ describe('iirActions', () => {
     expect(ipcRenderer.on).toBeCalledWith('asynchronous-reply', expect.any(Function));
     expect(ipcRenderer.send).toBeCalledWith('asynchronous-message',dataRequest);
   });
-  // Start of good data from callback handleGetWorkOrderDataResp from getWorkOrderData to set dispatch items
+  // Start with good data from callback handleGetWorkOrderDataResp from getWorkOrderData to set dispatch items
   it('should recive data from ipcRenderer and pass to set work order data, turn on display PDF form state and set check pdf file string', () => {
-
-
-    // TODO: Need to setup middleware with state,
-    // Checkout out https://redux.js.org/recipes/writing-tests
-
-    const resp = {
+    const resp: any = {
       error: {},
       data: [mockData]
     }
     const event = {};
-
-    const fn = actions.handleGetWorkOrderDataResp(event, resp);
-    expect(fn).toBeInstanceOf(Function);
+    const data = resp.data[0];
+    const getState: any = () => {
+      return mockState;
+    };
     const dispatch = spy();
-    fn(dispatch);
-  })
+    const fn = actions.handleGetWorkOrderDataResp(event, resp);
 
-  expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(false);
+    expect(fn).toBeInstanceOf(Function);
+    fn(dispatch, getState);
+    expect(dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY_OFF })).toBe(true);
+    expect(dispatch.calledWith({ type: actions.SET_WORK_ORDER_DATA, resp: data })).toBe(true);
+    expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(true);
+    expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(false);
+    const returnError = { error: '' }
+    expect(dispatch.calledWith({ type: modalActons.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(false);
+  });
 
+  // Send Error data from callback handleGetWorkOrderDataResp from getWorkOrderData to set dispatch items
+  it('should recive error data from ipcRenderer and pass enable error modal', () => {
+    const resp: any = {
+      error: { code: 'string', name: 'string' },
+      data: []
+    };
+    const event = {};
+    const data = resp.data[0];
+    const returnError = { error: '' };
+
+    const getState: any = () => { return mockState }
+    const dispatch = spy();
+    const fn = actions.handleGetWorkOrderDataResp(event, resp);
+
+    expect(fn).toBeInstanceOf(Function);
+    fn(dispatch, getState);
+    expect(dispatch.calledWith({ type: actions.SET_WORK_ORDER_DATA, resp: data })).toBe(false);
+    expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(false);
+    expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(false);
+    expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(true);
+    expect(dispatch.calledWith({ type: modalActons.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(true);
+  });
 });
