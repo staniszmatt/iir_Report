@@ -158,15 +158,17 @@ export function getIIRData(workOrder: {
     ) => {
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenStateOff());
-
       if (Object.keys(resp.error).length === 0) {
         // If there is no note data and set to null, set postIIRNotes to true
-
         if (resp.data.customerReasonForRemoval === null) {
           dispatch(togglePostIIRNotes());
         }
+
         const workOrderString = `${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`;
         dispatch(setWorkOrder(workOrder));
+        // TODO: Setup async for dispatch(setWorkOrderData(resp.data)); to call workOrder.callAutoEmailer(); when loaded.
+        // Once in a great while autoemailer runs before data is saved to state.
+        // Refernece https://redux.js.org/tutorials/essentials/part-5-async-logic on Detailed Explanation
         dispatch(setWorkOrderData(resp.data));
         dispatch(toggleIIRAddEditState());
         dispatch(checkForPDFFile(workOrderString));
