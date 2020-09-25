@@ -60,7 +60,7 @@ interface Props {
   };
 }
 
-export default function TearDownSummery(props: Props) {
+export default function TearDownSummery(props: Props | any) {
   const {
     getWorkOrderData,
     postOrUpdateIIRReport,

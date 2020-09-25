@@ -48,8 +48,6 @@ async function getWorkOrderData(request: Request) {
         INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
             WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
 
-      console.log('secondData: ', secondData);
-
       if (
         secondData.length > 0 &&
         Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
@@ -81,8 +79,6 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].Cert_type_Description = 'N/A';
         }
       }
-
-      console.log("returnData : ", returnData);
 
       db.close();
 
