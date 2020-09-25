@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import LoadingScreen from './LoadingDisplay';
 import Btn from './buttonFunctions/buttonClickHandler';
@@ -45,7 +46,6 @@ interface Props {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function IIRAddEdit(props: Props | any) {
   const {
     postOrUpdateIIRReport,

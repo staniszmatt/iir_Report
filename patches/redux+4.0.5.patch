@@ -1,8 +1,8 @@
 diff --git a/node_modules/redux/index.d.ts b/node_modules/redux/index.d.ts
-index 50e8d01..69c96ee 100644
+index 50e8d01..0935370 100644
 --- a/node_modules/redux/index.d.ts
 +++ b/node_modules/redux/index.d.ts
-@@ -210,9 +210,18 @@ export function combineReducers<M extends ReducersMapObject<any, any>>(
+@@ -210,9 +210,19 @@ export function combineReducers<M extends ReducersMapObject<any, any>>(
   * @template A The type of things (actions or otherwise) which may be
   *   dispatched.
   */
@@ -13,27 +13,28 @@ index 50e8d01..69c96ee 100644
 +//   <T extends A>(action: T): T
 +// }
 +
++// Updated to include the use of Thunk
 + export type ThunkAction<R, S, E> = (dispatch: Dispatch<S>, getState: () => S, extraArgument: E) => R;
-+ 
++
 +  export interface Dispatch<S> {
 +    <R, E>(asyncAction: ThunkAction<R, S, E>): R;
 +  }
 +  export interface Dispatch<S> {
 +    <A>(action:A &{type?:any}): A &{type?:any};
 +  }
- 
+
  /**
   * Function to remove listener added by `Store.subscribe()`.
-@@ -428,7 +437,7 @@ export type StoreEnhancerStoreCreator<Ext = {}, StateExt = {}> = <
- 
+@@ -428,7 +438,7 @@ export type StoreEnhancerStoreCreator<Ext = {}, StateExt = {}> = <
+
  /* middleware */
- 
+
 -export interface MiddlewareAPI<D extends Dispatch = Dispatch, S = any> {
 +export interface MiddlewareAPI<D extends Dispatch<any> = Dispatch<any>, S = any> {
    dispatch: D
    getState(): S
  }
-@@ -450,7 +459,7 @@ export interface MiddlewareAPI<D extends Dispatch = Dispatch, S = any> {
+@@ -450,7 +460,7 @@ export interface MiddlewareAPI<D extends Dispatch = Dispatch, S = any> {
  export interface Middleware<
    DispatchExt = {},
    S = any,
@@ -42,31 +43,31 @@ index 50e8d01..69c96ee 100644
  > {
    (api: MiddlewareAPI<D, S>): (
      next: Dispatch<AnyAction>
-@@ -558,23 +567,23 @@ export interface ActionCreatorsMapObject<A = any> {
+@@ -558,23 +568,23 @@ export interface ActionCreatorsMapObject<A = any> {
   */
  export function bindActionCreators<A, C extends ActionCreator<A>>(
    actionCreator: C,
 -  dispatch: Dispatch
 +  dispatch: Dispatch<any>
  ): C
- 
+
  export function bindActionCreators<
    A extends ActionCreator<any>,
    B extends ActionCreator<any>
 ->(actionCreator: A, dispatch: Dispatch): B
 +>(actionCreator: A, dispatch: Dispatch<any>): B
- 
+
  export function bindActionCreators<A, M extends ActionCreatorsMapObject<A>>(
    actionCreators: M,
 -  dispatch: Dispatch
 +  dispatch: Dispatch<any>
  ): M
- 
+
  export function bindActionCreators<
    M extends ActionCreatorsMapObject<any>,
    N extends ActionCreatorsMapObject<any>
 ->(actionCreators: M, dispatch: Dispatch): N
 +>(actionCreators: M, dispatch: Dispatch<any>): N
- 
+
  /* compose */
- 
+
