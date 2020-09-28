@@ -127,9 +127,11 @@ async function getIIRDataAPI(request: Request) {
       try {
         const dbIIR = await pool.connect();
         const iirQuery = `SELECT *
-        FROM tear_down_notes AS i
+        FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
         const getIIRData = await dbIIR.query(iirQuery);
+
+        console.log('Return get data', getIIRData);
 
         if (getIIRData.recordset.length === 0) {
           returnData.data.customerReasonForRemoval = null;
@@ -148,7 +150,10 @@ async function getIIRDataAPI(request: Request) {
             customerReasonForRemoval,
             genConditionReceived,
             evalFindings,
-            workedPerformed
+            workedPerformed,
+            tearDownTSN,
+            tearDownTSR,
+            tearDownTSO
           } = getIIRData.recordset[0];
 
           returnData.data.customerReasonForRemoval = checkStringLength(
@@ -160,6 +165,9 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.evalFindings = checkStringLength(evalFindings);
           // eslint-disable-next-line prettier/prettier
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
+          returnData.data.tearDownTSO = tearDownTSO;
+          returnData.data.tearDownTSN = tearDownTSN;
+          returnData.data.tearDownTSR = tearDownTSR;
           returnData.success = true;
         } else {
           returnData.success = true;

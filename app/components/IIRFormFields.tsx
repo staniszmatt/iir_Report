@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-useless-escape */
 import React from 'react';
@@ -5,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import routes from '../constants/routes.json';
 import FormTextInput from './forms/formTextArea';
+import FormInput from './forms/formInput';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './IIRFormFields.css';
 
@@ -19,12 +22,23 @@ interface DispatchProps {
     evalFindings: string;
     genConditionReceived: string;
     workedPerformedNote: string;
+    tso: string;
+    tsn: string;
+    tsr: string;
   };
+  initialValues: {
+    tso: null;
+    tsn: null;
+    tsr: null;
+  }
 }
 
 const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
+
+  console.log('form props', props);
+
   let btnText = 'UPDATE IIR NOTES';
   const { handleSubmit, onSubmit } = props;
   const {
@@ -32,8 +46,16 @@ const IIRForm = (
     evalFindings,
     genConditionReceived,
     workedPerformedNote,
-    handleReviewIIRPDF
+    handleReviewIIRPDF,
+    tso,
+    tsn,
+    tsr
   } = props.props;
+  props.initialValues.tso = tso;
+  props.initialValues.tsn = tsn;
+  props.initialValues.tsr = tsr;
+
+  // Setup of label text to include some new line editing here.
   const custRemoval = `(INCOMING INSPECTION)
   CUSTOMER REASON FOR REMOVAL:`;
   const genCondition = `(INCOMING INSPECTION)
@@ -60,6 +82,36 @@ const IIRForm = (
       className={styles['form-container']}
     >
       <div>
+        <div>
+          <div>(FINAL TABLE)</div>
+          <div>
+            <Field
+              label="TSO"
+              component={FormInput}
+              defaultValue={tso}
+              name="tsoValue"
+              type="text"
+            />
+          </div>
+          <div>
+            <Field
+              label="TSR"
+              component={FormInput}
+              defaultValue={tsr}
+              name="tsrValue"
+              type="text"
+            />
+          </div>
+          <div>
+            <Field
+              label="TSN"
+              component={FormInput}
+              defaultValue={tsn}
+              name="tsnValue"
+              type="text"
+            />
+          </div>
+        </div>
         <div>
           <Field
             label={custRemoval}
@@ -124,6 +176,9 @@ interface Values {
   evalFindings: string;
   genConditionReceived: string;
   workedPerformed: string;
+  tsn: any;
+  tso: any;
+  tsr: any;
 }
 
 function validate(values: Values) {
@@ -133,8 +188,26 @@ function validate(values: Values) {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformed
+    workedPerformed,
+    tsnValue,
+    tsrValue,
+    tsoValue
   } = values;
+
+  console.log('tsn, tsr, tso values: ', tsnValue, tsrValue, tsoValue);
+  console.log('customerReasonForRemoval ', customerReasonForRemoval);
+
+  if (isNaN(tsnValue)) {
+    errors.tsnValue = 'Must be a number!';
+  }
+
+  if (isNaN(tsrValue)) {
+    errors.tsrValue = 'Must be a number!';
+  }
+
+  if (isNaN(tsoValue)) {
+    errors.tsoValue = 'Must be a number!';
+  }
 
   if (customerReasonForRemoval) {
     if (customerReasonForRemoval.length > 700) {
@@ -170,6 +243,9 @@ export default reduxForm<FormProps, DispatchProps>({
     customerReasonForRemoval: null,
     genConditionReceived: null,
     evalFindings: null,
-    workedPerformed: null
+    workedPerformed: null,
+    tso: null,
+    tsn: null,
+    tsr: null
   }
 })(IIRForm);

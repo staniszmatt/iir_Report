@@ -10,7 +10,9 @@ import {
   TOGGLE_IIR_EDIT_STATE,
   TOGGLE_POST_IIR_NOTES,
   TOGGLE_DISPLAY_OPEN_PDF_BTN,
-  RESET_DISPLAY_STATE
+  RESET_DISPLAY_STATE,
+  TOGGLE_SEND_EMAIL_ON,
+  TOGGLE_SEND_EMAIL_OFF
 } from '../actions/iirActions';
 
 const IState = {
@@ -19,6 +21,7 @@ const IState = {
   loadingScreen: false,
   postIIRNotes: false,
   diplayOpenPDFBtn: false,
+  sendEmail: false,
   workOrder: {},
   workOrderInfo: {}
 };
@@ -40,6 +43,21 @@ export default function iir(state = IState, action: CustomAction) {
         ...state,
         loadingScreen: false
       };
+
+
+    case TOGGLE_SEND_EMAIL_ON:
+      return {
+        ...state,
+        sendEmail: true
+      };
+    case TOGGLE_SEND_EMAIL_OFF:
+      return {
+        ...state,
+        sendEmail: false
+      };
+
+
+
     case TOGGLE_PDF_DISPLAY:
       return {
         ...state,
@@ -78,6 +96,7 @@ export default function iir(state = IState, action: CustomAction) {
         iirFormDisplay: false,
         postIIRNotes: false,
         diplayOpenPDFBtn: false,
+        sendEmail: false,
         workOrder: {},
         workOrderInfo: {}
       };

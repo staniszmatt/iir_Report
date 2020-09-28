@@ -8,7 +8,7 @@ import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
 
 interface Props {
-  postOrUpdateIIRReport: () => {};
+  postUpdatePDFCheck: () => {};
   getIIRData: () => {};
   handleReviewIIRPDF: () => {};
   openPDF: () => {};
@@ -35,6 +35,9 @@ interface Props {
       TSN: number;
       TSO: number;
       TSR: number;
+      tearDownTSO: number;
+      tearDownTSN: number;
+      tearDownTSR: number;
       Trv_Num: string;
       Warrenty_Y_N: string;
       Work_Order_Number: string;
@@ -46,9 +49,28 @@ interface Props {
   };
 }
 
+function tsCheck(tearDownTS: any, TS: number) {
+  let returnValue = null;
+
+  if (tearDownTS === undefined && TS === undefined) {
+    return;
+  }
+
+  if (tearDownTS === null) {
+    returnValue = TS.toString();
+  } else {
+    returnValue = tearDownTS.toString();
+  }
+  // eslint-disable-next-line consistent-return
+  return returnValue;
+}
+
 export default function IIRAddEdit(props: Props | any) {
+
+  console.log('addEdit page props', props);
+
   const {
-    postOrUpdateIIRReport,
+    postUpdatePDFCheck,
     getIIRData,
     handleReviewIIRPDF,
     openPDF,
@@ -59,16 +81,33 @@ export default function IIRAddEdit(props: Props | any) {
     loadingScreen,
     iirFormDisplay,
     workOrderInfo,
-    diplayOpenPDFBtn
+    diplayOpenPDFBtn,
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir;
+  const {
+    TSN,
+    TSO,
+    TSR,
+    tearDownTSO,
+    tearDownTSN,
+    tearDownTSR
+  // eslint-disable-next-line react/destructuring-assignment
+  } = props.iir.workOrderInfo;
+  const tsn = tsCheck(tearDownTSN, TSN);
+  const tso = tsCheck(tearDownTSO, TSO);
+  const tsr = tsCheck(tearDownTSR, TSR);
+
+  console.log('tsn, tso, tsr', tsn, tso, tsr);
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
     workedPerformedNote: workOrderInfo.workedPerformed,
-    handleReviewIIRPDF
+    handleReviewIIRPDF,
+    tsn,
+    tso,
+    tsr
   };
   const cancelProp = { cancelLoading };
 
@@ -144,10 +183,7 @@ export default function IIRAddEdit(props: Props | any) {
                   </div>
                 </div>
               </div>
-              <IIRFormFields
-                onSubmit={postOrUpdateIIRReport}
-                props={iirProps}
-              />
+              <IIRFormFields onSubmit={postUpdatePDFCheck} props={iirProps} />
             </div>
           )}
         </div>

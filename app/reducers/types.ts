@@ -7,6 +7,7 @@ export type iirStateType = {
     loadingScreen: boolean;
     postIIRNotes: boolean;
     diplayOpenPDFBtn: boolean;
+    sendEmail: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;

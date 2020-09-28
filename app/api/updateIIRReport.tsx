@@ -70,7 +70,7 @@ async function postIIRReport(request: Request) {
   try {
     const db = await pool.connect();
 
-    const query = `UPDATE tear_down_notes
+    const query = `UPDATE tear_down_notes_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = '${SalesOrderNumber}' AND salesOrderNumberLine = '${salesOrderNumberLine}'`;
