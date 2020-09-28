@@ -21,6 +21,12 @@ export type iirStateType = {
       genConditionReceived: string;
       evalFindings: string;
       workedPerformed: string;
+      TSN: number;
+      TSO: number;
+      TSR: number;
+      tearDownTSO: string;
+      tearDownTSN: string;
+      tearDownTSR: string;
     };
   };
 };

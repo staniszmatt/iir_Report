@@ -43,8 +43,6 @@ export default function iir(state = IState, action: CustomAction) {
         ...state,
         loadingScreen: false
       };
-
-
     case TOGGLE_SEND_EMAIL_ON:
       return {
         ...state,
@@ -55,9 +53,6 @@ export default function iir(state = IState, action: CustomAction) {
         ...state,
         sendEmail: false
       };
-
-
-
     case TOGGLE_PDF_DISPLAY:
       return {
         ...state,

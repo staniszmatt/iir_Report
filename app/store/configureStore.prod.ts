@@ -42,9 +42,9 @@ function configureStore(initialState?: {
           TSN: number;
           TSO: number;
           TSR: number;
-          tearDownTSO: number;
-          tearDownTSN: number;
-          tearDownTSR: number;
+          tearDownTSO: string;
+          tearDownTSN: string;
+          tearDownTSR: string;
           Trv_Num: string;
           Warrenty_Y_N: string;
           Work_Order_Number: string;

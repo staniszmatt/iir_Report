@@ -22,15 +22,10 @@ interface DispatchProps {
     evalFindings: string;
     genConditionReceived: string;
     workedPerformedNote: string;
-    tso: string;
-    tsn: string;
-    tsr: string;
+    tsnValue: string;
+    tsoValue: string;
+    tsrValue: string;
   };
-  initialValues: {
-    tso: null;
-    tsn: null;
-    tsr: null;
-  }
 }
 
 const IIRForm = (
@@ -47,13 +42,10 @@ const IIRForm = (
     genConditionReceived,
     workedPerformedNote,
     handleReviewIIRPDF,
-    tso,
-    tsn,
-    tsr
+    tsnValue,
+    tsoValue,
+    tsrValue
   } = props.props;
-  props.initialValues.tso = tso;
-  props.initialValues.tsn = tsn;
-  props.initialValues.tsr = tsr;
 
   // Setup of label text to include some new line editing here.
   const custRemoval = `(INCOMING INSPECTION)
@@ -88,7 +80,7 @@ const IIRForm = (
             <Field
               label="TSO"
               component={FormInput}
-              defaultValue={tso}
+              defaultValue={tsoValue}
               name="tsoValue"
               type="text"
             />
@@ -97,7 +89,7 @@ const IIRForm = (
             <Field
               label="TSR"
               component={FormInput}
-              defaultValue={tsr}
+              defaultValue={tsrValue}
               name="tsrValue"
               type="text"
             />
@@ -106,7 +98,7 @@ const IIRForm = (
             <Field
               label="TSN"
               component={FormInput}
-              defaultValue={tsn}
+              defaultValue={tsnValue}
               name="tsnValue"
               type="text"
             />
@@ -176,9 +168,9 @@ interface Values {
   evalFindings: string;
   genConditionReceived: string;
   workedPerformed: string;
-  tsn: any;
-  tso: any;
-  tsr: any;
+  tsnValue: any;
+  tsoValue: any;
+  tsrValue: any;
 }
 
 function validate(values: Values) {
@@ -194,19 +186,22 @@ function validate(values: Values) {
     tsoValue
   } = values;
 
-  console.log('tsn, tsr, tso values: ', tsnValue, tsrValue, tsoValue);
-  console.log('customerReasonForRemoval ', customerReasonForRemoval);
-
-  if (isNaN(tsnValue)) {
-    errors.tsnValue = 'Must be a number!';
+  if (tsnValue) {
+    if (isNaN(tsnValue)) {
+      errors.tsnValue = 'Must be a number!';
+    }
   }
 
-  if (isNaN(tsrValue)) {
-    errors.tsrValue = 'Must be a number!';
+  if (tsrValue) {
+    if (isNaN(tsrValue)) {
+      errors.tsrValue = 'Must be a number!';
+    }
   }
 
-  if (isNaN(tsoValue)) {
-    errors.tsoValue = 'Must be a number!';
+  if (tsoValue) {
+    if (isNaN(tsoValue)) {
+      errors.tsoValue = 'Must be a number!';
+    }
   }
 
   if (customerReasonForRemoval) {
@@ -244,8 +239,8 @@ export default reduxForm<FormProps, DispatchProps>({
     genConditionReceived: null,
     evalFindings: null,
     workedPerformed: null,
-    tso: null,
-    tsn: null,
-    tsr: null
+    tsnValue: null,
+    tsrValue: null,
+    tsoValue: null
   }
 })(IIRForm);

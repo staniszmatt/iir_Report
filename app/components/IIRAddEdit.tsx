@@ -49,22 +49,6 @@ interface Props {
   };
 }
 
-function tsCheck(tearDownTS: any, TS: number) {
-  let returnValue = null;
-
-  if (tearDownTS === undefined && TS === undefined) {
-    return;
-  }
-
-  if (tearDownTS === null) {
-    returnValue = TS.toString();
-  } else {
-    returnValue = tearDownTS.toString();
-  }
-  // eslint-disable-next-line consistent-return
-  return returnValue;
-}
-
 export default function IIRAddEdit(props: Props | any) {
 
   console.log('addEdit page props', props);
@@ -93,11 +77,20 @@ export default function IIRAddEdit(props: Props | any) {
     tearDownTSR
   // eslint-disable-next-line react/destructuring-assignment
   } = props.iir.workOrderInfo;
-  const tsn = tsCheck(tearDownTSN, TSN);
-  const tso = tsCheck(tearDownTSO, TSO);
-  const tsr = tsCheck(tearDownTSR, TSR);
+  // Check if we need to send the JobCost data or AeroParts Data
+  let tsnProps: string;
+  let tsoProps: string;
+  let tsrProps: string;
 
-  console.log('tsn, tso, tsr', tsn, tso, tsr);
+  if (tearDownTSO === null || tearDownTSN === null || tearDownTSR === null) {
+    tsnProps = TSN.toString();
+    tsoProps = TSO.toString();
+    tsrProps = TSR.toString();
+  } else {
+    tsnProps = tearDownTSN;
+    tsoProps = tearDownTSO;
+    tsrProps = tearDownTSR;
+  }
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
@@ -105,9 +98,9 @@ export default function IIRAddEdit(props: Props | any) {
     genConditionReceived: workOrderInfo.genConditionReceived,
     workedPerformedNote: workOrderInfo.workedPerformed,
     handleReviewIIRPDF,
-    tsn,
-    tso,
-    tsr
+    tsnValue: tsnProps,
+    tsoValue: tsoProps,
+    tsrValue: tsrProps
   };
   const cancelProp = { cancelLoading };
 

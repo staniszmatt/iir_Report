@@ -138,6 +138,9 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.genConditionReceived = null;
           returnData.data.evalFindings = null;
           returnData.data.workedPerformed = null;
+          returnData.data.tearDownTSO = null;
+          returnData.data.tearDownTSN = null;
+          returnData.data.tearDownTSR = null
         } else {
           returnData.data.customerReasonForRemoval = '';
           returnData.data.genConditionReceived = '';

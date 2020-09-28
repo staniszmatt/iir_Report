@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
@@ -7,9 +8,11 @@ interface Props {
   checkedValue: boolean;
   defaultValue: string;
   disabled: boolean;
-  input: string;
+  input: {
+    name: string;
+    value: string;
+  };
   label: string;
-  type: string;
   name: string;
   meta: {
     error: {};
@@ -28,7 +31,6 @@ export default function FormField(props: Props) {
     input,
     name,
     label,
-    type = 'text',
     meta: { error, touched }
   } = props;
   const [valueState, setValueState] = useState<ValueState>({
@@ -47,11 +49,11 @@ export default function FormField(props: Props) {
 
   return (
     <div className={styles['form-container']}>
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={props.input.name}>{label}</label>
       <input
         {...input}
         onChange={valueChange}
-        type={type || 'text'}
+        type="text"
         checked={checkedValue}
         value={valueState.inputValue}
         disabled={disabled}

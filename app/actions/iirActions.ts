@@ -21,7 +21,6 @@ export const RESET_DISPLAY_STATE = 'RESET_DISPLAY_STATE';
 export const TOGGLE_SEND_EMAIL_ON = 'TOGGLE_SEND_EMAIL_ON';
 export const TOGGLE_SEND_EMAIL_OFF = 'TOGGLE_SEND_EMAIL_OFF';
 
-
 interface WorkOrder {
   callAutoEmailer?: () => {} | any;
   callSuccessModal?: () => {} | any;
@@ -66,8 +65,6 @@ export function toggleLoadingScreenState() {
   };
 }
 
-
-
 export function toggleSendEmailStateOn() {
   return {
     type: TOGGLE_SEND_EMAIL_ON
@@ -79,9 +76,6 @@ export function toggleSendEmailStateOff() {
     type: TOGGLE_SEND_EMAIL_OFF
   };
 }
-
-
-
 
 export function toggleLoadingScreenStateOff() {
   return {
@@ -357,10 +351,6 @@ export function getWorkOrderData(workOrder: {
   };
 }
 
-
-
-
-
 export function postUpdatePDFCheck(iirNotes: {
   customerReasonForRemoval: string | any;
   evalFindings: string | any;
@@ -368,8 +358,9 @@ export function postUpdatePDFCheck(iirNotes: {
   workedPerformed: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-    const state = getState().iir;
 
+    const state = getState().iir;
+    // When Work Order is searched, it will set state true if a PDF exists. Then setup to move it to the old folder since a change to notes were made.
     if (state.diplayOpenPDFBtn) {
       const dateTime = Date.now();
       const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
@@ -391,10 +382,6 @@ export function postUpdatePDFCheck(iirNotes: {
     }
   };
 }
-
-
-
-
 
 export function handlePostIIRResp(
   _event: {},
@@ -436,18 +423,19 @@ export function handlePostIIRResp(
   };
 }
 
-
-
-
-
-
 export function postOrUpdateIIRReport(iirNotes: {
   customerReasonForRemoval: string | any;
   evalFindings: string | any;
   genConditionReceived: string | any;
   workedPerformed: string | any;
+  tsoValue: string | any;
+  tsrValue: string | any;
+  tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('postOrUpdateIIRREport argument: ', iirNotes);
+
     const state = getState().iir;
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
 
@@ -475,12 +463,48 @@ export function postOrUpdateIIRReport(iirNotes: {
       state.workOrderInfo.workedPerformed,
       iirNotes.workedPerformed
     );
+
+    // Check if values excists in AeroParts DB otherwise use the JobCost DB value.
+    let tsoValueCheck: string;
+    let tsnValueCheck: string;
+    let tsrValueCheck: string;
+
+    if (
+      state.workOrderInfo.tearDownTSO === null &&
+      state.workOrderInfo.tearDownTSN === null &&
+      state.workOrderInfo.tearDownTSR === null
+    ) {
+      tsoValueCheck = state.workOrderInfo.TSO.toString();
+      tsnValueCheck = state.workOrderInfo.TSN.toString();
+      tsrValueCheck = state.workOrderInfo.TSR.toString();
+    } else {
+      tsoValueCheck = state.workOrderInfo.tearDownTSO;
+      tsnValueCheck = state.workOrderInfo.tearDownTSN;
+      tsrValueCheck = state.workOrderInfo.tearDownTSR;
+    }
+
+    const valueChangeChecktso = valueChangeCheck(
+      tsoValueCheck,
+      iirNotes.tsoValue
+    );
+    const valueChangeChecktsn = valueChangeCheck(
+      tsnValueCheck,
+      iirNotes.tsnValue
+    );
+    const valueChangeChecktsr = valueChangeCheck(
+      tsrValueCheck,
+      iirNotes.tsrValue
+    );
+
     // Cancel out if nothing was changed.
     if (
       valueChangeCheckCustomerReasonForRemoval === null &&
       valueChangeCheckEvalFindings === null &&
       valueChangeCheckGenConditionReceived === null &&
-      valueChangeCheckWorkedPerformed === null
+      valueChangeCheckWorkedPerformed === null &&
+      valueChangeChecktso === null &&
+      valueChangeChecktsn === null &&
+      valueChangeChecktsr === null
     ) {
       const returnError = {
         error: 'Nothing was changed! Please make changes to submit.'
@@ -503,6 +527,24 @@ export function postOrUpdateIIRReport(iirNotes: {
     ) {
       dispatch(toggleSendEmailStateOn());
     }
+    // Check if we need to send the JobCost Data but the origin null check if we have AeroParts Data.
+    let sendTSOData: string | null;
+    let sendTSNData: string | null;
+    let sendTSRData: string | null;
+
+    if (
+      state.workOrderInfo.tearDownTSO === null &&
+      state.workOrderInfo.tearDownTSN === null &&
+      state.workOrderInfo.tearDownTSR === null
+    ) {
+      sendTSOData = tsoValueCheck;
+      sendTSNData = tsnValueCheck;
+      sendTSRData = tsrValueCheck;
+    } else {
+      sendTSOData = valueChangeChecktso;
+      sendTSNData = valueChangeChecktsn;
+      sendTSRData = valueChangeChecktsr;
+    }
 
     const mainRequest = {
       request,
@@ -511,9 +553,15 @@ export function postOrUpdateIIRReport(iirNotes: {
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,
       genConditionReceived: iirNotes.genConditionReceived,
       evalFindings: iirNotes.evalFindings,
-      workedPerformed: iirNotes.workedPerformed
+      workedPerformed: iirNotes.workedPerformed,
+      tearDownTSO: sendTSOData,
+      tearDownTSN: sendTSNData,
+      tearDownTSR: sendTSRData
     };
 
+    console.log('main request for update/add: ', mainRequest);
+
+    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
     const callBackFunction = (
       event: {},
       resp: { error: { code: string; name: string }; data: object[] }

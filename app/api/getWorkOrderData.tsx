@@ -92,6 +92,9 @@ async function getWorkOrderData(request: Request) {
       returnData.data[0].genConditionReceived = 'NONE';
       returnData.data[0].evalFindings = 'NONE';
       returnData.data[0].workedPerformed = 'NONE';
+      returnData.data[0].tearDownTSO = getIIRData.recordset[0].tearDownTSO;
+      returnData.data[0].tearDownTSN = getIIRData.recordset[0].tearDownTSN;
+      returnData.data[0].tearDownTSR = getIIRData.recordset[0].tearDownTSR;
 
       if (getIIRData.recordset.length > 0) {
         const {
