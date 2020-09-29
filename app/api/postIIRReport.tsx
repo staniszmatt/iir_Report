@@ -9,6 +9,9 @@ interface Request {
   genConditionReceived: string | null;
   evalFindings: string | null;
   workedPerformed: string | null;
+  tearDownTSN: string | null;
+  tearDownTSO: string | null;
+  tearDownTSR: string | null;
 }
 
 interface ReturnData {
@@ -24,7 +27,10 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed
+    workedPerformed,
+    tearDownTSN,
+    tearDownTSO,
+    tearDownTSR
   } = request;
 
   const returnData: ReturnData = {
@@ -40,7 +46,10 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed
+    workedPerformed,
+    tearDownTSN,
+    tearDownTSO,
+    tearDownTSR
   };
 
   const dbQueryRequest: any = {};
@@ -73,7 +82,7 @@ async function postIIRReport(request: Request) {
   try {
     // TODO: Add line item to query!
     const db = await pool.connect();
-    const query = `INSERT INTO tear_down_notes (SalesOrderNumber, salesOrderNumberLine, ${keyName})
+    const query = `INSERT INTO tear_down_notes_dev (SalesOrderNumber, salesOrderNumberLine, ${keyName})
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
 

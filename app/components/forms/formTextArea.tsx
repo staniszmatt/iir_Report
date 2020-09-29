@@ -68,7 +68,7 @@ export default function FormTextArea(props: Props) {
           rows={rows}
         />
       </div>
-      <p className="red-text darken-2">{touched && error}</p>
+      {error && <p className="red-text darken-2">{touched && error}</p>}
     </div>
   );
 }

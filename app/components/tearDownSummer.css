@@ -1,5 +1,5 @@
 .form-container {
-  width: 770px;
+  width: 8.27in;
   padding-top: 40px;
   margin: auto;
 }
@@ -15,7 +15,7 @@
 }
 
 .form-page > div {
-  width: 8in;
+  width: 8.27in;
   margin: auto;
   border: 1px solid black;
 }
@@ -81,6 +81,10 @@ div.form-footer > div {
   height: 50px;
   width: 150px;
   object-fit: contain;
+}
+
+.form-page-container {
+  width: 8.27in;
 }
 
 .form-page-container > div:last-child {

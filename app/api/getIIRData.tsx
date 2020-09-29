@@ -85,6 +85,7 @@ async function getIIRDataAPI(request: Request) {
       returnData.data.Warrenty_Y_N = Warrenty_Y_N;
       returnData.data.OrderType = OrderType;
 
+      try {
       // Can't get the server to do more than one join for some reason, work around is a second query.
       const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
       sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
@@ -119,7 +120,11 @@ async function getIIRDataAPI(request: Request) {
         returnData.data.Manual_Combined = 'N/A';
         returnData.data.Work_Order_Number = 'N/A';
         returnData.data.Trv_Num = 'N/A';
-        returnData.data.Cert_type_Description = 'N/A'
+        returnData.data.Cert_type_Description = 'N/A';
+        returnData.data.Cert_type_Description = 'N/A';
+      }
+      } catch (error) {
+        returnData.data[0].travelerError = error;
       }
       db.close();
     }
@@ -127,7 +132,7 @@ async function getIIRDataAPI(request: Request) {
       try {
         const dbIIR = await pool.connect();
         const iirQuery = `SELECT *
-        FROM tear_down_notes AS i
+        FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
         const getIIRData = await dbIIR.query(iirQuery);
 
@@ -136,6 +141,9 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.genConditionReceived = null;
           returnData.data.evalFindings = null;
           returnData.data.workedPerformed = null;
+          returnData.data.tearDownTSO = null;
+          returnData.data.tearDownTSN = null;
+          returnData.data.tearDownTSR = null
         } else {
           returnData.data.customerReasonForRemoval = '';
           returnData.data.genConditionReceived = '';
@@ -148,7 +156,10 @@ async function getIIRDataAPI(request: Request) {
             customerReasonForRemoval,
             genConditionReceived,
             evalFindings,
-            workedPerformed
+            workedPerformed,
+            tearDownTSN,
+            tearDownTSR,
+            tearDownTSO
           } = getIIRData.recordset[0];
 
           returnData.data.customerReasonForRemoval = checkStringLength(
@@ -160,12 +171,15 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.evalFindings = checkStringLength(evalFindings);
           // eslint-disable-next-line prettier/prettier
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
+          returnData.data.tearDownTSO = tearDownTSO;
+          returnData.data.tearDownTSN = tearDownTSN;
+          returnData.data.tearDownTSR = tearDownTSR;
           returnData.success = true;
         } else {
           returnData.success = true;
         }
       } catch (error) {
-        returnData.error = error;
+        returnData.data.notesError = error;
       }
     } else {
       returnData.error = {
@@ -173,7 +187,7 @@ async function getIIRDataAPI(request: Request) {
       };
     }
   } catch (error) {
-    returnData.error = error;
+    returnData.data[0].NoteError = error;
   }
   return returnData;
 }

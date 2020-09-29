@@ -7,7 +7,7 @@
 
 .form-container > div {
   display: flex;
-  width: 650px;
+  width: 100%;
 }
 
 .form-container > div:first-child {
@@ -33,6 +33,10 @@
   background-color: #c5eafa;
 }
 
+.form-container > div:last-child > div > div {
+  margin: 10px 0;
+}
+
 .form-container > div:last-child > div > div > button:hover {
   background-color: #50a2ff;
 }
@@ -42,7 +46,7 @@
 }
 
 .form-container > div:last-child > div > form > div {
-  margin: 0 10px;
+  margin: auto;
 }
 
 .form-container > div:last-child > div > form > div:first-child > input {

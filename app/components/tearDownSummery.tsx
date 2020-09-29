@@ -49,6 +49,9 @@ interface Props {
       TSN: number;
       TSO: number;
       TSR: number;
+      tearDownTSO: string;
+      tearDownTSN: string;
+      tearDownTSR: string;
       Trv_Num: string;
       Warrenty_Y_N: string;
       Work_Order_Number: string;
@@ -61,6 +64,7 @@ interface Props {
 }
 
 export default function TearDownSummery(props: Props | any) {
+  // Action calls:
   const {
     getWorkOrderData,
     postOrUpdateIIRReport,
@@ -70,10 +74,34 @@ export default function TearDownSummery(props: Props | any) {
     savePDF,
     softResetState
   } = props;
+  // Tear Down State:
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo, diplayOpenPDFBtn } = props.iir;
   let displayPDFBtn = true;
   let warrentyString = 'No';
+  // Setup TS data depending if it needs from AeroParts DB or JobCost DB.
+  let tsoValues: string;
+  let tsnValues: string;
+  let tsrValues: string;
+
+  const {
+    TSN,
+    TSO,
+    TSR,
+    tearDownTSO,
+    tearDownTSN,
+    tearDownTSR
+  } = workOrderInfo
+
+  if (tearDownTSO === null || tearDownTSN === null || tearDownTSR === null) {
+    tsoValues = TSO.toString();
+    tsnValues = TSN.toString();
+    tsrValues = TSR.toString();
+  } else {
+    tsoValues = tearDownTSO;
+    tsnValues = tearDownTSN;
+    tsrValues = tearDownTSR;
+  }
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
@@ -101,8 +129,13 @@ export default function TearDownSummery(props: Props | any) {
   const getPDF = () => {
     softResetState();
     const input: any = document.getElementById('capture');
-    input.style.margin = '0';
+    input.style.margin = 'unset';
+    input.style.padding = 'unset';
     input.style.border = 'unset';
+    input.style.position = 'absolute';
+    input.style.width = '8.27in';
+    input.style.height = '11.69in';
+
 
     html2canvas(input, { scrollY: -window.scrollY, scale: 2 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
@@ -110,11 +143,12 @@ export default function TearDownSummery(props: Props | any) {
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
 
-      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+      pdf.addImage(imgData, 'JPEG', -2, 0, width, height);
       savePDF(pdf.output('arraybuffer'));
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
+    input.style.position = 'unset';
   };
 
   return (
@@ -142,7 +176,7 @@ export default function TearDownSummery(props: Props | any) {
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
+            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
@@ -196,15 +230,15 @@ export default function TearDownSummery(props: Props | any) {
                         <div>
                           <div>
                             <div>TSN:</div>
-                            <div>{workOrderInfo.TSN}</div>
+                            <div>{tsnValues}</div>
                           </div>
                           <div>
                             <div>TSR:</div>
-                            <div>{workOrderInfo.TSR}</div>
+                            <div>{tsrValues}</div>
                           </div>
                           <div>
                             <div>TSO:</div>
-                            <div>{workOrderInfo.TSO}</div>
+                            <div>{tsoValues}</div>
                           </div>
                         </div>
                         <div>

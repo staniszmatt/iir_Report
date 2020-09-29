@@ -9,6 +9,9 @@ interface Request {
   genConditionReceived: string | null;
   evalFindings: string | null;
   workedPerformed: string | null;
+  tearDownTSO: string | null;
+  tearDownTSN: string | null;
+  tearDownTSR: string | null;
 }
 
 interface ReturnData {
@@ -24,7 +27,10 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed
+    workedPerformed,
+    tearDownTSO,
+    tearDownTSN,
+    tearDownTSR
   } = request;
 
   const returnData: ReturnData = {
@@ -39,7 +45,10 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed
+    workedPerformed,
+    tearDownTSO,
+    tearDownTSN,
+    tearDownTSR
   };
 
   const dbQueryRequest: any = {};
@@ -70,7 +79,7 @@ async function postIIRReport(request: Request) {
   try {
     const db = await pool.connect();
 
-    const query = `UPDATE tear_down_notes
+    const query = `UPDATE tear_down_notes_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = '${SalesOrderNumber}' AND salesOrderNumberLine = '${salesOrderNumberLine}'`;
