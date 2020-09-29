@@ -7,6 +7,8 @@ export type iirStateType = {
     loadingScreen: boolean;
     postIIRNotes: boolean;
     diplayOpenPDFBtn: boolean;
+    sendEmail: boolean;
+    successUpdateModalCall: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
@@ -20,6 +22,12 @@ export type iirStateType = {
       genConditionReceived: string;
       evalFindings: string;
       workedPerformed: string;
+      TSN: number;
+      TSO: number;
+      TSR: number;
+      tearDownTSO: string;
+      tearDownTSN: string;
+      tearDownTSR: string;
     };
   };
 };

@@ -4,7 +4,7 @@ import { reset } from 'redux-form';
 import { connect } from 'react-redux';
 import IIRAddEdit from '../components/IIRAddEdit';
 import {
-  postOrUpdateIIRReport,
+  postUpdatePDFCheck,
   getIIRData,
   handleReviewIIRPDF,
   openPDF,
@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
   dispatch(reset('workOrderSearchForm'));
   return bindActionCreators(
     {
-      postOrUpdateIIRReport,
+      postUpdatePDFCheck,
       getIIRData,
       handleReviewIIRPDF,
       openPDF,
