@@ -8,7 +8,7 @@ import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
 
 interface Props {
-  postOrUpdateIIRReport: () => {};
+  postUpdatePDFCheck: () => {};
   getIIRData: () => {};
   handleReviewIIRPDF: () => {};
   openPDF: () => {};
@@ -35,6 +35,9 @@ interface Props {
       TSN: number;
       TSO: number;
       TSR: number;
+      tearDownTSO: string;
+      tearDownTSN: string;
+      tearDownTSR: string;
       Trv_Num: string;
       Warrenty_Y_N: string;
       Work_Order_Number: string;
@@ -48,7 +51,7 @@ interface Props {
 
 export default function IIRAddEdit(props: Props | any) {
   const {
-    postOrUpdateIIRReport,
+    postUpdatePDFCheck,
     getIIRData,
     handleReviewIIRPDF,
     openPDF,
@@ -62,13 +65,43 @@ export default function IIRAddEdit(props: Props | any) {
     diplayOpenPDFBtn
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir;
+  const {
+    TSN,
+    TSO,
+    TSR,
+    tearDownTSO,
+    tearDownTSN,
+    tearDownTSR
+    // eslint-disable-next-line react/destructuring-assignment
+  } = props.iir.workOrderInfo;
+  // Check if we need to send the JobCost data or AeroParts Data
+  let tsnProps: string;
+  let tsoProps: string;
+  let tsrProps: string;
+  let displayTSData: boolean;
+
+  if (tearDownTSO === null || tearDownTSN === null || tearDownTSR === null) {
+    tsnProps = TSN.toString();
+    tsoProps = TSO.toString();
+    tsrProps = TSR.toString();
+    displayTSData = true;
+  } else {
+    tsnProps = tearDownTSN;
+    tsoProps = tearDownTSO;
+    tsrProps = tearDownTSR;
+    displayTSData = false;
+  }
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
     workedPerformedNote: workOrderInfo.workedPerformed,
-    handleReviewIIRPDF
+    handleReviewIIRPDF,
+    tsnValue: tsnProps,
+    tsoValue: tsoProps,
+    tsrValue: tsrProps,
+    displayTSData
   };
   const cancelProp = { cancelLoading };
 
@@ -100,7 +133,7 @@ export default function IIRAddEdit(props: Props | any) {
             <div>
               {!diplayOpenPDFBtn && (
                 <div className={styles['open-pdf-btn']}>
-                  <div>PDF Needs Saved In Scanned Directory.</div>
+                  <div>PDF Needs Saved.</div>
                 </div>
               )}
               <div className={styles['header-info']}>
@@ -144,10 +177,7 @@ export default function IIRAddEdit(props: Props | any) {
                   </div>
                 </div>
               </div>
-              <IIRFormFields
-                onSubmit={postOrUpdateIIRReport}
-                props={iirProps}
-              />
+              <IIRFormFields onSubmit={postUpdatePDFCheck} props={iirProps} />
             </div>
           )}
         </div>
