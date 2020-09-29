@@ -9,6 +9,9 @@ interface Request {
   genConditionReceived: string | null;
   evalFindings: string | null;
   workedPerformed: string | null;
+  tearDownTSN: string | null;
+  tearDownTSO: string | null;
+  tearDownTSR: string | null;
 }
 
 interface ReturnData {
@@ -24,7 +27,10 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed
+    workedPerformed,
+    tearDownTSN,
+    tearDownTSO,
+    tearDownTSR
   } = request;
 
   const returnData: ReturnData = {
@@ -40,7 +46,10 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed
+    workedPerformed,
+    tearDownTSN,
+    tearDownTSO,
+    tearDownTSR
   };
 
   const dbQueryRequest: any = {};
@@ -77,7 +86,11 @@ async function postIIRReport(request: Request) {
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
 
+    console.log('post query: ', query);
+
     const postIIRReportData = await db.query(query);
+
+    console.log('query return post: ', postIIRReport);
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;

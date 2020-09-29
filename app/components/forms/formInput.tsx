@@ -59,7 +59,7 @@ export default function FormField(props: Props) {
         disabled={disabled}
         id={name}
       />
-      <p className="red-text darken-2">{touched && error}</p>
+      {error && <p className="red-text darken-2">{touched && error}</p>}
     </div>
   );
 }

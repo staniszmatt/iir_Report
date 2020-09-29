@@ -25,6 +25,7 @@ interface DispatchProps {
     tsnValue: string;
     tsoValue: string;
     tsrValue: string;
+    displayTSData: boolean;
   };
 }
 
@@ -44,7 +45,8 @@ const IIRForm = (
     handleReviewIIRPDF,
     tsnValue,
     tsoValue,
-    tsrValue
+    tsrValue,
+    displayTSData
   } = props.props;
 
   // Setup of label text to include some new line editing here.
@@ -74,34 +76,49 @@ const IIRForm = (
       className={styles['form-container']}
     >
       <div>
-        <div>
-          <div>(FINAL TABLE)</div>
+        <div className={styles['form-ts-data']}>
+          {displayTSData && (
+            <div>NOTE: Add Notes Before Editing TS Numbers.</div>
+          )}
+          {!displayTSData && <div />}
+
           <div>
-            <Field
-              label="TSO"
-              component={FormInput}
-              defaultValue={tsoValue}
-              name="tsoValue"
-              type="text"
-            />
-          </div>
-          <div>
-            <Field
-              label="TSR"
-              component={FormInput}
-              defaultValue={tsrValue}
-              name="tsrValue"
-              type="text"
-            />
-          </div>
-          <div>
-            <Field
-              label="TSN"
-              component={FormInput}
-              defaultValue={tsnValue}
-              name="tsnValue"
-              type="text"
-            />
+            <div>(FINAL TABLE)</div>
+
+            <div>
+              <div>
+                <Field
+                  label="TSO"
+                  component={FormInput}
+                  defaultValue={tsoValue}
+                  name="tsoValue"
+                  type="text"
+                  disabled={displayTSData}
+                />
+              </div>
+              <div>
+                <Field
+                  label="TSR"
+                  component={FormInput}
+                  defaultValue={tsrValue}
+                  name="tsrValue"
+                  type="text"
+                  disabled={displayTSData}
+                />
+              </div>
+              <div>
+                <Field
+                  label="TSN"
+                  component={FormInput}
+                  defaultValue={tsnValue}
+                  name="tsnValue"
+                  type="text"
+                  disabled={displayTSData}
+                />
+              </div>
+            </div>
+
+
           </div>
         </div>
         <div>

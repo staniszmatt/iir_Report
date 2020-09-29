@@ -101,8 +101,13 @@ export default function TearDownSummery(props: Props | any) {
   const getPDF = () => {
     softResetState();
     const input: any = document.getElementById('capture');
-    input.style.margin = '0';
+    input.style.margin = 'unset';
+    input.style.padding = 'unset';
     input.style.border = 'unset';
+    input.style.position = 'absolute';
+    input.style.width = '8.27in';
+    input.style.height = '11.69in';
+
 
     html2canvas(input, { scrollY: -window.scrollY, scale: 2 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
@@ -110,11 +115,14 @@ export default function TearDownSummery(props: Props | any) {
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
 
-      pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
+      console.log('width, height of pdf size: ', width, height);
+
+      pdf.addImage(imgData, 'JPEG', -2, 0, width, height);
       savePDF(pdf.output('arraybuffer'));
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
+    input.style.position = 'unset';
   };
 
   return (
@@ -142,7 +150,7 @@ export default function TearDownSummery(props: Props | any) {
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved In Scanned Directory.</div></div>}
+            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>

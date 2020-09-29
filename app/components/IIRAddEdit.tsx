@@ -81,15 +81,18 @@ export default function IIRAddEdit(props: Props | any) {
   let tsnProps: string;
   let tsoProps: string;
   let tsrProps: string;
+  let displayTSData: boolean;
 
   if (tearDownTSO === null || tearDownTSN === null || tearDownTSR === null) {
     tsnProps = TSN.toString();
     tsoProps = TSO.toString();
     tsrProps = TSR.toString();
+    displayTSData = true;
   } else {
     tsnProps = tearDownTSN;
     tsoProps = tearDownTSO;
     tsrProps = tearDownTSR;
+    displayTSData = false;
   }
 
   const iirProps = {
@@ -100,7 +103,8 @@ export default function IIRAddEdit(props: Props | any) {
     handleReviewIIRPDF,
     tsnValue: tsnProps,
     tsoValue: tsoProps,
-    tsrValue: tsrProps
+    tsrValue: tsrProps,
+    displayTSData
   };
   const cancelProp = { cancelLoading };
 
@@ -132,7 +136,7 @@ export default function IIRAddEdit(props: Props | any) {
             <div>
               {!diplayOpenPDFBtn && (
                 <div className={styles['open-pdf-btn']}>
-                  <div>PDF Needs Saved In Scanned Directory.</div>
+                  <div>PDF Needs Saved.</div>
                 </div>
               )}
               <div className={styles['header-info']}>
