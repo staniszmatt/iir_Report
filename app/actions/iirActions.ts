@@ -149,9 +149,6 @@ export function getIIRData(workOrder: {
   callSuccessModal?: any;
 }) {
   return (dispatch: Dispatch) => {
-
-    console.log('getIIRData arg', workOrder);
-
     dispatch(resetState());
     dispatch(reset('iirForm'));
 
@@ -173,9 +170,6 @@ export function getIIRData(workOrder: {
         data: { length: number; customerReasonForRemoval: string | null };
       }
     ) => {
-
-      console.log('get edit data', resp);
-
       // Turn off the loading screen once we receive a response.
       dispatch(toggleLoadingScreenStateOff());
       if (Object.keys(resp.error).length === 0) {
@@ -312,7 +306,7 @@ export function getWorkOrderData(workOrder: {
       resp: { error: { code: string; name: string }; data: object[] }
     ) => {
 
-      console.log('Resp for get pdf data: ', resp);
+      console.log('get tear down data resp: ', resp);
 
       dispatch(toggleLoadingScreenStateOff());
       // Checking no errors
@@ -359,9 +353,11 @@ export function postUpdatePDFCheck(iirNotes: {
   evalFindings: string | any;
   genConditionReceived: string | any;
   workedPerformed: string | any;
+  tsoValue: string | any;
+  tsrValue: string | any;
+  tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-
     const state = getState().iir;
     // When Work Order is searched, it will set state true if a PDF exists. Then setup to move it to the old folder since a change to notes were made.
     if (state.diplayOpenPDFBtn) {
@@ -436,9 +432,6 @@ export function postOrUpdateIIRReport(iirNotes: {
   tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-
-    console.log('postOrUpdateIIRREport argument: ', iirNotes);
-
     const state = getState().iir;
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
 
@@ -561,9 +554,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       tearDownTSN: sendTSNData,
       tearDownTSR: sendTSRData
     };
-
-    console.log('main request for update/add: ', mainRequest);
-
     // Setup to dispatch with callback function and can then cancle that specific listener when recived.
     const callBackFunction = (
       event: {},

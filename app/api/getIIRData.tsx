@@ -85,6 +85,7 @@ async function getIIRDataAPI(request: Request) {
       returnData.data.Warrenty_Y_N = Warrenty_Y_N;
       returnData.data.OrderType = OrderType;
 
+      try {
       // Can't get the server to do more than one join for some reason, work around is a second query.
       const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
       sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
@@ -119,7 +120,11 @@ async function getIIRDataAPI(request: Request) {
         returnData.data.Manual_Combined = 'N/A';
         returnData.data.Work_Order_Number = 'N/A';
         returnData.data.Trv_Num = 'N/A';
-        returnData.data.Cert_type_Description = 'N/A'
+        returnData.data.Cert_type_Description = 'N/A';
+        returnData.data.Cert_type_Description = 'N/A';
+      }
+      } catch (error) {
+        returnData.data[0].travelerError = error;
       }
       db.close();
     }
@@ -176,7 +181,7 @@ async function getIIRDataAPI(request: Request) {
           returnData.success = true;
         }
       } catch (error) {
-        returnData.error = error;
+        returnData.data.notesError = error;
       }
     } else {
       returnData.error = {
@@ -184,7 +189,7 @@ async function getIIRDataAPI(request: Request) {
       };
     }
   } catch (error) {
-    returnData.error = error;
+    returnData.data[0].NoteError = error;
   }
   return returnData;
 }
