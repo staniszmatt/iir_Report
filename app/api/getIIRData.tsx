@@ -136,8 +136,6 @@ async function getIIRDataAPI(request: Request) {
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
         const getIIRData = await dbIIR.query(iirQuery);
 
-        console.log('Return get data', getIIRData);
-
         if (getIIRData.recordset.length === 0) {
           returnData.data.customerReasonForRemoval = null;
           returnData.data.genConditionReceived = null;

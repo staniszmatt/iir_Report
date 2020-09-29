@@ -50,9 +50,6 @@ interface Props {
 }
 
 export default function IIRAddEdit(props: Props | any) {
-
-  console.log('addEdit page props', props);
-
   const {
     postUpdatePDFCheck,
     getIIRData,
@@ -75,7 +72,7 @@ export default function IIRAddEdit(props: Props | any) {
     tearDownTSO,
     tearDownTSN,
     tearDownTSR
-  // eslint-disable-next-line react/destructuring-assignment
+    // eslint-disable-next-line react/destructuring-assignment
   } = props.iir.workOrderInfo;
   // Check if we need to send the JobCost data or AeroParts Data
   let tsnProps: string;

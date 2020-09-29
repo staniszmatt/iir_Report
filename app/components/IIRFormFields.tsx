@@ -32,9 +32,6 @@ interface DispatchProps {
 const IIRForm = (
   props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-
-  console.log('form props', props);
-
   let btnText = 'UPDATE IIR NOTES';
   const { handleSubmit, onSubmit } = props;
   const {
@@ -119,8 +116,6 @@ const IIRForm = (
                 />
               </div>
             </div>
-
-
           </div>
         </div>
         <div>

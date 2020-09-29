@@ -52,9 +52,6 @@ async function postIIRReport(request: Request) {
   };
 
   const dbQueryRequest: any = {};
-
-  console.log('Update Request, : ', request);
-
   // This will load objects but ignore null value objects.
   // Needed to do this so we can get a count of the total number posts to be made
   // eslint-disable-next-line array-callback-return
@@ -87,11 +84,7 @@ async function postIIRReport(request: Request) {
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = '${SalesOrderNumber}' AND salesOrderNumberLine = '${salesOrderNumberLine}'`;
 
-    console.log('Update Query! : ', query);
-
     const postIIRReportData = await db.query(query);
-
-    console.log('update resp: ', postIIRReportData);
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;

@@ -305,9 +305,6 @@ export function getWorkOrderData(workOrder: {
       _event: {},
       resp: { error: { code: string; name: string }; data: object[] }
     ) => {
-
-      console.log('get tear down data resp: ', resp);
-
       dispatch(toggleLoadingScreenStateOff());
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {

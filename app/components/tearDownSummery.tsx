@@ -64,9 +64,6 @@ interface Props {
 }
 
 export default function TearDownSummery(props: Props | any) {
-
-  console.log('tear down display props: ', props);
-
   // Action calls:
   const {
     getWorkOrderData,
@@ -105,9 +102,6 @@ export default function TearDownSummery(props: Props | any) {
     tsnValues = tearDownTSN;
     tsrValues = tearDownTSR;
   }
-
-  console.log('tsoValues, tsnValues, tsrValues', tsoValues, tsnValues, tsrValues);
-
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
@@ -148,8 +142,6 @@ export default function TearDownSummery(props: Props | any) {
       const pdf = new JsPDF('p', 'mm', 'a4');
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
-
-      console.log('width, height of pdf size: ', width, height);
 
       pdf.addImage(imgData, 'JPEG', -2, 0, width, height);
       savePDF(pdf.output('arraybuffer'));

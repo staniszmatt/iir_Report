@@ -86,11 +86,7 @@ async function postIIRReport(request: Request) {
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
 
-    console.log('post query: ', query);
-
     const postIIRReportData = await db.query(query);
-
-    console.log('query return post: ', postIIRReport);
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;

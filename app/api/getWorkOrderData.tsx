@@ -49,8 +49,6 @@ async function getWorkOrderData(request: Request) {
           INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
               WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
 
-        console.log('Traveler Resp', secondData);
-
         if (
           secondData.length > 0 &&
           Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
@@ -114,7 +112,9 @@ async function getWorkOrderData(request: Request) {
             genConditionReceived
           );
           returnData.data[0].evalFindings = checkStringLength(evalFindings);
-          returnData.data[0].workedPerformed = checkStringLength(workedPerformed);
+          returnData.data[0].workedPerformed = checkStringLength(
+            workedPerformed
+          );
           returnData.data[0].tearDownTSO = getIIRData.recordset[0].tearDownTSO;
           returnData.data[0].tearDownTSN = getIIRData.recordset[0].tearDownTSN;
           returnData.data[0].tearDownTSR = getIIRData.recordset[0].tearDownTSR;
@@ -126,7 +126,6 @@ async function getWorkOrderData(request: Request) {
   } catch (error) {
     returnData.data[0].travelerError = error;
   }
-  console.log('**************** Get Tear down return data: *********************', returnData);
   return returnData;
 }
 
