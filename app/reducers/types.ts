@@ -8,6 +8,7 @@ export type iirStateType = {
     postIIRNotes: boolean;
     diplayOpenPDFBtn: boolean;
     sendEmail: boolean;
+    successUpdateModalCall: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;

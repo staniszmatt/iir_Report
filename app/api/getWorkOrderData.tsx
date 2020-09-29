@@ -13,6 +13,7 @@ interface Request {
 interface ReturnData {
   error: {};
   data: {} | any;
+  noData: boolean;
 }
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
@@ -28,7 +29,8 @@ function checkStringLength(stringToCheck: string) {
 async function getWorkOrderData(request: Request) {
   const returnData: ReturnData = {
     error: {},
-    data: []
+    data: [],
+    noData: false
   };
 
   try {
@@ -122,6 +124,10 @@ async function getWorkOrderData(request: Request) {
       } catch (error) {
         returnData.data[0].notesError = error;
       }
+    } else {
+      returnData.error = {
+        noWorkOrder: `Couldn't find WO: ${request.workOrderSearch}-${request.workOrderSearchLineItem}. Double check WO is correct.`
+      };
     }
   } catch (error) {
     returnData.data[0].travelerError = error;

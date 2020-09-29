@@ -21,6 +21,7 @@ function configureStore(initialState?: {
         postIIRNotes: boolean;
         diplayOpenPDFBtn: boolean;
         sendEmail: boolean;
+        successUpdateModalCall: boolean;
         workOrder: {
           workOrderSearch: string;
           workOrderSearchLineItem: string;
