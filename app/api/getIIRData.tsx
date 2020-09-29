@@ -132,7 +132,7 @@ async function getIIRDataAPI(request: Request) {
       try {
         const dbIIR = await pool.connect();
         const iirQuery = `SELECT *
-        FROM tear_down_notes_dev AS i
+        FROM tear_down_notes AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
         const getIIRData = await dbIIR.query(iirQuery);
 
