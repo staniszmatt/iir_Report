@@ -78,7 +78,9 @@ const IIRForm = (
       <div>
         <div className={styles['form-ts-data']}>
           {displayTSData && (
-            <div>NOTE: Add Notes Before Editing TS Numbers.</div>
+            <div>
+              NOTE: TS numbers can be edited only after notes have been added.
+            </div>
           )}
           {!displayTSData && <div />}
 

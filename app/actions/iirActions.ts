@@ -311,6 +311,9 @@ export function getWorkOrderData(workOrder: {
       _event: {},
       resp: { error: { code: string; name: string }; data: object[] }
     ) => {
+
+      console.log('Resp for get pdf data: ', resp);
+
       dispatch(toggleLoadingScreenStateOff());
       // Checking no errors
       if (Object.keys(resp.error).length === 0) {
