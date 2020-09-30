@@ -1,20 +1,26 @@
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './formInput.css';
 
 interface Props {
   checkedValue: boolean;
   defaultValue: string;
   disabled: boolean;
-  input: string;
+  input: {
+    name: string;
+    value: string;
+  };
   label: string;
-  type: string;
   name: string;
   meta: {
     error: {};
     touched: {};
   };
+}
+interface ValueState {
+  inputValue: string | number;
 }
 
 export default function FormField(props: Props) {
@@ -25,22 +31,33 @@ export default function FormField(props: Props) {
     input,
     name,
     label,
-    type = 'text',
     meta: { error, touched }
   } = props;
+  const [valueState, setValueState] = useState<ValueState>({
+    inputValue: defaultValue
+  });
+
+  const valueChange = (event: { currentTarget: { value: string } }) => {
+    const changeCharString = event.currentTarget.value.toUpperCase();
+    setValueState({
+      ...valueState,
+      inputValue: changeCharString
+    });
+  };
 
   return (
     <div className={styles['form-container']}>
-      <label htmlFor={name}>{label}</label>
+      <label htmlFor={props.input.name}>{label}</label>
       <input
         {...input}
-        type={type || 'text'}
+        onChange={valueChange}
+        type="text"
         checked={checkedValue}
-        defaultValue={defaultValue}
+        value={valueState.inputValue}
         disabled={disabled}
         id={name}
       />
-      <p className="red-text darken-2">{touched && error}</p>
+      {error && <p className="red-text darken-2">{touched && error}</p>}
     </div>
   );
 }

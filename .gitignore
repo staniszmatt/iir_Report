@@ -39,13 +39,9 @@ app/renderer.prod.js.map
 app/style.css
 app/style.css.map
 
-app/config/config.tsx
-app/config/config.js
-app/config/config
+app/config/*
 
-app/config/configEmail.tsx
-app/config/configEmail.js
-app/config/configEmail
+.vscode/
 
 .vscode/
 

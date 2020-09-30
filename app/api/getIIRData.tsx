@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -22,8 +23,9 @@ interface ReturnData {
 
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
+
   let returnString = '';
-  if (stringToCheck.length === 0 || stringToCheck === null) {
+  if (stringToCheck === null || stringToCheck.length === 0) {
     returnString = 'NONE';
   } else {
     returnString = stringToCheck;
@@ -31,7 +33,7 @@ function checkStringLength(stringToCheck: string) {
   return returnString;
 }
 
-async function getWorkOrderData(request: Request) {
+async function getIIRDataAPI(request: Request) {
   const returnData: ReturnData = {
     error: {},
     data: {},
@@ -84,54 +86,67 @@ async function getWorkOrderData(request: Request) {
       returnData.data.Warrenty_Y_N = Warrenty_Y_N;
       returnData.data.OrderType = OrderType;
 
-      // Can't get the server to do more than one join for some reason, work around is a second query.
+      try {
+      // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
       const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
-      sales_cust_8130_types.Cert_type_Description, sales_cust_8130_types.CustomerName
+      sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
         FROM traveler_header
-          INNER JOIN sales_cust_8130_types ON traveler_header.CustomerName = sales_cust_8130_types.CustomerName
+        INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
             WHERE traveler_header.Work_Order_Number = '${workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${workOrderSearchLineItem}'`);
 
-      if (
-        secondData.length > 0 &&
-        Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
-      ) {
-        const {
-          Manual_Combined,
-          Work_Order_Number,
-          Trv_Num,
-          Cert_type_Description
-        } = secondData[0];
+      if (secondData.length > 0) {
+        if (Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')) {
+          const {
+            Manual_Combined,
+            Work_Order_Number,
+            Trv_Num
+          } = secondData[0];
 
-        returnData.data.Manual_Combined = Manual_Combined;
-        returnData.data.Work_Order_Number = Work_Order_Number;
-        returnData.data.Trv_Num = Trv_Num;
-        returnData.data.Cert_type_Description = Cert_type_Description;
+          returnData.data.Manual_Combined = Manual_Combined;
+          returnData.data.Work_Order_Number = Work_Order_Number;
+          returnData.data.Trv_Num = Trv_Num;
+          if (
+            Object.prototype.hasOwnProperty.call(
+              secondData[0],
+              'Cert_type_Description'
+            )
+          ) {
+            // Grab all cert types if available and store into array.
+            returnData.data.Cert_type_Description = [];
+            // Set the list of cert types into a array list
+            const collectArrayCertList = secondData.map(
+              (objData: { Cert_type_Description: string }) => {
+                return objData.Cert_type_Description;
+              }
+            );
+          // Filter out all the duplicates
+          const removedDuplicates = collectArrayCertList.filter((elem: never, index: number, arrayData: []) => {
+            return index === arrayData.indexOf(elem);
+          })
+
+          returnData.data.Cert_type_Description = removedDuplicates;
+          } else {
+            returnData.data.Cert_type_Description = 'N/A';
+          }
+        }
       } else {
         returnData.data.Manual_Combined = 'N/A';
         returnData.data.Work_Order_Number = 'N/A';
         returnData.data.Trv_Num = 'N/A';
-        if (
-          Object.prototype.hasOwnProperty.call(
-            secondData[0],
-            'Cert_type_Description'
-          )
-        ) {
-          returnData.data.Cert_type_Description =
-            secondData[0].Cert_type_Description;
-        } else {
-          returnData.data.Cert_type_Description = 'N/A';
-        }
+        returnData.data.Cert_type_Description = 'N/A';
+        returnData.data.Cert_type_Description = 'N/A';
+      }
+      } catch (error) {
+        returnData.data[0].travelerError = error;
       }
       db.close();
     }
-
     if (data.length > 0) {
       try {
         const dbIIR = await pool.connect();
         const iirQuery = `SELECT *
-        FROM tear_down_notes AS i
+        FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
-
         const getIIRData = await dbIIR.query(iirQuery);
 
         if (getIIRData.recordset.length === 0) {
@@ -139,6 +154,9 @@ async function getWorkOrderData(request: Request) {
           returnData.data.genConditionReceived = null;
           returnData.data.evalFindings = null;
           returnData.data.workedPerformed = null;
+          returnData.data.tearDownTSO = null;
+          returnData.data.tearDownTSN = null;
+          returnData.data.tearDownTSR = null
         } else {
           returnData.data.customerReasonForRemoval = '';
           returnData.data.genConditionReceived = '';
@@ -151,7 +169,10 @@ async function getWorkOrderData(request: Request) {
             customerReasonForRemoval,
             genConditionReceived,
             evalFindings,
-            workedPerformed
+            workedPerformed,
+            tearDownTSN,
+            tearDownTSR,
+            tearDownTSO
           } = getIIRData.recordset[0];
 
           returnData.data.customerReasonForRemoval = checkStringLength(
@@ -163,12 +184,15 @@ async function getWorkOrderData(request: Request) {
           returnData.data.evalFindings = checkStringLength(evalFindings);
           // eslint-disable-next-line prettier/prettier
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
+          returnData.data.tearDownTSO = tearDownTSO;
+          returnData.data.tearDownTSN = tearDownTSN;
+          returnData.data.tearDownTSR = tearDownTSR;
           returnData.success = true;
         } else {
           returnData.success = true;
         }
       } catch (error) {
-        returnData.error = error;
+        returnData.data.notesError = error;
       }
     } else {
       returnData.error = {
@@ -176,9 +200,9 @@ async function getWorkOrderData(request: Request) {
       };
     }
   } catch (error) {
-    returnData.error = error;
+    returnData.data[0].NoteError = error;
   }
   return returnData;
 }
 
-export default getWorkOrderData;
+export default getIIRDataAPI;

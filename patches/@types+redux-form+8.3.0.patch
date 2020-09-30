@@ -1,0 +1,13 @@
+diff --git a/node_modules/@types/redux-form/lib/reduxForm.d.ts b/node_modules/@types/redux-form/lib/reduxForm.d.ts
+index 3b80e3c..32a47c1 100644
+--- a/node_modules/@types/redux-form/lib/reduxForm.d.ts
++++ b/node_modules/@types/redux-form/lib/reduxForm.d.ts
+@@ -275,7 +275,7 @@ export interface DecoratedFormActions<ErrorType> {
+     change: ChangeAction;
+     focus: FocusAction;
+     array: InjectedArrayProps;
+-    dispatch: Dispatch;
++    dispatch: Dispatch<any>;
+ }
+ 
+ export type DecoratedFormProps<FormData = {}, P = {}, ErrorType = string> =
