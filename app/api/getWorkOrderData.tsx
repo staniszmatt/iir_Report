@@ -60,15 +60,21 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].Manual_Combined = Manual_Combined;
           returnData.data[0].Work_Order_Number = Work_Order_Number;
           returnData.data[0].Trv_Num = Trv_Num;
-
+          // Sometimes Cert type may not be entered yet.
           if (
             Object.prototype.hasOwnProperty.call(
               secondData[0],
               'Cert_type_Description'
             )
           ) {
-            returnData.data[0].Cert_type_Description =
-              secondData[0].Cert_type_Description;
+            // Grab all cert types if available and store into array.
+            returnData.data[0].Cert_type_Description = [];
+
+            returnData.data[0].Cert_type_Description = secondData.map(
+              (objData: { Cert_type_Description: string }) => {
+                return objData.Cert_type_Description;
+              }
+            );
           } else {
             returnData.data[0].Cert_type_Description = 'N/A';
           }

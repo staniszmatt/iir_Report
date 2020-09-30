@@ -3,6 +3,7 @@ import React from 'react';
 import LoadingScreen from './LoadingDisplay';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
+import ArrayComponents from './RetunArrayComponents';
 import IIRFormFields from './IIRFormFields';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
@@ -173,7 +174,9 @@ export default function IIRAddEdit(props: Props | any) {
                   </div>
                   <div>
                     <div>Cert Type:</div>
-                    <div>{`${workOrderInfo.Cert_type_Description}`}</div>
+                    <ArrayComponents
+                      props={workOrderInfo.Cert_type_Description}
+                    />
                   </div>
                 </div>
               </div>
