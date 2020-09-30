@@ -60,7 +60,7 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].Manual_Combined = Manual_Combined;
           returnData.data[0].Work_Order_Number = Work_Order_Number;
           returnData.data[0].Trv_Num = Trv_Num;
-
+          // Sometimes Cert type may not be entered yet.
           if (
             Object.prototype.hasOwnProperty.call(
               secondData[0],

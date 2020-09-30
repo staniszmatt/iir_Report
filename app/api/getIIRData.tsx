@@ -110,8 +110,14 @@ async function getIIRDataAPI(request: Request) {
               'Cert_type_Description'
             )
           ) {
-            returnData.data.Cert_type_Description =
-              secondData[0].Cert_type_Description;
+            // Grab all cert types if available and store into array.
+            returnData.data.Cert_type_Description = [];
+
+            returnData.data.Cert_type_Description = secondData.map(
+              (objData: { Cert_type_Description: string }) => {
+                return objData.Cert_type_Description;
+              }
+            );
           } else {
             returnData.data.Cert_type_Description = 'N/A';
           }
