@@ -47,6 +47,8 @@ app/config/configEmail.tsx
 app/config/configEmail.js
 app/config/configEmail
 
+.vscode/
+
 dist
 dll
 main.js

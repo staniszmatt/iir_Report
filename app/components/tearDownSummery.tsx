@@ -9,6 +9,7 @@ import html2canvas from '@nidi/html2canvas';
 import JsPDF from 'jspdf';
 import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
+import ArrayComponents from './RetunArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
@@ -252,7 +253,7 @@ export default function TearDownSummery(props: Props | any) {
                         </div>
                         <div>
                           <div>Cert Type:</div>
-                          <div>{workOrderInfo.Cert_type_Description}</div>
+                          <ArrayComponents props={workOrderInfo.Cert_type_Description} />
                         </div>
                       </div>
                       <div>
