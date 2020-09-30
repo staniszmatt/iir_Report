@@ -20,9 +20,17 @@
   background-color: #50d33c;
 }
 
+.form-container > div:first-child > div > div:last-child > textarea {
+  max-height: 60px;
+}
+
 .form-container > div > div {
   width: 750px;
   margin: auto;
+}
+
+.form-container > div > div:nth-child(2) > div > div:last-child > textarea {
+  max-height: 60px;
 }
 
 .form-btn-container {
