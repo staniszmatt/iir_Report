@@ -64,6 +64,9 @@ interface Props {
 }
 
 export default function TearDownSummery(props: Props | any) {
+
+  console.log('tear down summery props: ', props);
+
   // Action calls:
   const {
     getWorkOrderData,
