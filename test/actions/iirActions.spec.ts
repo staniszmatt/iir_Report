@@ -21,8 +21,8 @@ const mockState = {
     postIIRNotes: false,
     diplayOpenPDFBtn: false,
     workOrder: {
-      workOrderSearch: '',
-      workOrderSearchLineItem: ''
+      workOrderSearch: 'string',
+      workOrderSearchLineItem: 'string'
     }
   }
 }
@@ -71,29 +71,48 @@ jest.mock(
 );
 
 describe('iirActions', () => {
-  it('should reset iir state to all false states and clear data', () => {
-    expect(actions.resetState()).toMatchSnapshot();
-  });
-  it('should toggle PDF form display state', () => {
-    expect(actions.toggleDisplayPDFFormState()).toMatchSnapshot();
-  });
-  it('should toggle to post iir notes state', () => {
-    expect(actions.togglePostIIRNotes()).toMatchSnapshot();
-  });
-  it('should toggle loading screen display state', () => {
+  it('should call RESET_STATE', () => {
+      expect(actions.resetState()).toMatchSnapshot();
+    });
+  it('should call RESET_DISPLAY_STATE', () => {
+      expect(actions.softResetState()).toMatchSnapshot();
+    });
+  it('should call TOGGLE_PDF_DISPLAY', () => {
+      expect(actions.toggleDisplayPDFFormState()).toMatchSnapshot();
+    });
+  it('should call TOGGLE_DISPLAY_OPEN_PDF_BTN', () => {
+    expect(actions.toggleDisplayOpenPDFBTnState()).toMatchSnapshot();
+    });
+  it('should call TOGGLE_POST_IIR_NOTES', () => {
+      expect(actions.togglePostIIRNotes()).toMatchSnapshot();
+    });
+  it('should call TOGGLE_LOADING_SCREEN_DISPLAY_ON', () => {
     expect(actions.toggleLoadingScreenState()).toMatchSnapshot();
   });
-  it('should toggle IIR form field display state', () => {
+  it('should call TOGGLE_SEND_EMAIL_ON', () => {
+    expect(actions.toggleSendEmailStateOn()).toMatchSnapshot();
+  });
+  it('should call TOGGLE_SEND_EMAIL_OFF', () => {
+    expect(actions.toggleSendEmailStateOff()).toMatchSnapshot();
+  });
+  it('should call TOGGLE_SUCCESS_UPDATE_MODAL_ON', () => {
+    expect(actions.toggleSuccessUpdateModalOn()).toMatchSnapshot();
+  });
+  it('should call TOGGLE_SUCCESS_UPDATE_MODAL_OFF', () => {
+    expect(actions.toggleSuccessUpdateModalOff()).toMatchSnapshot();
+  });
+  it('should call TOGGLE_LOADING_SCREEN_DISPLAY_OFF', () => {
+    expect(actions.toggleLoadingScreenStateOff()).toMatchSnapshot();
+  });
+  it('should call TOGGLE_IIR_EDIT_STATE', () => {
     expect(actions.toggleIIRAddEditState()).toMatchSnapshot();
   });
-  it('should set the workOrder data state', () => {
+  it('should call SET_WORK_ORDER and include work order object', () => {
     expect(
-      actions.setWorkOrder({
-        workOrderSearch: 'string',
-        workOrderSearchLineItem: 'string'
-      })
+      actions.setWorkOrder(mockState.iir.workOrder)
     ).toMatchSnapshot();
   });
+
   it('should set the workOrderData data state', () => {
     expect(
       actions.setWorkOrderData(mockData)
@@ -160,10 +179,11 @@ describe('iirActions', () => {
     const getState: any = () => {
       return mockState;
     };
+
     const state = getState();
     const workOrder = {
-      workOrderSearch: state.iir.workOrder.workOrderSearch,
-      workOrderSearchLineItem: state.iir.workOrder.workOrderSearchLineItem
+      workOrderSearch: 'string',
+      workOrderSearchLineItem: 'string'
     };
 
     const dispatch = spy();
@@ -172,7 +192,6 @@ describe('iirActions', () => {
     fn(dispatch, getState);
 
     expect(dispatch.calledWith({ type: actions.TOGGLE_LOADING_SCREEN_DISPLAY_OFF })).toBe(true);
-    expect(dispatch.calledWith({ type: actions.SET_WORK_ORDER, resp: workOrder })).toBe(true);
     expect(dispatch.calledWith({ type: actions.SET_WORK_ORDER_DATA, resp: data })).toBe(true);
     expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(true);
     expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(false);

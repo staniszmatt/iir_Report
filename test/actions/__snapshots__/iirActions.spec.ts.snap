@@ -1,27 +1,84 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`iirActions Test error modal 1`] = `
+exports[`iirActions should call RESET_DISPLAY_STATE 1`] = `
 Object {
-  "resp": Object {
-    "error": "string",
-  },
-  "type": "TOGGLE_ERROR_MODAL_STATE",
+  "type": "RESET_DISPLAY_STATE",
 }
 `;
 
-exports[`iirActions should reset iir state to all false states and clear data 1`] = `
+exports[`iirActions should call RESET_STATE 1`] = `
 Object {
   "type": "RESET_STATE",
 }
 `;
 
-exports[`iirActions should set the workOrder data state 1`] = `
+exports[`iirActions should call SET_WORK_ORDER and include work order object 1`] = `
 Object {
   "resp": Object {
     "workOrderSearch": "string",
     "workOrderSearchLineItem": "string",
   },
   "type": "SET_WORK_ORDER",
+}
+`;
+
+exports[`iirActions should call TOGGLE_DISPLAY_OPEN_PDF_BTN 1`] = `
+Object {
+  "type": "TOGGLE_DISPLAY_OPEN_PDF_BTN",
+}
+`;
+
+exports[`iirActions should call TOGGLE_IIR_EDIT_STATE 1`] = `
+Object {
+  "type": "TOGGLE_IIR_EDIT_STATE",
+}
+`;
+
+exports[`iirActions should call TOGGLE_LOADING_SCREEN_DISPLAY_OFF 1`] = `
+Object {
+  "type": "TOGGLE_LOADING_SCREEN_DISPLAY_OFF",
+}
+`;
+
+exports[`iirActions should call TOGGLE_LOADING_SCREEN_DISPLAY_ON 1`] = `
+Object {
+  "type": "TOGGLE_LOADING_SCREEN_DISPLAY_ON",
+}
+`;
+
+exports[`iirActions should call TOGGLE_PDF_DISPLAY 1`] = `
+Object {
+  "type": "TOGGLE_PDF_DISPLAY",
+}
+`;
+
+exports[`iirActions should call TOGGLE_POST_IIR_NOTES 1`] = `
+Object {
+  "type": "SET_POST_IIR_NOTES",
+}
+`;
+
+exports[`iirActions should call TOGGLE_SEND_EMAIL_OFF 1`] = `
+Object {
+  "type": "TOGGLE_SEND_EMAIL_OFF",
+}
+`;
+
+exports[`iirActions should call TOGGLE_SEND_EMAIL_ON 1`] = `
+Object {
+  "type": "TOGGLE_SEND_EMAIL_ON",
+}
+`;
+
+exports[`iirActions should call TOGGLE_SUCCESS_UPDATE_MODAL_OFF 1`] = `
+Object {
+  "type": "TOGGLE_SUCCESS_UPDATE_MODAL_OFF",
+}
+`;
+
+exports[`iirActions should call TOGGLE_SUCCESS_UPDATE_MODAL_ON 1`] = `
+Object {
+  "type": "TOGGLE_SUCCESS_UPDATE_MODAL_ON",
 }
 `;
 
@@ -54,29 +111,5 @@ Object {
     "workedPerformed": "NONE",
   },
   "type": "SET_WORK_ORDER_DATA",
-}
-`;
-
-exports[`iirActions should toggle IIR form field display state 1`] = `
-Object {
-  "type": "TOGGLE_IIR_EDIT_STATE",
-}
-`;
-
-exports[`iirActions should toggle PDF form display state 1`] = `
-Object {
-  "type": "TOGGLE_PDF_DISPLAY",
-}
-`;
-
-exports[`iirActions should toggle loading screen display state 1`] = `
-Object {
-  "type": "TOGGLE_LOADING_SCREEN_DISPLAY_ON",
-}
-`;
-
-exports[`iirActions should toggle to post iir notes state 1`] = `
-Object {
-  "type": "SET_POST_IIR_NOTES",
 }
 `;
