@@ -69,12 +69,19 @@ async function getWorkOrderData(request: Request) {
           ) {
             // Grab all cert types if available and store into array.
             returnData.data[0].Cert_type_Description = [];
-
-            returnData.data[0].Cert_type_Description = secondData.map(
+            // Set the list of cert types into a array list
+            const collectArrayCertList = secondData.map(
               (objData: { Cert_type_Description: string }) => {
                 return objData.Cert_type_Description;
               }
             );
+            // Filter out all the duplicates
+            const removedDuplicates = collectArrayCertList.filter(
+              (elem: never, index: number, arrayData: []) => {
+                return index === arrayData.indexOf(elem);
+              }
+            );
+            returnData.data[0].Cert_type_Description = removedDuplicates;
           } else {
             returnData.data[0].Cert_type_Description = 'N/A';
           }

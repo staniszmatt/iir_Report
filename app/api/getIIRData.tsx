@@ -86,7 +86,7 @@ async function getIIRDataAPI(request: Request) {
       returnData.data.OrderType = OrderType;
 
       try {
-      // Can't get the server to do more than one join for some reason, work around is a second query.
+      // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
       const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
       sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
         FROM traveler_header
@@ -112,12 +112,18 @@ async function getIIRDataAPI(request: Request) {
           ) {
             // Grab all cert types if available and store into array.
             returnData.data.Cert_type_Description = [];
-
-            returnData.data.Cert_type_Description = secondData.map(
+            // Set the list of cert types into a array list
+            const collectArrayCertList = secondData.map(
               (objData: { Cert_type_Description: string }) => {
                 return objData.Cert_type_Description;
               }
             );
+          // Filter out all the duplicates
+          const removedDuplicates = collectArrayCertList.filter((elem: never, index: number, arrayData: []) => {
+            return index === arrayData.indexOf(elem);
+          })
+
+          returnData.data.Cert_type_Description = removedDuplicates;
           } else {
             returnData.data.Cert_type_Description = 'N/A';
           }
