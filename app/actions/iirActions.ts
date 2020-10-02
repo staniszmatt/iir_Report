@@ -159,7 +159,7 @@ export function savePDF(pdfData: []) {
 export function handleGeIIRDataResp(
   _event: {},
   resp: {
-    error: { code: string; name: string };
+    error: { code: string; name: string } | any;
     data: { length: number; customerReasonForRemoval: string | null };
   }
 ) {
@@ -199,14 +199,7 @@ export function handleGeIIRDataResp(
     ) {
       dispatch(toggleErrorModalState(resp.error));
     } else {
-      const returnError = { error: '' };
-      if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
-      } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
-      }
-      dispatch(toggleErrorModalState(returnError));
+      dispatch(toggleErrorModalState(resp.error));
     }
   };
 }
