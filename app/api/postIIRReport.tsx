@@ -15,7 +15,7 @@ interface Request {
 }
 
 interface ReturnData {
-  error: {};
+  error: {} | any;
   resp: {};
   succuss: boolean;
 }
@@ -82,6 +82,12 @@ async function postIIRReport(request: Request) {
   try {
     // TODO: Add line item to query!
     const db = await pool.connect();
+    /**
+     * NOTE: Per mssql libray referenced: https://www.npmjs.com/package/mssql
+     * All values are automatically sanitized against sql injection. This is because it is rendered as
+     * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
+     * Column names cannot be passed/set in statements using variables.
+     */
     const query = `INSERT INTO tear_down_notes_dev (SalesOrderNumber, salesOrderNumberLine, ${keyName})
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
@@ -99,7 +105,12 @@ async function postIIRReport(request: Request) {
       };
     }
   } catch (error) {
-    returnData.error = error;
+    // Not sure if there is a better way but don't need to return the array of key value pairs.
+    // eslint-disable-next-line array-callback-return
+    Object.getOwnPropertyNames(error).map(key => {
+      // eslint-disable-next-line no-useless-return
+      returnData.error[key] = error[key];
+    });
   }
   return returnData;
 }

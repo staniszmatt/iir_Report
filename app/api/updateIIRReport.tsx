@@ -78,7 +78,12 @@ async function postIIRReport(request: Request) {
 
   try {
     const db = await pool.connect();
-
+    /**
+     * NOTE: Per mssql libray referenced: https://www.npmjs.com/package/mssql
+     * All values are automatically sanitized against sql injection. This is because it is rendered as
+     * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
+     * Column names cannot be passed/set in statements using variables.
+     */
     const query = `UPDATE tear_down_notes_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName

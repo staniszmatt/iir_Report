@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'mssql/msnodesqlv8';
 import pool from '../config/config';
+import getDriver from '../config/configODBC';
 
 const odbc = require('odbc');
 
@@ -11,7 +12,7 @@ interface Request {
 }
 
 interface ReturnData {
-  error: {};
+  error: {} | any;
   data: {} | any;
   noData: boolean;
 }
@@ -32,24 +33,38 @@ async function getWorkOrderData(request: Request) {
     data: [],
     noData: false
   };
+  const odbcDriverString = getDriver();
 
   try {
-    const db = await odbc.connect('DSN=AeroSuper');
-    const data = await db.query(`SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
-    sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType
-    FROM sales_order_line
-    INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
-    WHERE sales_order_line.SalesOrderNumber = '${request.workOrderSearch}' AND sales_order_line.ItemNumber = '${request.workOrderSearchLineItem}'`);
+    const workOrder = request.workOrderSearch;
+    const lineItme = request.workOrderSearchLineItem;
+    // Set this up so it can visually be better when creating the query string.
+    const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
+      sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType FROM sales_order_line INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
+      WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`;
+    // Prepard query statement
+    const db = await odbc.connect(odbcDriverString);
+    const query = await db.createStatement();
+    await query.prepare(queryString);
+    await query.bind([workOrder, lineItme]);
+    const data = await query.execute();
+    // Must close otherwise could tie up connection pool
+    await query.close();
 
     if (data.length > 0) {
       returnData.data = data;
+      const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
+        sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
+        FROM traveler_header INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
+        WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`;
       try {
         // Can't get the server to do more than one join for some reason, work around is a second query.
-        const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
-        sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
-          FROM traveler_header
-          INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
-              WHERE traveler_header.Work_Order_Number = '${request.workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${request.workOrderSearchLineItem}'`);
+        const query2 = await db.createStatement();
+        await query2.prepare(query2String);
+        await query2.bind([workOrder, lineItme]);
+        const secondData = await query2.execute();
+        query2.close();
+        db.close();
 
         if (
           secondData.length > 0 &&
@@ -91,14 +106,25 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].Trv_Num = 'N/A';
           returnData.data[0].Cert_type_Description = 'N/A';
         }
-      } catch (err) {
-        returnData.data[0].travlerError = err;
+      } catch (error) {
+        // Not sure if there is a better way but don't need to return the array of key value pairs.
+        // eslint-disable-next-line array-callback-return
+        Object.getOwnPropertyNames(error).map(key => {
+          // eslint-disable-next-line no-useless-return
+          returnData.error[key] = error[key];
+        });
       }
 
       db.close();
 
       try {
         const dbIIR = await pool.connect();
+        /**
+         * NOTE: Per mssql libray referenced: https://www.npmjs.com/package/mssql
+         * All values are automatically sanitized against sql injection. This is because it is rendered as
+         * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
+         * Column names cannot be passed/set in statements using variables.
+         */
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = '${returnData.data[0].SalesOrderNumber}' AND i.salesOrderNumberLine = '${returnData.data[0].ItemNumber}'`;
@@ -135,7 +161,12 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].tearDownTSR = getIIRData.recordset[0].tearDownTSR;
         }
       } catch (error) {
-        returnData.data[0].notesError = error;
+        // Not sure if there is a better way but don't need to return the array of key value pairs.
+        // eslint-disable-next-line array-callback-return
+        Object.getOwnPropertyNames(error).map(key => {
+          // eslint-disable-next-line no-useless-return
+          returnData.error[key] = error[key];
+        });
       }
     } else {
       returnData.error = {
@@ -143,7 +174,12 @@ async function getWorkOrderData(request: Request) {
       };
     }
   } catch (error) {
-    returnData.data[0].travelerError = error;
+    // Not sure if there is a better way but don't need to return the array of key value pairs.
+    // eslint-disable-next-line array-callback-return
+    Object.getOwnPropertyNames(error).map(key => {
+      // eslint-disable-next-line no-useless-return
+      returnData.error[key] = error[key];
+    });
   }
   return returnData;
 }

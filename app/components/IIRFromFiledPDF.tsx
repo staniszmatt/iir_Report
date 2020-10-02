@@ -32,10 +32,7 @@ const IIRForm = (
     workedPerformed
   } = props.props;
   // Removing white space for this specific item in the JobCost DB.
-  const workedPerformedFixString = workedPerformed
-    .replace('       ', ' ')
-    .replace('           ', ' ')
-    .replace('         ', ' ');
+  const workedPerformedFixString = workedPerformed.replace(/\s\s+/g, ' ');
   const warningCheck = {
     background: 'none'
   };
