@@ -6,7 +6,7 @@ export type iirStateType = {
     iirFormDisplay: boolean;
     loadingScreen: boolean;
     postIIRNotes: boolean;
-    diplayOpenPDFBtn: boolean;
+    displayOpenPDFBtn: boolean;
     sendEmail: boolean;
     successUpdateModalCall: boolean;
     workOrder: {

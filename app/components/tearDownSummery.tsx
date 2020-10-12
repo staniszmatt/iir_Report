@@ -9,7 +9,7 @@ import html2canvas from '@nidi/html2canvas';
 import JsPDF from 'jspdf';
 import routes from '../constants/routes.json';
 import LoadingScreen from './LoadingDisplay';
-import ArrayComponents from './RetunArrayComponents';
+import ArrayComponents from './ReturnArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
@@ -27,7 +27,7 @@ interface Props {
   iir: {
     loadingScreen: boolean;
     loadPDF: boolean;
-    diplayOpenPDFBtn: boolean;
+    displayOpenPDFBtn: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
@@ -77,7 +77,7 @@ export default function TearDownSummery(props: Props | any) {
   } = props;
   // Tear Down State:
   // eslint-disable-next-line react/destructuring-assignment
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo, diplayOpenPDFBtn } = props.iir;
+  const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = props.iir;
   let displayPDFBtn = true;
   let warrentyString = 'No';
   // Setup TS data depending if it needs from AeroParts DB or JobCost DB.
@@ -124,6 +124,7 @@ export default function TearDownSummery(props: Props | any) {
   }
 
   const cancelProp = { cancelLoading };
+  // TODO: If selectable content is required, try using @progress/kendo-react-pdf.
   // Sets up the React component with the id to create a image and convert it to PNG then
   // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
   // create a PDF from a component.
@@ -158,14 +159,14 @@ export default function TearDownSummery(props: Props | any) {
         <img src={logo} alt="AeroParts Logo" />
       </div>
       <div className={styles['form-container']}>
-        <div>TEAR DONW FORM REVIEW</div>
+        <div>TEAR DOWN FORM REVIEW</div>
         {!loadingScreen && (
           <div>
             <WorkOrderSearchForm onSubmit={getWorkOrderData} />
           </div>
         )}
         {loadingScreen && <LoadingScreen props={cancelProp} />}
-        {diplayOpenPDFBtn && (
+        {displayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
             <div>
               File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
@@ -177,7 +178,7 @@ export default function TearDownSummery(props: Props | any) {
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!diplayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
+            {!displayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
@@ -282,7 +283,7 @@ export default function TearDownSummery(props: Props | any) {
                     <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
                   </Link>
                 </div>
-                {!diplayOpenPDFBtn && (
+                {!displayOpenPDFBtn && (
                   <div>
                     {displayPDFBtn  && (
                     <button onClick={getPDF} type="button">

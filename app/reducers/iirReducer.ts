@@ -22,7 +22,7 @@ const IState = {
   iirFormDisplay: false,
   loadingScreen: false,
   postIIRNotes: false,
-  diplayOpenPDFBtn: false,
+  displayOpenPDFBtn: false,
   sendEmail: false,
   successUpdateModalCall: false,
   workOrder: {},
@@ -74,7 +74,7 @@ export default function iir(state = IState, action: CustomAction) {
     case TOGGLE_DISPLAY_OPEN_PDF_BTN:
       return {
         ...state,
-        diplayOpenPDFBtn: true
+        displayOpenPDFBtn: true
       };
     case TOGGLE_IIR_EDIT_STATE:
       return {
@@ -103,7 +103,7 @@ export default function iir(state = IState, action: CustomAction) {
         loadPDF: false,
         iirFormDisplay: false,
         postIIRNotes: false,
-        diplayOpenPDFBtn: false,
+        displayOpenPDFBtn: false,
         workOrder: {},
         workOrderInfo: {}
       };
@@ -114,7 +114,7 @@ export default function iir(state = IState, action: CustomAction) {
         loadPDF: false,
         iirFormDisplay: false,
         postIIRNotes: false,
-        diplayOpenPDFBtn: false
+        displayOpenPDFBtn: false
       };
     default:
       return state;

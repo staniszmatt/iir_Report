@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`modalActions should create an action to turn modal error state and pass object message 1`] = `
+Object {
+  "resp": Object {
+    "error": "Error Message",
+  },
+  "type": "TOGGLE_ERROR_MODAL_STATE",
+}
+`;
+
+exports[`modalActions should create an action to turn on modal state 1`] = `
+Object {
+  "type": "TOGGLE_MODAL_STATE",
+}
+`;
+
+exports[`modalActions should create an action to turn on modal success state and pass string message 1`] = `
+Object {
+  "resp": "Success String",
+  "type": "TOGGLE_SUCCESS_MODAL_STATE",
+}
+`;
+
+exports[`modalActions should create an action to turn on modal warning state and pass object message 1`] = `
+Object {
+  "resp": Object {
+    "warningMsg": "Warning",
+  },
+  "type": "TOGGLE_WARNING_MODAL_STATE",
+}
+`;
