@@ -36,8 +36,14 @@ async function getWorkOrderData(request: Request) {
   const odbcDriverString = getDriver();
 
   try {
-    const workOrder = request.workOrderSearch;
-    const lineItem = request.workOrderSearchLineItem;
+    const workOrder = request.workOrderSearch
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
+    const lineItem = request.workOrderSearchLineItem
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
     // Set this up so it can visually be better when creating the query string.
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
       sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType FROM sales_order_line INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber

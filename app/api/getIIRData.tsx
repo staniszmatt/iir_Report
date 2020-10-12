@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -23,7 +22,6 @@ interface ReturnData {
 
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
-
   let returnString = '';
   if (stringToCheck === null || stringToCheck.length === 0) {
     returnString = 'NONE';
@@ -43,13 +41,19 @@ async function getIIRDataAPI(request: Request) {
   const odbcDriverString = getDriver();
 
   try {
-    const workOrder = workOrderSearch;
-    const lineItem = workOrderSearchLineItem;
+    const workOrder = workOrderSearch
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
+    const lineItem = workOrderSearchLineItem
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
     sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType
     FROM sales_order_line
     INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
-    WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`
+    WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`;
 
     const db = await odbc.connect(odbcDriverString);
     const query = await db.createStatement();
@@ -97,62 +101,68 @@ async function getIIRDataAPI(request: Request) {
       returnData.data.OrderType = OrderType;
 
       try {
-      // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
+        // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
+        const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
+        sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
+          FROM traveler_header
+          INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
+              WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`;
+        const query2 = await db.createStatement();
+        await query2.prepare(query2String);
+        await query2.bind([workOrder, lineItem]);
+        const secondData = await query2.execute();
+        query2.close();
+        db.close();
 
-      const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
-      sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
-        FROM traveler_header
-        INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
-            WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`
-      const query2 = await db.createStatement();
-      await query2.prepare(query2String);
-      await query2.bind([workOrder, lineItem]);
-      const secondData = await query2.execute();
-      query2.close();
-      db.close();
-
-      if (secondData.length > 0) {
-        if (Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')) {
-          const {
-            Manual_Combined,
-            Work_Order_Number,
-            Trv_Num
-          } = secondData[0];
-
-          returnData.data.Manual_Combined = Manual_Combined;
-          returnData.data.Work_Order_Number = Work_Order_Number;
-          returnData.data.Trv_Num = Trv_Num;
+        if (secondData.length > 0) {
           if (
             Object.prototype.hasOwnProperty.call(
               secondData[0],
-              'Cert_type_Description'
+              'Manual_Combined'
             )
           ) {
-            // Grab all cert types if available and store into array.
-            returnData.data.Cert_type_Description = [];
-            // Set the list of cert types into a array list
-            const collectArrayCertList = secondData.map(
-              (objData: { Cert_type_Description: string }) => {
-                return objData.Cert_type_Description;
-              }
-            );
-          // Filter out all the duplicates
-          const removedDuplicates = collectArrayCertList.filter((elem: never, index: number, arrayData: []) => {
-            return index === arrayData.indexOf(elem);
-          })
+            const {
+              Manual_Combined,
+              Work_Order_Number,
+              Trv_Num
+            } = secondData[0];
 
-          returnData.data.Cert_type_Description = removedDuplicates;
-          } else {
-            returnData.data.Cert_type_Description = 'N/A';
+            returnData.data.Manual_Combined = Manual_Combined;
+            returnData.data.Work_Order_Number = Work_Order_Number;
+            returnData.data.Trv_Num = Trv_Num;
+            if (
+              Object.prototype.hasOwnProperty.call(
+                secondData[0],
+                'Cert_type_Description'
+              )
+            ) {
+              // Grab all cert types if available and store into array.
+              returnData.data.Cert_type_Description = [];
+              // Set the list of cert types into a array list
+              const collectArrayCertList = secondData.map(
+                (objData: { Cert_type_Description: string }) => {
+                  return objData.Cert_type_Description;
+                }
+              );
+              // Filter out all the duplicates
+              const removedDuplicates = collectArrayCertList.filter(
+                (elem: never, index: number, arrayData: []) => {
+                  return index === arrayData.indexOf(elem);
+                }
+              );
+
+              returnData.data.Cert_type_Description = removedDuplicates;
+            } else {
+              returnData.data.Cert_type_Description = 'N/A';
+            }
           }
+        } else {
+          returnData.data.Manual_Combined = 'N/A';
+          returnData.data.Work_Order_Number = 'N/A';
+          returnData.data.Trv_Num = 'N/A';
+          returnData.data.Cert_type_Description = 'N/A';
+          returnData.data.Cert_type_Description = 'N/A';
         }
-      } else {
-        returnData.data.Manual_Combined = 'N/A';
-        returnData.data.Work_Order_Number = 'N/A';
-        returnData.data.Trv_Num = 'N/A';
-        returnData.data.Cert_type_Description = 'N/A';
-        returnData.data.Cert_type_Description = 'N/A';
-      }
       } catch (error) {
         returnData.data[0].travelerError = error;
       }
@@ -161,12 +171,12 @@ async function getIIRDataAPI(request: Request) {
     if (data.length > 0) {
       try {
         const dbIIR = await pool.connect();
-      /**
-       * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
-       * All values are automatically sanitized against sql injection. This is because it is rendered as
-       * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
-       * Column names cannot be passed/set in statements using variables.
-       */
+        /**
+         * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
+         * All values are automatically sanitized against sql injection. This is because it is rendered as
+         * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
+         * Column names cannot be passed/set in statements using variables.
+         */
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
@@ -179,7 +189,7 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.workedPerformed = null;
           returnData.data.tearDownTSO = null;
           returnData.data.tearDownTSN = null;
-          returnData.data.tearDownTSR = null
+          returnData.data.tearDownTSR = null;
         } else {
           returnData.data.customerReasonForRemoval = '';
           returnData.data.genConditionReceived = '';
