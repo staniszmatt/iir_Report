@@ -83,7 +83,7 @@ async function postIIRReport(request: Request) {
     // TODO: Add line item to query!
     const db = await pool.connect();
     /**
-     * NOTE: Per mssql libray referenced: https://www.npmjs.com/package/mssql
+     * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
      * All values are automatically sanitized against sql injection. This is because it is rendered as
      * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
      * Column names cannot be passed/set in statements using variables.

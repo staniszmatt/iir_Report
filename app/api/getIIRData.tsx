@@ -44,7 +44,7 @@ async function getIIRDataAPI(request: Request) {
 
   try {
     const workOrder = workOrderSearch;
-    const lineItme = workOrderSearchLineItem;
+    const lineItem = workOrderSearchLineItem;
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
     sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType
     FROM sales_order_line
@@ -54,7 +54,7 @@ async function getIIRDataAPI(request: Request) {
     const db = await odbc.connect(odbcDriverString);
     const query = await db.createStatement();
     await query.prepare(queryString);
-    await query.bind([workOrder, lineItme]);
+    await query.bind([workOrder, lineItem]);
     const data = await query.execute();
     // Must close otherwise could tie up connection pool
     await query.close();
@@ -106,7 +106,7 @@ async function getIIRDataAPI(request: Request) {
             WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`
       const query2 = await db.createStatement();
       await query2.prepare(query2String);
-      await query2.bind([workOrder, lineItme]);
+      await query2.bind([workOrder, lineItem]);
       const secondData = await query2.execute();
       query2.close();
       db.close();
@@ -162,7 +162,7 @@ async function getIIRDataAPI(request: Request) {
       try {
         const dbIIR = await pool.connect();
       /**
-       * NOTE: Per mssql libray referenced: https://www.npmjs.com/package/mssql
+       * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
        * All values are automatically sanitized against sql injection. This is because it is rendered as
        * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
        * Column names cannot be passed/set in statements using variables.
