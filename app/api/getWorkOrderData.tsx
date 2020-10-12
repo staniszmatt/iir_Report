@@ -92,7 +92,7 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].Cert_type_Description = 'N/A';
         }
       } catch (err) {
-        returnData.data[0].travlerError = err;
+        returnData.data[0].travelerError = err;
       }
 
       db.close();

@@ -3,7 +3,7 @@ import React from 'react';
 import LoadingScreen from './LoadingDisplay';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
-import ArrayComponents from './RetunArrayComponents';
+import ArrayComponents from './ReturnArrayComponents';
 import IIRFormFields from './IIRFormFields';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
@@ -17,7 +17,7 @@ interface Props {
   iir: {
     loadingScreen: boolean;
     iirFormDisplay: boolean;
-    diplayOpenPDFBtn: boolean;
+    displayOpenPDFBtn: boolean;
     workOrderInfo: {
       Cert_type_Description: string;
       CustomerName: string;
@@ -63,7 +63,7 @@ export default function IIRAddEdit(props: Props | any) {
     loadingScreen,
     iirFormDisplay,
     workOrderInfo,
-    diplayOpenPDFBtn
+    displayOpenPDFBtn
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir;
   const {
@@ -119,7 +119,7 @@ export default function IIRAddEdit(props: Props | any) {
           </div>
         )}
         {loadingScreen && <LoadingScreen props={cancelProp} />}
-        {diplayOpenPDFBtn && (
+        {displayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
             <div>
               File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
@@ -132,7 +132,7 @@ export default function IIRAddEdit(props: Props | any) {
         <div>
           {iirFormDisplay && (
             <div>
-              {!diplayOpenPDFBtn && (
+              {!displayOpenPDFBtn && (
                 <div className={styles['open-pdf-btn']}>
                   <div>PDF Needs Saved.</div>
                 </div>
@@ -169,7 +169,7 @@ export default function IIRAddEdit(props: Props | any) {
                     <div>{`${workOrderInfo.SerialNumber}`}</div>
                   </div>
                   <div>
-                    <div>Quantitiy:</div>
+                    <div>Quantity:</div>
                     <div>{`${workOrderInfo.Quantity}`}</div>
                   </div>
                   <div>

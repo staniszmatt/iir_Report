@@ -23,6 +23,7 @@ function mapStateToProps(state: iirStateType) {
 function mapDispatchToProps(dispatch: Dispatch<any>) {
   // Reset Search Form when loading the page.
   dispatch(reset('workOrderSearchForm'));
+
   return bindActionCreators(
     {
       getWorkOrderData,
