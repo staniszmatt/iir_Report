@@ -51,7 +51,7 @@ const IIRForm = (
   CUSTOMER REASON FOR REMOVAL:`;
   const genCondition = `(INCOMING INSPECTION)
   GENERAL CONDITION AS RECEIVED:
-  (OUT OF BOX VIEW EX: CLEAN, DIRTY, MISSING PARTS, DENTED, SCARTCHES)`;
+  (OUT OF BOX VIEW EX: CLEAN, DIRTY, MISSING PARTS, DENTED, SCRATCHES)`;
   const evalCondition = `(INCOMING INSPECTION)
   EVALUATION FINDINGS:
   (HIDDEN DAMAGE:  N/A, DENTED, DAMAGED FLANGE, LEAKS, CORRODED, CRACKED)`;
@@ -220,25 +220,25 @@ function validate(values: Values) {
 
   if (customerReasonForRemoval) {
     if (customerReasonForRemoval.length > 700) {
-      errors.customerReasonForRemoval = 'Over max charictor limit!';
+      errors.customerReasonForRemoval = 'Over max character limit!';
     }
   }
 
   if (evalFindings) {
     if (evalFindings.length > 700) {
-      errors.evalFindings = 'Over max charictor limit!';
+      errors.evalFindings = 'Over max character limit!';
     }
   }
 
   if (genConditionReceived) {
     if (genConditionReceived.length > 700) {
-      errors.genConditionReceived = 'Over max charictor limit!';
+      errors.genConditionReceived = 'Over max character limit!';
     }
   }
 
   if (workedPerformed) {
     if (workedPerformed.length > 616) {
-      errors.workedPerformed = 'Over max charictor limit!';
+      errors.workedPerformed = 'Over max character limit!';
     }
   }
   return errors;

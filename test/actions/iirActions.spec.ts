@@ -3,8 +3,7 @@
 
 import { spy } from 'sinon';
 import * as actions from '../../app/actions/iirActions';
-import * as modalActons from '../../app/actions/modalActions';
-import { checkForPDFFile } from '../../app/actions/iirActions';
+import * as modalActions from '../../app/actions/modalActions';
 
 const { ipcRenderer } = require('electron');
 
@@ -13,13 +12,13 @@ const mockState = {
   // iirFormDisplay: false,
   // loadingScreen: false,
   // postIIRNotes: false,
-  // diplayOpenPDFBtn: false,
+  // displayOpenPDFBtn: false,
   iir: {
     loadingScreen: true,
     loadPDF: false,
     iirFormDisplay: false,
     postIIRNotes: false,
-    diplayOpenPDFBtn: false,
+    displayOpenPDFBtn: false,
     workOrder: {
       workOrderSearch: 'string',
       workOrderSearchLineItem: 'string'
@@ -118,7 +117,7 @@ describe('iirActions', () => {
       actions.setWorkOrderData(mockData)
     ).toMatchSnapshot();
   });
-  it('should toggle laoding screen to false, reset iir state and remove ipcRender listner action', () => {
+  it('should toggle loading screen to false, reset iir state and remove ipcRender listener action', () => {
     const fn = actions.cancelLoading();
     expect(fn).toBeInstanceOf(Function);
     const dispatch = spy();
@@ -130,7 +129,7 @@ describe('iirActions', () => {
     expect(ipcRenderer.removeAllListeners).toBeCalledWith('asynchronous-reply');
   });
   // Actions getWorkOrderData testing.
-  // First set to test of reciving correct data
+  // First set to test of receiving correct data
   // This is for the getWorkOrderData method in iirActions
   it('should pass two values to use for searching for info, setting loading screen and saving work order search', () => {
     const dataResp = {
@@ -163,12 +162,12 @@ describe('iirActions', () => {
     ipcRenderer.on.mockImplementationOnce((event, callback) => {
       callback(event, dataResp);
     });
-    // This may be more for the UI react components than for actions unfortently
+    // This may be more for the UI react components than for actions unfortunately
     expect(ipcRenderer.on).toBeCalledWith('asynchronous-reply', expect.any(Function));
     expect(ipcRenderer.send).toBeCalledWith('asynchronous-message',dataRequest);
   });
   // Start with good data from callback handleGetWorkOrderDataResp from getWorkOrderData to set dispatch items
-  it('should recive data from ipcRenderer and pass to set work order data, turn on display PDF form state and set check pdf file string', () => {
+  it('should receive data from ipcRenderer and pass to set work order data, turn on display PDF form state and set check pdf file string', () => {
     const resp: any = {
       error: {},
       data: [mockData]
@@ -180,11 +179,11 @@ describe('iirActions', () => {
       return mockState;
     };
 
-    const state = getState();
-    const workOrder = {
-      workOrderSearch: 'string',
-      workOrderSearchLineItem: 'string'
-    };
+    // const state = getState();
+    // const workOrder = {
+    //   workOrderSearch: 'string',
+    //   workOrderSearchLineItem: 'string'
+    // };
 
     const dispatch = spy();
     const fn = actions.handleGetWorkOrderDataResp(event, resp);
@@ -195,20 +194,20 @@ describe('iirActions', () => {
     expect(dispatch.calledWith({ type: actions.SET_WORK_ORDER_DATA, resp: data })).toBe(true);
     expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(true);
     expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(false);
-    expect(dispatch.calledWith({ type: modalActons.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(false);
+    expect(dispatch.calledWith({ type: modalActions.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(false);
   });
 
   // Send Error data from callback handleGetWorkOrderDataResp from getWorkOrderData to set dispatch items
-  it('should recive error data from ipcRenderer and pass enable error modal', () => {
+  it('should receive error data from ipcRenderer and pass enable error modal', () => {
     const resp: any = {
       error: { code: 'string', name: 'string' },
       data: []
     };
     const event = {};
     const data = resp.data[0];
-    const returnError = {
-      error: 'message'
-    };
+    // const returnError = {
+    //   error: 'message'
+    // };
     const getState: any = () => { return mockState }
     const state = getState();
     const workOrder = {
@@ -228,6 +227,6 @@ describe('iirActions', () => {
     expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(true);
     // Fails for some reason when resp is added, pass/fail works when resp removed from here and modal actions.
     // TODO: Need to figure out why later.
-    // expect(dispatch.calledWith({ type: modalActons.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(true);
+    // expect(dispatch.calledWith({ type: modalActions.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(true);
   });
 });

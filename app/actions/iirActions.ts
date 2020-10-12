@@ -176,8 +176,8 @@ export function handleGeIIRDataResp(
       const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
 
       // TODO: Setup async for dispatch(setWorkOrderData(resp.data)); to call workOrder.callAutoEmailer(); when loaded.
-      // Once in a great while autoemailer runs before data is saved to state.
-      // Refernece https://redux.js.org/tutorials/essentials/part-5-async-logic on Detailed Explanation
+      // Once in a great while autoEmailer runs before data is saved to state.
+      // Reference https://redux.js.org/tutorials/essentials/part-5-async-logic on Detailed Explanation
       dispatch(setWorkOrderData(resp.data));
       dispatch(toggleIIRAddEditState());
       dispatch(checkForPDFFile(workOrderString));
@@ -299,7 +299,7 @@ export function autoEmailer() {
       }
     };
 
-    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
+    // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
       resp: {
@@ -317,7 +317,7 @@ export function autoEmailer() {
   };
 }
 
-// This will only be exacutable if checkForPDFFile finds the file and sets the display open pdf btn to true.
+// This will only be exactable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
   return (_dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
@@ -385,7 +385,7 @@ export function getWorkOrderData(workOrder: {
       workOrderSearch: workOrder.workOrderSearch,
       workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
-    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
+    // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
       resp: {
@@ -416,7 +416,7 @@ export function postUpdatePDFCheck(iirNotes: {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     // When Work Order is searched, it will set state true if a PDF exists. Then setup to move it to the old folder since a change to notes were made.
-    if (state.diplayOpenPDFBtn) {
+    if (state.displayOpenPDFBtn) {
       const dateTime = Date.now();
       const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
       const oldPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
@@ -451,7 +451,7 @@ export function handlePostIIRResp(
         workOrderSearch: state.workOrder.workOrderSearch,
         workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
       };
-      // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
+      // Callback for autoEmailer and success modal only if the updated workOrder Info successfully updates state
       dispatch(getIIRData(workOrder));
     } else {
       const returnError = { error: '' };
@@ -481,11 +481,11 @@ export function postOrUpdateIIRReport(iirNotes: {
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
 
     // If values are not changed, then set them to null
-    const valueChangeCheck = (stateValue: string, recievedValue: string) => {
-      if (stateValue === recievedValue || recievedValue === null) {
+    const valueChangeCheck = (stateValue: string, receivedValue: string) => {
+      if (stateValue === receivedValue || receivedValue === null) {
         return null;
       }
-      return recievedValue;
+      return receivedValue;
     };
     // Setup value checks to use for comparing and returning null values.
     const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
@@ -505,7 +505,7 @@ export function postOrUpdateIIRReport(iirNotes: {
       iirNotes.workedPerformed
     );
 
-    // Check if values excists in AeroParts DB otherwise use the JobCost DB value.
+    // Check if values exists in AeroParts DB otherwise use the JobCost DB value.
     let tsoValueCheck: string;
     let tsnValueCheck: string;
     let tsrValueCheck: string;
@@ -601,7 +601,7 @@ export function postOrUpdateIIRReport(iirNotes: {
       tearDownTSN: sendTSNData,
       tearDownTSR: sendTSRData
     };
-    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
+    // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
       resp: { error: { code: string; name: string }; data: object[] }
@@ -641,8 +641,8 @@ export function handleReviewIIRPDF() {
 }
 
 export function cancelLoading() {
-  // Resets the state, removes loading screen and clears the listner that
-  // could be setup to prevent aditional server request issues when cancling
+  // Resets the state, removes loading screen and clears the listener that
+  // could be setup to prevent additional server request issues when canceling
   // a loading state.
   return (dispatch: Dispatch) => {
     dispatch(resetState());
