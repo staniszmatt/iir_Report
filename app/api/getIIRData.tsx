@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'mssql/msnodesqlv8';
 import pool from '../config/config';
+import getDriver from '../config/configODBC';
 
 const odbc = require('odbc');
 
@@ -16,7 +17,7 @@ interface Request {
 
 interface ReturnData {
   success: boolean;
-  error: {};
+  error: {} | any;
   data: {} | any;
 }
 
@@ -39,14 +40,24 @@ async function getIIRDataAPI(request: Request) {
     success: false
   };
   const { workOrderSearch, workOrderSearchLineItem } = request.workOrder;
+  const odbcDriverString = getDriver();
 
   try {
-    const db = await odbc.connect('DSN=AeroSuper');
-    const data = await db.query(`SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
+    const workOrder = workOrderSearch;
+    const lineItem = workOrderSearchLineItem;
+    const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
     sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType
     FROM sales_order_line
     INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
-    WHERE sales_order_line.SalesOrderNumber = '${workOrderSearch}' AND sales_order_line.ItemNumber = '${workOrderSearchLineItem}'`);
+    WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`
+
+    const db = await odbc.connect(odbcDriverString);
+    const query = await db.createStatement();
+    await query.prepare(queryString);
+    await query.bind([workOrder, lineItem]);
+    const data = await query.execute();
+    // Must close otherwise could tie up connection pool
+    await query.close();
 
     if (data.length > 0) {
       const {
@@ -87,11 +98,18 @@ async function getIIRDataAPI(request: Request) {
 
       try {
       // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
-      const secondData: any = await db.query(`SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
+
+      const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
       sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
         FROM traveler_header
         INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
-            WHERE traveler_header.Work_Order_Number = '${workOrderSearch}' AND traveler_header.Sales_Order_Line_Item = '${workOrderSearchLineItem}'`);
+            WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`
+      const query2 = await db.createStatement();
+      await query2.prepare(query2String);
+      await query2.bind([workOrder, lineItem]);
+      const secondData = await query2.execute();
+      query2.close();
+      db.close();
 
       if (secondData.length > 0) {
         if (Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')) {
@@ -143,6 +161,12 @@ async function getIIRDataAPI(request: Request) {
     if (data.length > 0) {
       try {
         const dbIIR = await pool.connect();
+      /**
+       * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
+       * All values are automatically sanitized against sql injection. This is because it is rendered as
+       * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
+       * Column names cannot be passed/set in statements using variables.
+       */
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
@@ -191,7 +215,12 @@ async function getIIRDataAPI(request: Request) {
           returnData.success = true;
         }
       } catch (error) {
-        returnData.data.notesError = error;
+        // Not sure if there is a better way but don't need to return the array of key value pairs.
+        // eslint-disable-next-line array-callback-return
+        Object.getOwnPropertyNames(error).map(key => {
+          // eslint-disable-next-line no-useless-return
+          returnData.error[key] = error[key];
+        });
       }
     } else {
       returnData.error = {
@@ -199,7 +228,12 @@ async function getIIRDataAPI(request: Request) {
       };
     }
   } catch (error) {
-    returnData.data[0].NoteError = error;
+    // Not sure if there is a better way but don't need to return the array of key value pairs.
+    // eslint-disable-next-line array-callback-return
+    Object.getOwnPropertyNames(error).map(key => {
+      // eslint-disable-next-line no-useless-return
+      returnData.error[key] = error[key];
+    });
   }
   return returnData;
 }

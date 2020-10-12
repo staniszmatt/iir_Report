@@ -159,11 +159,14 @@ export function savePDF(pdfData: []) {
 export function handleGeIIRDataResp(
   _event: {},
   resp: {
-    error: { code: string; name: string };
+    error: { code: string; name: string } | any;
     data: { length: number; customerReasonForRemoval: string | null };
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('get edit note data resp: ', resp);
+
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
@@ -196,14 +199,7 @@ export function handleGeIIRDataResp(
     ) {
       dispatch(toggleErrorModalState(resp.error));
     } else {
-      const returnError = { error: '' };
-      if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
-      } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
-      }
-      dispatch(toggleErrorModalState(returnError));
+      dispatch(toggleErrorModalState(resp.error));
     }
   };
 }
@@ -335,6 +331,10 @@ export function handleGetWorkOrderDataResp(
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('Get Tear Down data resp: ', resp);
+
+
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
     const { workOrderSearch, workOrderSearchLineItem } = state.workOrder;
@@ -443,6 +443,9 @@ export function handlePostIIRResp(
   resp: { error: { name: string; code: string }; data: {} }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('handle update resp: ', resp);
+
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
 
@@ -479,7 +482,7 @@ export function postOrUpdateIIRReport(iirNotes: {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
-
+    debugger;
     // If values are not changed, then set them to null
     const valueChangeCheck = (stateValue: string, receivedValue: string) => {
       if (stateValue === receivedValue || receivedValue === null) {
