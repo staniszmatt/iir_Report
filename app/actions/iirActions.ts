@@ -436,6 +436,9 @@ export function handlePostIIRResp(
   resp: { error: { name: string; code: string }; data: {} }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('Add/Edit resp: ', resp);
+
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
 
@@ -447,13 +450,14 @@ export function handlePostIIRResp(
       // Callback for autoEmailer and success modal only if the updated workOrder Info successfully updates state
       dispatch(getIIRData(workOrder));
     } else {
-      const returnError = { error: '' };
+      let returnError = {};
 
       if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        returnError = resp.error;
       } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
+        returnError = {
+          error: 'Something went wrong updating or adding IIR notes!'
+        };
       }
       dispatch(toggleErrorModalState(returnError));
     }

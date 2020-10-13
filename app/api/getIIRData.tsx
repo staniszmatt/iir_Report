@@ -41,11 +41,11 @@ async function getIIRDataAPI(request: Request) {
   const odbcDriverString = getDriver();
 
   try {
-    const workOrder = workOrderSearch
+    const cleanWorkOrder = workOrderSearch
       .replace(/  +/g, '')
       .replace(/[`']/g, '"')
       .replace(/[#^&*<>()@~]/g, '');
-    const lineItem = workOrderSearchLineItem
+    const cleanLineItem = workOrderSearchLineItem
       .replace(/  +/g, '')
       .replace(/[`']/g, '"')
       .replace(/[#^&*<>()@~]/g, '');
@@ -58,7 +58,7 @@ async function getIIRDataAPI(request: Request) {
     const db = await odbc.connect(odbcDriverString);
     const query = await db.createStatement();
     await query.prepare(queryString);
-    await query.bind([workOrder, lineItem]);
+    await query.bind([cleanWorkOrder, cleanLineItem]);
     const data = await query.execute();
     // Must close otherwise could tie up connection pool
     await query.close();
@@ -109,7 +109,7 @@ async function getIIRDataAPI(request: Request) {
               WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`;
         const query2 = await db.createStatement();
         await query2.prepare(query2String);
-        await query2.bind([workOrder, lineItem]);
+        await query2.bind([cleanWorkOrder, cleanLineItem]);
         const secondData = await query2.execute();
         query2.close();
         db.close();

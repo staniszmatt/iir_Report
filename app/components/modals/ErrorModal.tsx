@@ -35,6 +35,9 @@ function arrayObjectComponentsReturn(arrayOfObjects: []) {
 }
 
 export default function AlarmModal(props: Props) {
+
+  console.log('error modal props: ', props);
+
   const objectList = props.props;
   let mappedComponents: [] | {};
 
