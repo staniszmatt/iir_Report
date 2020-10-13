@@ -139,7 +139,7 @@ export default function TearDownSummery(props: Props | any) {
     input.style.height = '11.69in';
 
 
-    html2canvas(input, { scrollY: -window.scrollY, scale: 2 }).then(canvas => {
+    html2canvas(input, { scrollY: -window.scrollY, scale: 1.2 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new JsPDF('p', 'mm', 'a4');
       const width = pdf.internal.pageSize.getWidth();
