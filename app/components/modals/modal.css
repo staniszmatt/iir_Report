@@ -85,6 +85,28 @@
   margin: 0 20px;
 }
 
+.success-modal-container > div:first-child > p {
+  font-size: 25px;
+  margin: 25px 0;
+}
+
+.success-modal-container > div:last-child > p {
+  font-size: 18px;
+  margin: 20px 0;
+  text-decoration: underline;
+}
+
+.warning-modal-container > div:first-child > p {
+  font-size: 25px;
+  margin: 25px 0;
+}
+
+.warning-modal-container > div:nth-child(2) > p {
+  font-size: 18px;
+  margin: 20px 0;
+  text-decoration: underline;
+}
+
 .error-modal-container > div:last-child > div > p {
   font-size: 18px;
 }
@@ -98,17 +120,6 @@
   height: 240px;
 }
 
-.success-modal-container > div:first-child > p {
-  font-size: 25px;
-  margin: 25px 0;
-}
-
-.success-modal-container > div:last-child > p {
-  font-size: 18px;
-  margin: 20px 0;
-  text-decoration: underline;
-}
-
 /* Warning Modal Styling */
 .warning-modal-container {
   text-align: center;
@@ -117,17 +128,6 @@
   border-radius: 5px;
   box-shadow: inset 0 0 18px #000160;
   height: 240px;
-}
-
-.warning-modal-container > div:first-child > p {
-  font-size: 25px;
-  margin: 25px 0;
-}
-
-.warning-modal-container > div:nth-child(2) > p {
-  font-size: 18px;
-  margin: 20px 0;
-  text-decoration: underline;
 }
 
 .warning-modal-container > div:last-child > button:hover {

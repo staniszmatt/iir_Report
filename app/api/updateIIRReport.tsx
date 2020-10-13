@@ -34,14 +34,11 @@ async function postIIRReport(request: Request) {
     tearDownTSN,
     tearDownTSR
   } = request;
-
   const returnData: ReturnData = {
     error: {},
     resp: {},
     succuss: false
   };
-  // Setup of an empty string for adding to the Query.
-  let keyName = `SalesOrderNumber, salesOrderNumberLine, `;
   // This is to setup the object of only values that can be set null
   const nullableKeys: any = {
     customerReasonForRemoval,
@@ -73,7 +70,6 @@ async function postIIRReport(request: Request) {
     .replace(/[`']/g, '"')
     .replace(/[#^&*<>()@~]/g, '');
   // Start Setup the @param count to add to query string to help setup prepare statement
-  let params = '@param1, @param2, ';
   let keyValue = '';
   // Setup the values for params to pass through execute below.
   const preStateParams: any = {

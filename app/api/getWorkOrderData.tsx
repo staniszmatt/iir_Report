@@ -5,6 +5,7 @@ import pool from '../config/config';
 import getDriver from '../config/configODBC';
 
 const odbc = require('odbc');
+const sql = require('mssql/msnodesqlv8');
 
 interface Request {
   workOrderSearch: string;
@@ -125,16 +126,22 @@ async function getWorkOrderData(request: Request) {
 
       try {
         const dbIIR = await pool.connect();
-        /**
-         * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
-         * All values are automatically sanitized against sql injection. This is because it is rendered as
-         * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
-         * Column names cannot be passed/set in statements using variables.
-         */
+        const preState = await new sql.PreparedStatement(dbIIR);
+        preState.input('param1', sql.VarChar(12));
+        preState.input('param2', sql.VarChar(2));
+        const preStateParams: any = {
+          param1: workOrder,
+          param2: lineItem
+        };
+
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
-        WHERE i.SalesOrderNumber = '${returnData.data[0].SalesOrderNumber}' AND i.salesOrderNumberLine = '${returnData.data[0].ItemNumber}'`;
-        const getIIRData = await dbIIR.query(iirQuery);
+        WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
+
+        await preState.prepare(iirQuery);
+        const getIIRData = await preState.execute(preStateParams);
+        await preState.unprepare();
+
         // Setup assuming no data is available.
         returnData.data[0].customerReasonForRemoval = 'NONE';
         returnData.data[0].genConditionReceived = 'NONE';

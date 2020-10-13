@@ -165,7 +165,12 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.Cert_type_Description = 'N/A';
         }
       } catch (error) {
-        returnData.data[0].travelerError = error;
+        // Not sure if there is a better way but don't need to return the array of key value pairs.
+        // eslint-disable-next-line array-callback-return
+        Object.getOwnPropertyNames(error).map(key => {
+          // eslint-disable-next-line no-useless-return
+          returnData.error[key] = error[key];
+        });
       }
       db.close();
     }
@@ -179,12 +184,6 @@ async function getIIRDataAPI(request: Request) {
           param1: cleanWorkOrder,
           param2: cleanLineItem
         };
-        /**
-         * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
-         * All values are automatically sanitized against sql injection. This is because it is rendered as
-         * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
-         * Column names cannot be passed/set in statements using variables.
-         */
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
