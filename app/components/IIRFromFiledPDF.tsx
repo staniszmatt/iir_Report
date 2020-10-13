@@ -65,7 +65,7 @@ const IIRForm = (
       </div>
       <div>
         <Field
-          label="GENERAL CONDITION AS RECEIVED (HIDDEN DAMAGE):"
+          label="GENERAL CONDITION AS RECEIVED:"
           component={FormTextInput}
           name="genConditionReceived"
           type="textarea"
@@ -77,7 +77,7 @@ const IIRForm = (
       </div>
       <div>
         <Field
-          label="EVALUATION FINDINGS:"
+          label="EVALUATION FINDINGS (HIDDEN DAMAGE):"
           component={FormTextInput}
           name="evalFindings"
           type="textarea"
