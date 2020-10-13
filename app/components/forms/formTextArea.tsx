@@ -42,9 +42,8 @@ export default function FormTextArea(props: Props) {
   const valueChange = (event: { currentTarget: { value: string } }) => {
     const changeCharString = event.currentTarget.value
       .replace(/  +/g, ' ')
-      .replace(/[`]/g, '"')
-      .replace(/[']/g, '"')
-      .replace(/["]/g, '"');
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
 
     setValueState({
       ...valueState,

@@ -9,47 +9,33 @@ interface Props {
 
 function arrayObjectComponentsReturn(arrayOfObjects: []) {
   const returnComponents = arrayOfObjects.map((arrayValue: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    let subComponents: any;
     if (typeof arrayValue !== 'object') {
       return (
         <div key="unknownError">
-          <p>Unkown Additional Error!</p>
-          <p>Was part of the error but of uknown type.</p>
+          <p>Unknown Additional Error!</p>
+          <p>Was part of the error but of unknown type.</p>
         </div>
       );
       // eslint-disable-next-line no-else-return
-    } else {
-      const keyName: any = Object.keys(arrayValue);
-      console.log('array Value: ', arrayValue)
-      console.log('KeyName: ', Object.keys(arrayValue));
-      console.log('KeyValue: ', arrayValue[keyName]);
-      debugger;
-
-      return (
-        <div key={keyName}>
-          <p>{`Error Key: ${keyName}`}</p>
-          <p>{`Description: ${arrayValue[keyName]}`}</p>
-        </div>
-      );
+    } else if (typeof arrayValue === 'object') {
+      subComponents = Object.keys(arrayValue).map(objKey => {
+        return (
+          <div key={objKey}>
+            <p>{`Error Key: ${objKey}`}</p>
+            <p>{`Description: ${arrayValue[objKey]}`}</p>
+          </div>
+        );
+      });
     }
+    return subComponents;
   });
   return returnComponents;
 }
 
 export default function AlarmModal(props: Props) {
-  // const objectList = props.props;
-
-  // TODO: Testing only objectList
-  const objectList: any = {
-    test1: 'test1',
-    test2: 'test2',
-    test3: [
-      {
-        testA: 'testA',
-        testB: 'testB'
-      }
-    ]
-  };
-
+  const objectList = props.props;
   let mappedComponents: [] | {};
 
   if (typeof objectList !== 'object') {
@@ -61,9 +47,6 @@ export default function AlarmModal(props: Props) {
     );
   } else {
     mappedComponents = Object.keys(objectList).map((key: string) => {
-
-      console.log(`Key: ${key}, Value: ${objectList[key]}`);
-
       if (Array.isArray(objectList[key])) {
         const objArrayList = arrayObjectComponentsReturn(objectList[key]);
         return (

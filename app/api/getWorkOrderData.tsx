@@ -5,6 +5,7 @@ import pool from '../config/config';
 import getDriver from '../config/configODBC';
 
 const odbc = require('odbc');
+const sql = require('mssql/msnodesqlv8');
 
 interface Request {
   workOrderSearch: string;
@@ -36,8 +37,14 @@ async function getWorkOrderData(request: Request) {
   const odbcDriverString = getDriver();
 
   try {
-    const workOrder = request.workOrderSearch;
-    const lineItem = request.workOrderSearchLineItem;
+    const workOrder = request.workOrderSearch
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
+    const lineItem = request.workOrderSearchLineItem
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
     // Set this up so it can visually be better when creating the query string.
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
       sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType FROM sales_order_line INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
@@ -119,16 +126,22 @@ async function getWorkOrderData(request: Request) {
 
       try {
         const dbIIR = await pool.connect();
-        /**
-         * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
-         * All values are automatically sanitized against sql injection. This is because it is rendered as
-         * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
-         * Column names cannot be passed/set in statements using variables.
-         */
+        const preState = await new sql.PreparedStatement(dbIIR);
+        preState.input('param1', sql.VarChar(12));
+        preState.input('param2', sql.VarChar(2));
+        const preStateParams: any = {
+          param1: workOrder,
+          param2: lineItem
+        };
+
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
-        WHERE i.SalesOrderNumber = '${returnData.data[0].SalesOrderNumber}' AND i.salesOrderNumberLine = '${returnData.data[0].ItemNumber}'`;
-        const getIIRData = await dbIIR.query(iirQuery);
+        WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
+
+        await preState.prepare(iirQuery);
+        const getIIRData = await preState.execute(preStateParams);
+        await preState.unprepare();
+
         // Setup assuming no data is available.
         returnData.data[0].customerReasonForRemoval = 'NONE';
         returnData.data[0].genConditionReceived = 'NONE';

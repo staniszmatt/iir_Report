@@ -13,7 +13,7 @@
   display: flex;
   flex-flow: column;
   background-color: #bdbdbd;
-  max-width: 500px;
+  min-width: 500px;
   margin: auto;
 }
 
@@ -64,7 +64,10 @@
   background-color: red;
   border-radius: 5px;
   box-shadow: inset 0 0 18px #000160;
-  height: 240px;
+  min-height: 240px;
+  max-height: 750px;
+  word-wrap: break-word;
+  overflow-y: auto;
 }
 
 .error-modal-container > div:first-child > p {
@@ -78,13 +81,8 @@
   text-decoration: underline;
 }
 
-/* Success Modal Styling */
-.success-modal-container {
-  text-align: center;
-  background-color: #48ff48;
-  border-radius: 5px;
-  box-shadow: inset 0 0 18px #000160;
-  height: 240px;
+.error-modal-container > div:last-child {
+  margin: 0 20px;
 }
 
 .success-modal-container > div:first-child > p {
@@ -98,16 +96,6 @@
   text-decoration: underline;
 }
 
-/* Warning Modal Styling */
-.warning-modal-container {
-  text-align: center;
-  background-color: yellow;
-  color: red;
-  border-radius: 5px;
-  box-shadow: inset 0 0 18px #000160;
-  height: 240px;
-}
-
 .warning-modal-container > div:first-child > p {
   font-size: 25px;
   margin: 25px 0;
@@ -117,6 +105,29 @@
   font-size: 18px;
   margin: 20px 0;
   text-decoration: underline;
+}
+
+.error-modal-container > div:last-child > div > p {
+  font-size: 18px;
+}
+
+/* Success Modal Styling */
+.success-modal-container {
+  text-align: center;
+  background-color: #48ff48;
+  border-radius: 5px;
+  box-shadow: inset 0 0 18px #000160;
+  height: 240px;
+}
+
+/* Warning Modal Styling */
+.warning-modal-container {
+  text-align: center;
+  background-color: yellow;
+  color: red;
+  border-radius: 5px;
+  box-shadow: inset 0 0 18px #000160;
+  height: 240px;
 }
 
 .warning-modal-container > div:last-child > button:hover {

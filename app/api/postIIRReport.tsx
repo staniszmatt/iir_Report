@@ -2,6 +2,8 @@
 import 'mssql/msnodesqlv8';
 import pool from '../config/config';
 
+const sql = require('mssql/msnodesqlv8');
+
 interface Request {
   SalesOrderNumber: string;
   salesOrderNumberLine: string;
@@ -39,8 +41,7 @@ async function postIIRReport(request: Request) {
     succuss: false
   };
   // Setup of an empty string for adding to the Query.
-  let keyName = '';
-  let keyValue = '';
+  let keyName = `SalesOrderNumber, salesOrderNumberLine, `;
   // This is to setup the object of only values that can be set null
   const nullableKeys: any = {
     customerReasonForRemoval,
@@ -62,17 +63,49 @@ async function postIIRReport(request: Request) {
       dbQueryRequest[key] = nullableKeys[key];
     }
   });
-
+  // Sanitize work order strings.
+  const cleanWorkOrder = SalesOrderNumber.replace(/  +/g, '')
+    .replace(/[`']/g, '"')
+    .replace(/[#^&*<>()@~]/g, '');
+  const cleanLineItem = salesOrderNumberLine
+    .replace(/  +/g, '')
+    .replace(/[`']/g, '"')
+    .replace(/[#^&*<>()@~]/g, '');
+  // Start Setup the @param count to add to query string to help setup prepare statement
+  let params = '@param1, @param2, ';
+  // Setup the values for params to pass through execute below.
+  const preStateParams: any = {
+    param1: cleanWorkOrder,
+    param2: cleanLineItem
+  };
+  // Start Connection for setup of prepare statement
+  const db = await pool.connect();
+  const preState = await new sql.PreparedStatement(db);
+  preState.input('param1', sql.VarChar);
+  preState.input('param2', sql.VarChar);
   // Setup the query string based off the none null values stored in dbQueryRequest.
   // The else statement removes the comma to complete the query string.
+
   Object.keys(dbQueryRequest).map((key, index) => {
     const keyLastIndex = Object.keys(dbQueryRequest).length - 1;
+    // Start Count at three because we start work order number and line item at 1 and 2
+    // This is where we add the param values to use in query string
+    const paramCount = index + 3;
+    const cleanName = key.replace(/[^a-zA-Z-0-9-_ ]/g, '');
+    const cleanKeyValue = dbQueryRequest[key]
+      .replace(/  +/g, ' ')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
+    const paramKeyName = `param${paramCount}`;
+    preStateParams[paramKeyName] = cleanKeyValue;
+    preState.input(paramKeyName, sql.VarChar);
+    // Set the last index to add to string without the comma.
     if (index !== keyLastIndex) {
-      keyName += `${key}, `;
-      keyValue += `'${dbQueryRequest[key]}', `;
+      keyName += `${cleanName}, `;
+      params += ` @param${paramCount},`;
     } else {
-      keyName += `${key}`;
-      keyValue += `'${dbQueryRequest[key]}'`;
+      keyName += `${cleanName}`;
+      params += ` @param${paramCount}`;
     }
     // Do not want to return anything, not sure at the moment if I need to restructure this.
     // eslint-disable-next-line no-useless-return
@@ -80,19 +113,13 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    // TODO: Add line item to query!
-    const db = await pool.connect();
-    /**
-     * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
-     * All values are automatically sanitized against sql injection. This is because it is rendered as
-     * prepared statement, and thus all limitations imposed in MS SQL on parameters apply. e.g.
-     * Column names cannot be passed/set in statements using variables.
-     */
-    const query = `INSERT INTO tear_down_notes_dev (SalesOrderNumber, salesOrderNumberLine, ${keyName})
+    const queryString = `INSERT INTO tear_down_notes_dev (${keyName})
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-    VALUES ('${SalesOrderNumber}', '${salesOrderNumberLine}', ${keyValue})`;
+    VALUES (${params})`;
 
-    const postIIRReportData = await db.query(query);
+    await preState.prepare(queryString);
+    const postIIRReportData = await preState.execute(preStateParams);
+    await preState.unprepare();
 
     if (postIIRReportData.recordset[0].id) {
       returnData.succuss = true;
