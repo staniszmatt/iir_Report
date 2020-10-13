@@ -69,7 +69,8 @@
       "target": [
         "nsis",
         "msi"
-      ]
+      ],
+      "publish": ["github"]
     },
     "nsis": {
       "oneClick": false,
@@ -112,12 +113,13 @@
       "provider": "github",
       "owner": "staniszmatt",
       "repo": "iir_Report",
-      "private": false
+      "private": false,
+      "releaseType": "release"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/staniszmatt/iir_Report"
+    "url": "https://github.com/staniszmatt/iir_Report"
   },
   "author": {
     "name": "Matthew Staniszewski",
