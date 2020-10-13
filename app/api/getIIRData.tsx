@@ -6,6 +6,7 @@ import pool from '../config/config';
 import getDriver from '../config/configODBC';
 
 const odbc = require('odbc');
+const sql = require('mssql/msnodesqlv8');
 
 interface Request {
   workOrder: {
@@ -171,6 +172,13 @@ async function getIIRDataAPI(request: Request) {
     if (data.length > 0) {
       try {
         const dbIIR = await pool.connect();
+        const preState = await new sql.PreparedStatement(dbIIR);
+        preState.input('param1', sql.VarChar(12));
+        preState.input('param2', sql.VarChar(2));
+        const preStateParams: any = {
+          param1: cleanWorkOrder,
+          param2: cleanLineItem
+        };
         /**
          * NOTE: Per mssql library referenced: https://www.npmjs.com/package/mssql
          * All values are automatically sanitized against sql injection. This is because it is rendered as
@@ -179,8 +187,11 @@ async function getIIRDataAPI(request: Request) {
          */
         const iirQuery = `SELECT *
         FROM tear_down_notes_dev AS i
-        WHERE i.SalesOrderNumber = '${workOrderSearch}' AND i.salesOrderNumberLine = '${workOrderSearchLineItem}'`;
-        const getIIRData = await dbIIR.query(iirQuery);
+        WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
+
+        await preState.prepare(iirQuery);
+        const getIIRData = await preState.execute(preStateParams);
+        await preState.unprepare();
 
         if (getIIRData.recordset.length === 0) {
           returnData.data.customerReasonForRemoval = null;

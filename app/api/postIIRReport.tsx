@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'mssql/msnodesqlv8';
-import { Key } from 'readline';
 import pool from '../config/config';
 
 const sql = require('mssql/msnodesqlv8');
@@ -42,9 +41,7 @@ async function postIIRReport(request: Request) {
     succuss: false
   };
   // Setup of an empty string for adding to the Query.
-  let secondKeyName = '';
   let keyName = `SalesOrderNumber, salesOrderNumberLine, `;
-  let keyValue = '';
   // This is to setup the object of only values that can be set null
   const nullableKeys: any = {
     customerReasonForRemoval,
@@ -94,7 +91,6 @@ async function postIIRReport(request: Request) {
     // Start Count at three because we start work order number and line item at 1 and 2
     // This is where we add the param values to use in query string
     const paramCount = index + 3;
-
     const cleanName = key.replace(/[^a-zA-Z-0-9-_ ]/g, '');
     const cleanKeyValue = dbQueryRequest[key]
       .replace(/  +/g, ' ')
@@ -120,8 +116,6 @@ async function postIIRReport(request: Request) {
     const queryString = `INSERT INTO tear_down_notes_dev (${keyName})
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES (${params})`;
-
-    console.log('queryString: ', queryString);
 
     await preState.prepare(queryString);
     const postIIRReportData = await preState.execute(preStateParams);
