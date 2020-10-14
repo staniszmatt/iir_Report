@@ -167,22 +167,23 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 // Auto Updating Setup
-autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
-});
-
+// Just pulling to display app version
 ipcMain.on('app_version', event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
 });
+// TODO: Hiding until a better understanding of auto-update is complete.
+// autoUpdater.on('update-available', () => {
+//   mainWindow.webContents.send('update_available');
+// });
 
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
-});
+// autoUpdater.on('update-downloaded', () => {
+//   mainWindow.webContents.send('update_downloaded');
+// });
+
+// ipcMain.on('restart_app', () => {
+//   autoUpdater.quitAndInstall();
+// });
 
 // API calls
 ipcMain.on('asynchronous-message', async (event, arg) => {
