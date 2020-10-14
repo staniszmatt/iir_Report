@@ -20,6 +20,7 @@ import getIIRData from './api/getIIRData';
 import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
+import pjson from './package.json';
 
 export default class AppUpdater {
   constructor() {
@@ -165,7 +166,25 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
 });
+// Auto Updating Setup
+autoUpdater.on('update-available', () => {
+  mainWindow.webContents.send('update_available');
+});
 
+autoUpdater.on('update-downloaded', () => {
+  mainWindow.webContents.send('update_downloaded');
+});
+
+ipcMain.on('app_version', event => {
+  const pversion = pjson.version;
+  event.sender.send('app_version', { version: pversion });
+});
+
+ipcMain.on('restart_app', () => {
+  autoUpdater.quitAndInstall();
+});
+
+// API calls
 ipcMain.on('asynchronous-message', async (event, arg) => {
   let requestToSend: any = () => {};
   let switchFail = false;

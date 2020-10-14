@@ -10,6 +10,7 @@
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
     "dev": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
+    "deploy": "electron-builder build --win --publish always",
     "electron-rebuild": "electron-rebuild --parallel --force --types prod,dev,optional --module-dir app",
     "ts": "tsc",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
@@ -69,7 +70,8 @@
       "target": [
         "nsis",
         "msi"
-      ]
+      ],
+      "publish": ["github"]
     },
     "nsis": {
       "oneClick": false,
@@ -112,12 +114,13 @@
       "provider": "github",
       "owner": "staniszmatt",
       "repo": "iir_Report",
-      "private": false
+      "private": false,
+      "releaseType": "release"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/staniszmatt/iir_Report"
+    "url": "https://github.com/staniszmatt/iir_Report"
   },
   "author": {
     "name": "Matthew Staniszewski",
