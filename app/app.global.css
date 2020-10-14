@@ -69,7 +69,9 @@ button:active {
   outline: 1px black;
 }
 
-#notification {
+/* TODO: Hide until I figure out auto-updater */
+
+/* #notification {
   position: fixed;
   bottom: 20px;
   left: 20px;
@@ -81,4 +83,4 @@ button:active {
 }
 .hidden {
   display: none;
-}
+} */

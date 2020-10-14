@@ -166,23 +166,24 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
 });
-// Auto Updating Setup
-autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
-});
-
+// Pass App version
 ipcMain.on('app_version', event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
 });
 
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
-});
+// Auto Updating Setup
+// autoUpdater.on('update-available', () => {
+//   mainWindow.webContents.send('update_available');
+// });
+
+// autoUpdater.on('update-downloaded', () => {
+//   mainWindow.webContents.send('update_downloaded');
+// });
+
+// ipcMain.on('restart_app', () => {
+//   autoUpdater.quitAndInstall();
+// });
 
 // API calls
 ipcMain.on('asynchronous-message', async (event, arg) => {
