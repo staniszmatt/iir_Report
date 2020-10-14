@@ -185,6 +185,7 @@ async function getIIRDataAPI(request: Request) {
           param2: cleanLineItem
         };
         const iirQuery = `SELECT *
+
         FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
