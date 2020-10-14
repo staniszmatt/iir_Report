@@ -436,9 +436,6 @@ export function handlePostIIRResp(
   resp: { error: { name: string; code: string }; data: {} }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-
-    console.log('Add/Edit resp: ', resp);
-
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
 

@@ -21,7 +21,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <p id="version"></p>
+    <!-- <p id="version"></p> -->
     <!-- Auto-update notification -->
     <div id="notification" class="hidden">
       <p id="message"></p>
@@ -60,13 +60,6 @@
 
         // Setup for auto-updating
         const { ipcRenderer } = require('electron');
-        const version = document.getElementById('version');
-
-        ipcRenderer.send('app_version');
-        ipcRenderer.on('app_version', (event, arg) => {
-          ipcRenderer.removeAllListeners('app_version');
-          version.innerText = 'Version ' + arg.version;
-        });
         // Setup for update notifications
         const notification = document.getElementById('notification');
         const message = document.getElementById('message');

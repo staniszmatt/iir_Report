@@ -1,5 +1,5 @@
 /*
- * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ * @NOTE: Pre-pend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 @import '~@fortawesome/fontawesome-free/css/all.css';
@@ -67,13 +67,6 @@ button:active {
   box-shadow: 1px 1px rgba(255, 255, 255, 0.2);
   transform: scale(0.97);
   outline: 1px black;
-}
-
-#version {
-  font-size: 30px;
-  position: absolute;
-  top: 40px;
-  left: 40px;
 }
 
 #notification {
