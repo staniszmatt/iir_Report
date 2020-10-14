@@ -3,6 +3,13 @@
   display: flex;
 }
 
+.container > :last-child {
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
 .backgroundImageContainer {
   margin: auto;
 }
@@ -26,4 +33,10 @@
   user-select: none;
   pointer-events: none;
   width: 100%;
+}
+
+#version {
+  margin: auto;
+  width: 100%;
+  text-align: center;
 }

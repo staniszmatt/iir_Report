@@ -79,3 +79,7 @@
   pointer-events: none;
   width: 100%;
 }
+
+#version {
+  display: none;
+}

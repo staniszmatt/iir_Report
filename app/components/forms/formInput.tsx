@@ -38,7 +38,11 @@ export default function FormField(props: Props) {
   });
 
   const valueChange = (event: { currentTarget: { value: string } }) => {
-    const changeCharString = event.currentTarget.value.toUpperCase();
+    const changeCharString = event.currentTarget.value
+      .toUpperCase()
+      .replace(/  +/g, '')
+      .replace(/[^a-zA-Z-0-9-. ]/g, '');
+
     setValueState({
       ...valueState,
       inputValue: changeCharString

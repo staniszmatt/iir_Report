@@ -10,6 +10,7 @@
     "build-main": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.main.prod.babel.js --colors",
     "build-renderer": "cross-env NODE_ENV=production webpack --config ./configs/webpack.config.renderer.prod.babel.js --colors",
     "dev": "cross-env START_HOT=1 node -r @babel/register ./internals/scripts/CheckPortInUse.js && cross-env START_HOT=1 yarn start-renderer-dev",
+    "deploy": "electron-builder build --win --publish always",
     "electron-rebuild": "electron-rebuild --parallel --force --types prod,dev,optional --module-dir app",
     "ts": "tsc",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
@@ -22,7 +23,7 @@
     "package-mac": "yarn build && electron-builder build --mac",
     "package-linux": "yarn build && electron-builder build --linux",
     "package-win": "yarn build && electron-builder build --win --x64",
-    "postinstall": "node -r @babel/register internals/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn build-dll && opencollective-postinstall",
+    "postinstall": "node -r @babel/register internals/scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn build-dll patch-package && opencollective-postinstall",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{js,jsx,json,html,css,less,scss,yml}'",
     "postlint-styles-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.{css,scss}'",
     "preinstall": "node ./internals/scripts/CheckYarn.js",
@@ -69,7 +70,8 @@
       "target": [
         "nsis",
         "msi"
-      ]
+      ],
+      "publish": ["github"]
     },
     "nsis": {
       "oneClick": false,
@@ -112,12 +114,13 @@
       "provider": "github",
       "owner": "staniszmatt",
       "repo": "iir_Report",
-      "private": false
+      "private": false,
+      "releaseType": "release"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/staniszmatt/iir_Report"
+    "url": "https://github.com/staniszmatt/iir_Report"
   },
   "author": {
     "name": "Matthew Staniszewski",
@@ -216,7 +219,7 @@
     "browserslist-config-erb": "^0.0.1",
     "chalk": "^3.0.0",
     "concurrently": "^5.2.0",
-    "cross-env": "^7.0.0",
+    "cross-env": "^7.0.2",
     "cross-spawn": "^7.0.1",
     "css-loader": "^3.4.2",
     "detect-port": "^1.3.0",
@@ -283,10 +286,11 @@
     "connected-react-router": "^6.8.0",
     "core-js": "^3.6.5",
     "devtron": "^1.4.0",
-    "electron": "8.2.4",
+    "electron": "8.5.2",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.0.6",
     "electron-updater": "^4.2.0",
+    "fetch-mock": "^9.10.7",
     "fs": "^0.0.1-security",
     "history": "^4.10.1",
     "image-type": "^4.1.0",
@@ -302,7 +306,9 @@
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",
+    "redux-api-middleware": "^3.2.1",
     "redux-form": "^8.3.6",
+    "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
     "sendmail": "^1.6.1",
     "source-map-support": "^0.5.16",
