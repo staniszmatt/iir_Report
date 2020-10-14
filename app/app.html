@@ -21,20 +21,6 @@
   </head>
   <body>
     <div id="root"></div>
-
-    <!-- TODO: Hiding until a better understanding of auto-updater is complete. -->
-    <!-- <p id="version"></p> -->
-    <!-- Auto-update notification -->
-    <!-- <div id="notification" class="hidden">
-      <p id="message"></p>
-      <button id="close-button" onClick="closeNotification()">
-        Close
-      </button>
-      <button id="restart-button" onClick="restartApp()" class="hidden">
-        Restart
-      </button>
-    </div> -->
-
     <script>
       if (typeof process === 'object') {
         const scripts = [];
@@ -59,35 +45,6 @@
               .join('')
           );
         }
-
-        // Hiding until a better understanding of auto-updating is done.
-        // // Setup for auto-updating
-        // const { ipcRenderer } = require('electron');
-        // // Setup for update notifications
-        // const notification = document.getElementById('notification');
-        // const message = document.getElementById('message');
-        // const restartButton = document.getElementById('restart-button');
-
-        // ipcRenderer.on('update_available', () => {
-        //   ipcRenderer.removeAllListeners('update_available');
-        //   message.innerText = 'A new update is available. Downloading now...';
-        //   notification.classList.remove('hidden');
-        // });
-        // ipcRenderer.on('update_downloaded', () => {
-        //   ipcRenderer.removeAllListeners('update_downloaded');
-        //   message.innerText =
-        //     'Update Downloaded. It will be installed on restart. Restart now?';
-        //   restartButton.classList.remove('hidden');
-        //   notification.classList.remove('hidden');
-        // });
-
-        // function closeNotification() {
-        //   notification.classList.add('hidden');
-        // }
-
-        // function restartApp() {
-        //   ipcRenderer.send('restart_app');
-        // }
       }
     </script>
   </body>
