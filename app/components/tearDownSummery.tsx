@@ -135,22 +135,27 @@ export default function TearDownSummery(props: Props | any) {
     input.style.padding = 'unset';
     input.style.border = 'unset';
     input.style.position = 'absolute';
-    input.style.width = '8.27in';
-    input.style.height = '11.69in';
+    input.style.background = 'white';
+    input.style.left = '0';
+    input.style.top = '0';
+    input.style.width = '8.3in';
+    input.style.height = '10.9in';
 
 
-    html2canvas(input, { scrollY: -window.scrollY, scale: 1.2 }).then(canvas => {
+    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const pdf = new JsPDF('p', 'mm', 'a4');
       const width = pdf.internal.pageSize.getWidth();
       const height = pdf.internal.pageSize.getHeight();
 
-      pdf.addImage(imgData, 'JPEG', -2, 0, width, height);
+      pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
       savePDF(pdf.output('arraybuffer'));
     });
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
     input.style.position = 'unset';
+    input.style.left = 'unset';
+    input.style.top = 'unset';
   };
 
   return (
