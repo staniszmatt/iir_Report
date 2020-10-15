@@ -30,7 +30,20 @@ export default class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+// Auto-Update Setup
+log.transports.file.level = 'info';
+autoUpdater.logger = log;
+log.info('App starting...');
+const appversion = pjson.version;
+
+// Original setup for main
+let mainWindow: BrowserWindow | null | any = null;
+
+// Auto-Update Setup
+function sendStatusToWindow(text: string, ver: string) {
+  log.info(text);
+  mainWindow.webContents.send('message', text, ver);
+}
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -115,7 +128,7 @@ const createWindow = async () => {
   // eslint-disable-next-line
   new AppUpdater();
 
-  mainWindow.webContents.on('context-menu', (_event, params) => {
+  mainWindow.webContents.on('context-menu', (_event: {}, params: {} | any) => {
     const menu = new Menu();
 
     // Add each spelling suggestion
@@ -159,7 +172,11 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('ready', createWindow);
+// Added Auto-Update check here.
+app.on('ready', () => {
+  createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -170,6 +187,44 @@ app.on('activate', () => {
 ipcMain.on('app_version', event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
+});
+
+// Auto-Update Setup
+autoUpdater.on('checking-for-update', () => {
+  sendStatusToWindow('Checking for update...', appversion);
+});
+
+autoUpdater.on('update-available', info => {
+  console.log('update-available info: ', info);
+  sendStatusToWindow('Update available.', appversion);
+});
+
+autoUpdater.on('update-not-available', info => {
+  console.log('update-not-available info: ', info);
+  sendStatusToWindow('Update not available.', appversion);
+});
+
+autoUpdater.on('error', err => {
+  sendStatusToWindow(`Error in auto-updater. ${err}`, appversion);
+});
+
+autoUpdater.on('download-progress', progressObj => {
+  let logMessage = `Download speed: ${progressObj.bytesPerSecond}`;
+  logMessage = `${logMessage} - Downloaded  ${progressObj.percent}%`;
+  logMessage = `${logMessage} ( ${progressObj.transferred} / ${progressObj.total} )`;
+  sendStatusToWindow(logMessage, appversion);
+});
+
+autoUpdater.on('update-downloaded', info => {
+  console.log('update-downloaded info: ', info);
+  setTimeout(() => {
+    sendStatusToWindow(
+      'Update downloaded..Restarting App in 5 seconds',
+      appversion
+    );
+    mainWindow.webContents.send('updateReady');
+    autoUpdater.quitAndInstall();
+  }, 5000);
 });
 
 // API calls

@@ -56,7 +56,6 @@
     "appId": "org.develar.TearDownReport",
     "files": [
       "dist/",
-      "electron-builder.yml",
       "build/",
       "node_modules/",
       "app.html",
@@ -71,16 +70,20 @@
         "nsis",
         "msi"
       ],
-      "publish": [
-        "github"
-      ]
+      "publish": {
+        "provider": "github",
+        "owner": "staniszmatt",
+        "repo": "https://github.com/staniszmatt/iir_Report.git",
+        "private": false,
+        "releaseType": "release"
+      }
     },
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
+      "createDesktopShortcut": false,
       "include": "build/installer.nsh",
       "installerIcon": "aeropartsicon_1Jk_icon.ico",
       "installerHeaderIcon": "aeropartsicon_1Jk_icon.ico",
@@ -115,14 +118,14 @@
     "publish": {
       "provider": "github",
       "owner": "staniszmatt",
-      "repo": "iir_Report",
+      "repo": "https://github.com/staniszmatt/iir_Report.git",
       "private": false,
       "releaseType": "release"
     }
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/staniszmatt/iir_Report"
+    "url": "git+https://github.com/staniszmatt/iir_Report"
   },
   "author": {
     "name": "Matthew Staniszewski",
