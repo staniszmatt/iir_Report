@@ -31,6 +31,7 @@ node_modules
 .DS_Store
 
 # App packaged
+.github/workflows/electron-builder.yml
 release
 app/main.prod.js
 app/main.prod.js.map

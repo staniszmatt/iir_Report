@@ -115,7 +115,7 @@
     "publish": {
       "provider": "github",
       "owner": "staniszmatt",
-      "repo": "iir_Report",
+      "repo": "https://github.com/staniszmatt/iir_Report",
       "private": false,
       "releaseType": "release"
     }
