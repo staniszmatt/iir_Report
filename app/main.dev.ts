@@ -148,12 +148,12 @@ const createWindow = async () => {
 
     menu.popup();
   });
-};
 
-// Setup auto-updater
-mainWindow.once('ready-to-show', () => {
-  autoUpdater.checkForUpdatesAndNotify();
-});
+  // Setup auto-updater
+  mainWindow.once('ready-to-show', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
+};
 
 /**
  * Add event listeners...
