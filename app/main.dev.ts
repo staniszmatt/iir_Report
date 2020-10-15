@@ -11,9 +11,17 @@
  */
 import 'mssql/msnodesqlv8';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, Menu, MenuItem } from 'electron';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  MenuItem,
+  autoUpdater,
+  dialog
+} from 'electron';
+// import { autoUpdater } from 'electron-updater';
+// import log from 'electron-log';
 import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
 import getIIRData from './api/getIIRData';
@@ -22,14 +30,49 @@ import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
 import pjson from './package.json';
 
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-}
+require('update-electron-app')();
 
+// export default class AppUpdater {
+//   constructor() {
+//     log.transports.file.level = 'info';
+//     autoUpdater.logger = log;
+//     autoUpdater.checkForUpdatesAndNotify();
+//   }
+// }
+
+// Trying this auto updater
+const server = 'https://github.com/staniszmatt/iir_Report';
+const url = `${server}/update/${process.platform}/${app.getVersion()}`;
+
+autoUpdater.setFeedURL({ url });
+
+setInterval(() => {
+  autoUpdater.checkForUpdates();
+}, 60000);
+
+autoUpdater.on('update-downloaded', (_event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.'
+  };
+
+  // eslint-disable-next-line promise/catch-or-return
+  dialog.showMessageBox(dialogOpts).then(returnValue => {
+    // eslint-disable-next-line promise/always-return
+    if (returnValue.response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
+autoUpdater.on('error', message => {
+  console.error('There was a problem updating the application');
+  console.error(message);
+});
+
+// Original start
 let mainWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -113,7 +156,7 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  // new AppUpdater();
 
   mainWindow.webContents.on('context-menu', (_event, params) => {
     const menu = new Menu();
