@@ -80,7 +80,7 @@
       "allowElevation": true,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
+      "createDesktopShortcut": false,
       "include": "build/installer.nsh",
       "installerIcon": "aeropartsicon_1Jk_icon.ico",
       "installerHeaderIcon": "aeropartsicon_1Jk_icon.ico",
