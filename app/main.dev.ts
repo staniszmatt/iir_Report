@@ -162,7 +162,6 @@ app.on('window-all-closed', () => {
 // Added Auto-Update check here.
 app.on('ready', () => {
   createWindow();
-  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('activate', () => {
@@ -174,44 +173,6 @@ app.on('activate', () => {
 ipcMain.on('app_version', event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
-});
-
-// Auto-Update Setup
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...', appversion);
-});
-
-autoUpdater.on('update-available', info => {
-  console.log('update-available info: ', info);
-  sendStatusToWindow('Update available.', appversion);
-});
-
-autoUpdater.on('update-not-available', info => {
-  console.log('update-not-available info: ', info);
-  sendStatusToWindow('Update not available.', appversion);
-});
-
-autoUpdater.on('error', err => {
-  sendStatusToWindow(`Error in auto-updater. ${err}`, appversion);
-});
-
-autoUpdater.on('download-progress', progressObj => {
-  let logMessage = `Download speed: ${progressObj.bytesPerSecond}`;
-  logMessage = `${logMessage} - Downloaded  ${progressObj.percent}%`;
-  logMessage = `${logMessage} ( ${progressObj.transferred} / ${progressObj.total} )`;
-  sendStatusToWindow(logMessage, appversion);
-});
-
-autoUpdater.on('update-downloaded', info => {
-  console.log('update-downloaded info: ', info);
-  setTimeout(() => {
-    sendStatusToWindow(
-      'Update downloaded..Restarting App in 5 seconds',
-      appversion
-    );
-    mainWindow.webContents.send('updateReady');
-    autoUpdater.quitAndInstall();
-  }, 5000);
 });
 
 // API calls
