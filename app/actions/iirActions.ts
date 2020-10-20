@@ -23,6 +23,7 @@ export const TOGGLE_SEND_EMAIL_OFF = 'TOGGLE_SEND_EMAIL_OFF';
 export const TOGGLE_SUCCESS_UPDATE_MODAL_ON = 'TOGGLE_SUCCESS_UPDATE_MODAL_ON';
 export const TOGGLE_SUCCESS_UPDATE_MODAL_OFF =
   'TOGGLE_SUCCESS_UPDATE_MODAL_OFF';
+export const GET_VERSION = 'GET_VERSION';
 
 interface WorkOrder {
   callAutoEmailer?: () => {} | any;
@@ -115,6 +116,30 @@ export function setWorkOrderData(resp: {}) {
   return {
     type: SET_WORK_ORDER_DATA,
     resp
+  };
+}
+
+export function setGetVersion(resp: string) {
+  return {
+    type: GET_VERSION,
+    resp
+  };
+}
+
+export function handleGetVersion(_event: {}, resp: { version: string }) {
+  return (dispatch: Dispatch) => {
+    dispatch(setGetVersion(resp.version));
+  };
+}
+
+export function getVersion() {
+  return (dispatch: Dispatch) => {
+    const callHandleGetVersion = (event: {}, resp: { version: string }) => {
+      dispatch(handleGetVersion(event, resp));
+      ipcRenderer.removeListener('app_version', callHandleGetVersion);
+    };
+    ipcRenderer.send('app_version');
+    ipcRenderer.on('app_version', callHandleGetVersion);
   };
 }
 

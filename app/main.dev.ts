@@ -171,7 +171,6 @@ app.on('activate', () => {
 ipcMain.on('app_version', event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
-  ipcMain.removeListener('app_version');
 });
 
 // API calls

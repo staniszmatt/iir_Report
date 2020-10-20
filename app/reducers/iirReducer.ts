@@ -14,7 +14,8 @@ import {
   TOGGLE_SEND_EMAIL_ON,
   TOGGLE_SEND_EMAIL_OFF,
   TOGGLE_SUCCESS_UPDATE_MODAL_ON,
-  TOGGLE_SUCCESS_UPDATE_MODAL_OFF
+  TOGGLE_SUCCESS_UPDATE_MODAL_OFF,
+  GET_VERSION
 } from '../actions/iirActions';
 
 const IState = {
@@ -26,7 +27,8 @@ const IState = {
   sendEmail: false,
   successUpdateModalCall: false,
   workOrder: {},
-  workOrderInfo: {}
+  workOrderInfo: {},
+  appVersion: ''
 };
 
 export interface CustomAction extends Action {
@@ -36,6 +38,11 @@ export interface CustomAction extends Action {
 
 export default function iir(state = IState, action: CustomAction) {
   switch (action.type) {
+    case GET_VERSION:
+      return {
+        ...state,
+        appVersion: action.resp
+      };
     case TOGGLE_LOADING_SCREEN_DISPLAY_ON:
       return {
         ...state,
