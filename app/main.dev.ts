@@ -22,8 +22,6 @@ import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
 import pjson from './package.json';
 
-require('update-electron-app')();
-
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -148,11 +146,6 @@ const createWindow = async () => {
 
     menu.popup();
   });
-
-  // Setup auto-updater
-  mainWindow.once('ready-to-show', () => {
-    autoUpdater.checkForUpdatesAndNotify();
-  });
 };
 
 /**
@@ -178,6 +171,7 @@ app.on('activate', () => {
 ipcMain.on('app_version', event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
+  ipcMain.removeListener('app_version');
 });
 
 // API calls
@@ -219,16 +213,4 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
   } catch (err) {
     event.sender.send('asynchronous-reply', err);
   }
-});
-
-// Additional auto-updater setup
-autoUpdater.on('update-available', () => {
-  mainWindow.webContents.send('update_available');
-});
-autoUpdater.on('update-downloaded', () => {
-  mainWindow.webContents.send('update_downloaded');
-});
-
-ipcMain.on('restart_app', () => {
-  autoUpdater.quitAndInstall();
 });
