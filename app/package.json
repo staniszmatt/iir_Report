@@ -1,7 +1,7 @@
 {
   "name": "tear-down-app",
   "productName": "Tear Down Report",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "Electron application based on React, React Router, Webpack, React Hot Loader to interface data and create specific work instructions based of inputs",
   "main": "./main.prod.js",
   "author": {
@@ -11,12 +11,12 @@
   },
   "scripts": {
     "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
-    "postinstall": "yarn electron-rebuild"
+    "postinstall": "yarn electron-rebuild --build-from-source"
   },
   "license": "MIT",
   "dependencies": {
     "msnodesqlv8": "^2.0.5",
-    "mssql": "^6.2.0",
+    "mssql": "^6.2.3",
     "odbc": "^2.3.5"
   },
   "devDependencies": {

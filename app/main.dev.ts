@@ -30,20 +30,7 @@ export default class AppUpdater {
   }
 }
 
-// Auto-Update Setup
-log.transports.file.level = 'info';
-autoUpdater.logger = log;
-log.info('App starting...');
-const appversion = pjson.version;
-
-// Original setup for main
-let mainWindow: BrowserWindow | null | any = null;
-
-// Auto-Update Setup
-function sendStatusToWindow(text: string, ver: string) {
-  log.info(text);
-  mainWindow.webContents.send('message', text, ver);
-}
+let mainWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');

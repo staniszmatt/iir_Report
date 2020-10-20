@@ -1,26 +1,22 @@
-import React, { useState } from 'react';
-import { ipcRenderer } from 'electron';
+import React from 'react';
 import styles from './Home.css';
 import logo from '../img/logo.png';
 
-interface VersionState {
-  version: string;
+interface Props {
+  getVersion: () => {};
+  iir: {
+    appVersion: string;
+  };
 }
 
-export default function Home() {
-  const [versionState, setVersionState] = useState<VersionState>({
-    version: ''
-  });
+export default function Home(props: Props) {
+  const { getVersion } = props;
+  // eslint-disable-next-line react/destructuring-assignment
+  const { appVersion } = props.iir;
 
-  ipcRenderer.send('app_version');
-  ipcRenderer.on('app_version', (_event, arg) => {
-    ipcRenderer.removeAllListeners('app_version');
-    // version.innerText = 'Version ' + arg.version;
-    setVersionState({
-      ...versionState,
-      version: arg.version
-    });
-  });
+  if (appVersion === '') {
+    getVersion();
+  }
 
   return (
     <div className={styles.container} data-tid="container">
@@ -32,7 +28,7 @@ export default function Home() {
           <img src={logo} alt="AeroParts Logo" />
         </div>
         <div id={styles.version}>
-          <p>{`VERSION: ${versionState.version}`}</p>
+          <p>{`VERSION: ${appVersion}`}</p>
         </div>
       </div>
     </div>
