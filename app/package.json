@@ -1,7 +1,7 @@
 {
   "name": "tear-down-app",
   "productName": "Tear Down Report",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Electron application based on React, React Router, Webpack, React Hot Loader to interface data and create specific work instructions based of inputs",
   "main": "./main.prod.js",
   "author": {
