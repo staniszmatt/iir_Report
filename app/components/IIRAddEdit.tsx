@@ -7,6 +7,7 @@ import ArrayComponents from './ReturnArrayComponents';
 import IIRFormFields from './IIRFormFields';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
+import { connectAdvanced } from 'react-redux';
 
 interface Props {
   postUpdatePDFCheck: () => {};
@@ -75,6 +76,9 @@ export default function IIRAddEdit(props: Props | any) {
     tearDownTSR
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir.workOrderInfo;
+
+  console.log("edit page props: ", props);
+
   // Check if we need to send the JobCost data or AeroParts Data
   let tsnProps: string;
   let tsoProps: string;

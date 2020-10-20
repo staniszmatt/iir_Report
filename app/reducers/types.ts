@@ -28,6 +28,11 @@ export type iirStateType = {
       tearDownTSO: string;
       tearDownTSN: string;
       tearDownTSR: string;
+      Manual: string;
+      Manual_Document: string;
+      Manual_Section: string;
+      Manual_Revision: string;
+      Manual_Rev_Date_MMDDYY: string;
     };
   };
 };

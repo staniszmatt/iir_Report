@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-useless-escape */
@@ -17,6 +18,11 @@ interface DispatchProps {
     genConditionReceived: string;
     workedPerformedNote: string;
     workedPerformed: string;
+    Manual: string;
+    Manual_Document: string;
+    Manual_Section: string;
+    Manual_Revision: string;
+    Manual_Rev_Date_MMDDYY: string;
   };
 }
 
@@ -29,20 +35,31 @@ const IIRForm = (
     evalFindings,
     genConditionReceived,
     workedPerformedNote,
-    workedPerformed
+    workedPerformed,
+    Manual,
+    Manual_Document,
+    Manual_Section,
+    Manual_Revision,
+    Manual_Rev_Date_MMDDYY
   } = props.props;
-  // Removing white space for this specific item in the JobCost DB.
-  const workedPerformedFixString = workedPerformed.replace(/\s\s+/g, ' ');
+
+  let fixManual_RevisionString = 'N/A';
+  let workPerformedString = 'N/A';
+
+  console.log('Tear Down Props: ', props);
+
   const warningCheck = {
     background: 'none'
   };
-
-  let workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
+  // TODO: Setup for if/else statement
+  let workPerformedDefault = `${workedPerformed}\n${workedPerformedNote}`;
 
   if (workedPerformed === 'N/A' || workedPerformed === '') {
     workPerformedDefault = 'WARNING - NO WORK HAS BEEN SETUP YET!';
     warningCheck.background = 'yellow';
   } else {
+    // Removing white space for this specific item in the JobCost DB.
+    const fixManual_RevisionString = Manual_Revision.replace(/\s\s+/g, '');
     warningCheck.background = 'none';
   }
 
