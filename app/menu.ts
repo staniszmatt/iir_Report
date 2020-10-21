@@ -204,7 +204,6 @@ export default class MenuBuilder {
         submenu: [
           {
             label: '&Check For Updates',
-            accelerator: 'Ctrl+Y',
             click: () => {
               new mainMenu.default();
             }
@@ -215,6 +214,48 @@ export default class MenuBuilder {
             click: () => {
               this.mainWindow.close();
             }
+          }
+        ]
+      },
+      {
+        label: '&Edit',
+        submenu: [
+          {
+            label: 'Undo',
+            accelerator: 'Ctrl+Z',
+            selector: 'undo:',
+            role: 'undo'
+          },
+          {
+            label: 'Redo',
+            accelerator: 'Ctrl+Y',
+            selector: 'redo:',
+            role: 'redo'
+          },
+          { type: 'separator' },
+          {
+            label: 'Cut',
+            accelerator: 'Ctrl+X',
+            selector: 'cut:',
+            role: 'cut'
+          },
+          {
+            label: 'Copy',
+            accelerator: 'Ctrl+C',
+            selector: 'copy:',
+            role: 'copy'
+          },
+          {
+            label: 'Paste',
+            accelerator: 'Ctrl+V',
+            selector: 'paste:',
+            role: 'paste'
+          },
+          {
+            label: 'Select All',
+            accelerator: 'Ctrl+A',
+            selector: 'selectAll:',
+            role: 'selectAll'
           }
         ]
       },
