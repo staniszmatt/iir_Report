@@ -60,7 +60,7 @@ async function getWorkOrderData(request: Request) {
 
     if (data.length > 0) {
       returnData.data = data;
-      const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
+      const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Manual, traveler_header.Manual_Document, traveler_header.Manual_Section, traveler_header.Manual_Revision, traveler_header.Manual_Rev_Date_MMDDYY, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
         sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
         FROM traveler_header INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
         WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`;
@@ -77,9 +77,23 @@ async function getWorkOrderData(request: Request) {
           secondData.length > 0 &&
           Object.prototype.hasOwnProperty.call(secondData[0], 'Manual_Combined')
         ) {
-          const { Manual_Combined, Work_Order_Number, Trv_Num } = secondData[0];
+          const {
+            Manual_Combined,
+            Manual,
+            Manual_Document,
+            Manual_Section,
+            Manual_Revision,
+            Manual_Rev_Date_MMDDYY,
+            Work_Order_Number,
+            Trv_Num
+          } = secondData[0];
 
           returnData.data[0].Manual_Combined = Manual_Combined;
+          returnData.data[0].Manual = Manual;
+          returnData.data[0].Manual_Document = Manual_Document;
+          returnData.data[0].Manual_Section = Manual_Section;
+          returnData.data[0].Manual_Revision = Manual_Revision;
+          returnData.data[0].Manual_Rev_Date_MMDDYY = Manual_Rev_Date_MMDDYY;
           returnData.data[0].Work_Order_Number = Work_Order_Number;
           returnData.data[0].Trv_Num = Trv_Num;
           // Sometimes Cert type may not be entered yet.
@@ -109,6 +123,11 @@ async function getWorkOrderData(request: Request) {
           }
         } else {
           returnData.data[0].Manual_Combined = 'N/A';
+          returnData.data[0].Manual = 'N/A';
+          returnData.data[0].Manual_Document = 'N/A';
+          returnData.data[0].Manual_Section = 'N/A';
+          returnData.data[0].Manual_Revision = 'N/A';
+          returnData.data[0].Manual_Rev_Date_MMDDYY = 'N/A';
           returnData.data[0].Work_Order_Number = 'N/A';
           returnData.data[0].Trv_Num = 'N/A';
           returnData.data[0].Cert_type_Description = 'N/A';

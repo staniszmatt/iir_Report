@@ -40,6 +40,11 @@ interface Props {
       DateIssuedYYMMDD: string;
       ItemNumber: string;
       Manual_Combined: string;
+      Manual: string;
+      Manual_Document: string;
+      Manual_Section: string;
+      Manual_Revision: string;
+      Manual_Rev_Date_MMDDYY: string;
       OrderType: string;
       PartDescription: string;
       PartNumber: string;
@@ -113,7 +118,12 @@ export default function TearDownSummery(props: Props | any) {
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
     workedPerformedNote: workOrderInfo.workedPerformed,
-    workedPerformed: workOrderInfo.Manual_Combined
+    workedPerformed: workOrderInfo.Manual_Combined,
+    Manual: workOrderInfo.Manual,
+    Manual_Document: workOrderInfo.Manual_Document,
+    Manual_Section: workOrderInfo.Manual_Section,
+    Manual_Revision: workOrderInfo.Manual_Revision,
+    Manual_Rev_Date_MMDDYY: workOrderInfo.Manual_Rev_Date_MMDDYY
   };
 
   if (
