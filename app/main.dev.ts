@@ -14,6 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain, Menu, MenuItem } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+// eslint-disable-next-line import/no-cycle
 import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
 import getIIRData from './api/getIIRData';
@@ -23,6 +24,8 @@ import emailer from './api/emailer';
 import pjson from './package.json';
 
 export default class AppUpdater {
+  static default: any;
+
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
