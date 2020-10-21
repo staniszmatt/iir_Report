@@ -1,7 +1,7 @@
 {
   "name": "tear-down-app",
-  "productName": "Tear Down Report",
-  "version": "1.1.0",
+  "productName": "TearDownReport",
+  "version": "1.0.0",
   "description": "Electron-React application with Redux, TypeScript, Webpack, React Hot Loader, and Thunk to generate and update tear down reports",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -101,7 +101,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/staniszmatt/iir_Report"
+    "url": "https://github.com/staniszmatt/iir_Report"
   },
   "author": {
     "name": "Matthew Staniszewski",
