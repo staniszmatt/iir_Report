@@ -11,7 +11,7 @@
  */
 import 'mssql/msnodesqlv8';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, Menu, MenuItem } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 // eslint-disable-next-line import/no-cycle
@@ -117,37 +117,6 @@ const createWindow = async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
-
-  mainWindow.webContents.on('context-menu', (_event: {}, params: {} | any) => {
-    const menu = new Menu();
-
-    // Add each spelling suggestion
-    // eslint-disable-next-line no-restricted-syntax
-    for (const suggestion of params.dictionarySuggestions) {
-      menu.append(
-        new MenuItem({
-          label: suggestion,
-          // eslint-disable-next-line no-loop-func
-          click: () => mainWindow!.webContents.replaceMisspelling(suggestion)
-        })
-      );
-    }
-
-    // Allow users to add the misspelled word to the dictionary
-    if (params.misspelledWord) {
-      menu.append(
-        new MenuItem({
-          label: 'Add to dictionary',
-          click: () =>
-            mainWindow!.webContents.session.addWordToSpellCheckerDictionary(
-              params.misspelledWord
-            )
-        })
-      );
-    }
-
-    menu.popup();
-  });
 };
 
 /**
@@ -162,7 +131,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Added Auto-Update check here.
 app.on('ready', () => {
   createWindow();
 });
