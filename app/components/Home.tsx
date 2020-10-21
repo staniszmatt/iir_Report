@@ -9,7 +9,8 @@ interface Props {
   };
 }
 
-export default function Home(props: Props) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Home(props: Props | any) {
   const { getVersion } = props;
   // eslint-disable-next-line react/destructuring-assignment
   const { appVersion } = props.iir;
