@@ -1,3 +1,5 @@
+/* eslint-disable new-cap */
+/* eslint-disable no-new */
 /* eslint @typescript-eslint/ban-ts-ignore: off */
 import {
   app,
@@ -6,6 +8,8 @@ import {
   BrowserWindow,
   MenuItemConstructorOptions
 } from 'electron';
+// eslint-disable-next-line import/no-cycle
+import mainMenu from './main.dev';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -198,6 +202,13 @@ export default class MenuBuilder {
       {
         label: '&File',
         submenu: [
+          {
+            label: '&Check For Updates',
+            accelerator: 'Ctrl+Y',
+            click: () => {
+              new mainMenu.default();
+            }
+          },
           {
             label: '&Close',
             accelerator: 'Ctrl+W',
