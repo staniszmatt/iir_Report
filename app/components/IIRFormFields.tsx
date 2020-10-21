@@ -188,7 +188,7 @@ interface Values {
 }
 
 // Remove Colon Option for input to verify if its a number
-function testColonNumber(value) {
+function testColonNumber(value: any) {
   const removeColon = value.replace(/:/g, '');
   return isNaN(removeColon);
 }
