@@ -44,22 +44,21 @@ const IIRForm = (
   } = props.props;
 
   let fixManual_RevisionString = 'N/A';
-  let workPerformedString = 'N/A';
-
-  console.log('Tear Down Props: ', props);
+  let workPerformedDefault = 'N/A';
 
   const warningCheck = {
     background: 'none'
   };
   // TODO: Setup for if/else statement
-  let workPerformedDefault = `${workedPerformed}\n${workedPerformedNote}`;
 
   if (workedPerformed === 'N/A' || workedPerformed === '') {
     workPerformedDefault = 'WARNING - NO WORK HAS BEEN SETUP YET!';
     warningCheck.background = 'yellow';
   } else {
     // Removing white space for this specific item in the JobCost DB.
-    const fixManual_RevisionString = Manual_Revision.replace(/\s\s+/g, '');
+    fixManual_RevisionString = Manual_Revision.replace(/\s/g, '');
+    const updatedWorkPerformed = `Manual:${Manual}  Document:${Manual_Document}-${Manual_Section}  Rev:${fixManual_RevisionString}  Dated:${Manual_Rev_Date_MMDDYY}`;
+    workPerformedDefault = `${updatedWorkPerformed}\n${workedPerformedNote}`;
     warningCheck.background = 'none';
   }
 
