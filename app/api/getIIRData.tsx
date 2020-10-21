@@ -103,7 +103,7 @@ async function getIIRDataAPI(request: Request) {
 
       try {
         // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
-        const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
+        const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Manual, traveler_header.Manual_Document, traveler_header.Manual_Section, traveler_header.Manual_Revision, traveler_header.Manual_Rev_Date_MMDDYY, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
         sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
           FROM traveler_header
           INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
@@ -115,6 +115,8 @@ async function getIIRDataAPI(request: Request) {
         query2.close();
         db.close();
 
+        console.log('getIIR traveler header Resp: ', secondData);
+
         if (secondData.length > 0) {
           if (
             Object.prototype.hasOwnProperty.call(
@@ -124,11 +126,21 @@ async function getIIRDataAPI(request: Request) {
           ) {
             const {
               Manual_Combined,
+              Manual,
+              Manual_Document,
+              Manual_Section,
+              Manual_Revision,
+              Manual_Rev_Date_MMDDYY,
               Work_Order_Number,
               Trv_Num
             } = secondData[0];
 
             returnData.data.Manual_Combined = Manual_Combined;
+            returnData.data.Manual = Manual;
+            returnData.data.Manual_Document = Manual_Document;
+            returnData.data.Manual_Section = Manual_Section;
+            returnData.data.Manual_Revision = Manual_Revision;
+            returnData.data.Manual_Rev_Date_MMDDYY = Manual_Rev_Date_MMDDYY;
             returnData.data.Work_Order_Number = Work_Order_Number;
             returnData.data.Trv_Num = Trv_Num;
             if (
@@ -159,9 +171,13 @@ async function getIIRDataAPI(request: Request) {
           }
         } else {
           returnData.data.Manual_Combined = 'N/A';
+          returnData.data.Manual = 'N/A';
+          returnData.data.Manual_Document = 'N/A';
+          returnData.data.Manual_Section = 'N/A';
+          returnData.data.Manual_Revision = 'N/A';
+          returnData.data.Manual_Rev_Date_MMDDYY = 'N/A';
           returnData.data.Work_Order_Number = 'N/A';
           returnData.data.Trv_Num = 'N/A';
-          returnData.data.Cert_type_Description = 'N/A';
           returnData.data.Cert_type_Description = 'N/A';
         }
       } catch (error) {

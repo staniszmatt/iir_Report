@@ -48,6 +48,11 @@ const configureStore = (initialState?: {
           DateIssuedYYMMDD: string;
           ItemNumber: string;
           Manual_Combined: string;
+          Manual: string;
+          Manual_Document: string;
+          Manual_Section: string;
+          Manual_Revision: string;
+          Manual_Rev_Date_MMDDYY: string;
           OrderType: string;
           PartDescription: string;
           PartNumber: string;
