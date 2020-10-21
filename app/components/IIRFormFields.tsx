@@ -187,6 +187,12 @@ interface Values {
   tsrValue: any;
 }
 
+// Remove Colon Option for input to verify if its a number
+function testColonNumber(value) {
+  const removeColon = value.replace(/:/g, '');
+  return isNaN(removeColon);
+}
+
 function validate(values: Values) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
@@ -199,21 +205,24 @@ function validate(values: Values) {
     tsrValue,
     tsoValue
   } = values;
-
+  // Check if value exists before testing
   if (tsnValue) {
-    if (isNaN(tsnValue)) {
+    const testValue: boolean = testColonNumber(tsnValue);
+    if (testValue) {
       errors.tsnValue = 'Must be a number!';
     }
   }
 
   if (tsrValue) {
-    if (isNaN(tsrValue)) {
+    const testValue: boolean = testColonNumber(tsrValue);
+    if (testValue) {
       errors.tsrValue = 'Must be a number!';
     }
   }
 
   if (tsoValue) {
-    if (isNaN(tsoValue)) {
+    const testValue: boolean = testColonNumber(tsoValue);
+    if (testValue) {
       errors.tsoValue = 'Must be a number!';
     }
   }
