@@ -9,8 +9,6 @@ import {
   MenuItemConstructorOptions,
   MenuItem
 } from 'electron';
-// eslint-disable-next-line import/no-cycle
-import mainMenu from './main.dev';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -346,12 +344,6 @@ export default class MenuBuilder {
       {
         label: '&File',
         submenu: [
-          {
-            label: '&Check For Updates',
-            click: () => {
-              new mainMenu.default();
-            }
-          },
           {
             label: '&Close',
             accelerator: 'Ctrl+W',
