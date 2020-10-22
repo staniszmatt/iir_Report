@@ -1,10 +1,13 @@
+/* eslint-disable new-cap */
+/* eslint-disable no-new */
 /* eslint @typescript-eslint/ban-ts-ignore: off */
 import {
   app,
   Menu,
   shell,
   BrowserWindow,
-  MenuItemConstructorOptions
+  MenuItemConstructorOptions,
+  MenuItem
 } from 'electron';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -25,6 +28,8 @@ export default class MenuBuilder {
       process.env.DEBUG_PROD === 'true'
     ) {
       this.setupDevelopmentEnvironment();
+    } else {
+      this.setupProductionEnvironment();
     }
 
     const template =
@@ -38,18 +43,132 @@ export default class MenuBuilder {
     return menu;
   }
 
+  setupProductionEnvironment() {
+    this.mainWindow.webContents.on('context-menu', (_, props) => {
+      if (props.misspelledWord) {
+        const menu = new Menu();
+
+        // Add each spelling suggestion
+        // eslint-disable-next-line no-restricted-syntax
+        for (const suggestion of props.dictionarySuggestions) {
+          menu.append(
+            new MenuItem({
+              label: suggestion,
+              click: () =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                this.mainWindow!.webContents.replaceMisspelling(suggestion)
+            })
+          );
+        }
+
+        // Allow users to add the misspelled word to the dictionary
+        if (props.misspelledWord) {
+          menu.append(
+            new MenuItem({
+              label: 'Add to dictionary',
+              click: () =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                this.mainWindow!.webContents.session.addWordToSpellCheckerDictionary(
+                  props.misspelledWord
+                )
+            })
+          );
+        }
+
+        menu.popup();
+      } else {
+        Menu.buildFromTemplate([
+          {
+            label: 'Cut',
+            accelerator: 'Ctrl+X',
+            role: 'cut'
+          },
+          {
+            label: 'Copy',
+            accelerator: 'Ctrl+C',
+            role: 'copy'
+          },
+          {
+            label: 'Paste',
+            accelerator: 'Ctrl+V',
+            role: 'paste'
+          },
+          {
+            label: 'Select All',
+            accelerator: 'Ctrl+A',
+            role: 'selectAll'
+          }
+        ]).popup({ window: this.mainWindow });
+      }
+    });
+  }
+
   setupDevelopmentEnvironment() {
     this.mainWindow.webContents.on('context-menu', (_, props) => {
-      const { x, y } = props;
+      if (props.misspelledWord) {
+        const menu = new Menu();
 
-      Menu.buildFromTemplate([
-        {
-          label: 'Inspect element',
-          click: () => {
-            this.mainWindow.webContents.inspectElement(x, y);
-          }
+        // Add each spelling suggestion
+        // eslint-disable-next-line no-restricted-syntax
+        for (const suggestion of props.dictionarySuggestions) {
+          menu.append(
+            new MenuItem({
+              label: suggestion,
+              click: () =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                this.mainWindow!.webContents.replaceMisspelling(suggestion)
+            })
+          );
         }
-      ]).popup({ window: this.mainWindow });
+
+        // Allow users to add the misspelled word to the dictionary
+        if (props.misspelledWord) {
+          menu.append(
+            new MenuItem({
+              label: 'Add to dictionary',
+              click: () =>
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                this.mainWindow!.webContents.session.addWordToSpellCheckerDictionary(
+                  props.misspelledWord
+                )
+            })
+          );
+        }
+
+        menu.popup();
+      } else {
+        const { x, y } = props;
+
+        Menu.buildFromTemplate([
+          {
+            label: 'Inspect element',
+            click: () => {
+              this.mainWindow.webContents.inspectElement(x, y);
+            }
+          },
+          { type: 'separator' },
+          {
+            label: 'Cut',
+            accelerator: 'Ctrl+X',
+            role: 'cut'
+          },
+          {
+            label: 'Copy',
+            accelerator: 'Ctrl+C',
+            role: 'copy'
+          },
+          {
+            label: 'Paste',
+            accelerator: 'Ctrl+V',
+            role: 'paste'
+          },
+          {
+            label: 'Select All',
+            accelerator: 'Ctrl+A',
+            role: 'selectAll'
+          }
+        ]).popup({ window: this.mainWindow });
+      }
     });
   }
 
@@ -88,16 +207,42 @@ export default class MenuBuilder {
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
       label: 'Edit',
       submenu: [
-        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        {
+          label: 'Undo',
+          accelerator: 'Command+Z',
+          selector: 'undo:',
+          role: 'undo'
+        },
+        {
+          label: 'Redo',
+          accelerator: 'Shift+Command+Z',
+          selector: 'redo:',
+          role: 'redo'
+        },
         { type: 'separator' },
-        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        {
+          label: 'Cut',
+          accelerator: 'Command+X',
+          selector: 'cut:',
+          role: 'cut'
+        },
+        {
+          label: 'Copy',
+          accelerator: 'Command+C',
+          selector: 'copy:',
+          role: 'copy'
+        },
+        {
+          label: 'Paste',
+          accelerator: 'Command+V',
+          selector: 'paste:',
+          role: 'paste'
+        },
         {
           label: 'Select All',
           accelerator: 'Command+A',
-          selector: 'selectAll:'
+          selector: 'selectAll:',
+          role: 'selectAll'
         }
       ]
     };
@@ -194,7 +339,8 @@ export default class MenuBuilder {
   }
 
   buildDefaultTemplate() {
-    const templateDefault = [
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const templateDefault: any = [
       {
         label: '&File',
         submenu: [
@@ -204,6 +350,48 @@ export default class MenuBuilder {
             click: () => {
               this.mainWindow.close();
             }
+          }
+        ]
+      },
+      {
+        label: '&Edit',
+        submenu: [
+          {
+            label: 'Undo',
+            accelerator: 'Ctrl+Z',
+            selector: 'undo:',
+            role: 'undo'
+          },
+          {
+            label: 'Redo',
+            accelerator: 'Ctrl+Y',
+            selector: 'redo:',
+            role: 'redo'
+          },
+          { type: 'separator' },
+          {
+            label: 'Cut',
+            accelerator: 'Ctrl+X',
+            selector: 'cut:',
+            role: 'cut'
+          },
+          {
+            label: 'Copy',
+            accelerator: 'Ctrl+C',
+            selector: 'copy:',
+            role: 'copy'
+          },
+          {
+            label: 'Paste',
+            accelerator: 'Ctrl+V',
+            selector: 'paste:',
+            role: 'paste'
+          },
+          {
+            label: 'Select All',
+            accelerator: 'Ctrl+A',
+            selector: 'selectAll:',
+            role: 'selectAll'
           }
         ]
       },
