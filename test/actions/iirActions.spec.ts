@@ -224,7 +224,6 @@ describe('iirActions', () => {
     expect(dispatch.calledWith({ type: actions.SET_WORK_ORDER, resp: workOrder })).toBe(false);
     expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(false);
     expect(dispatch.calledWith({ type: actions.TOGGLE_PDF_DISPLAY })).toBe(false);
-    expect(dispatch.calledWith({ type: actions.RESET_STATE })).toBe(true);
     // Fails for some reason when resp is added, pass/fail works when resp removed from here and modal actions.
     // TODO: Need to figure out why later.
     // expect(dispatch.calledWith({ type: modalActions.TOGGLE_ERROR_MODAL_STATE, resp: returnError })).toBe(true);
