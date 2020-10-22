@@ -356,6 +356,7 @@ export function handleGetWorkOrderDataResp(
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
     const { workOrderSearch, workOrderSearchLineItem } = state.workOrder;
+
     // Checking no errors
     if (Object.keys(resp.error).length === 0) {
       // Checking if data is empty and the edit form search is false
@@ -369,16 +370,7 @@ export function handleGetWorkOrderDataResp(
     ) {
       dispatch(toggleErrorModalState(resp.error));
     } else {
-      dispatch(reset('iirFormDisabled'));
-      dispatch(resetState());
-      const returnError = { error: '' };
-      if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
-      } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
-      }
-      dispatch(toggleErrorModalState(returnError));
+      dispatch(toggleErrorModalState(resp.error));
     }
   };
 }

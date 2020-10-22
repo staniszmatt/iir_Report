@@ -11,9 +11,10 @@
  */
 import 'mssql/msnodesqlv8';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, Menu, MenuItem } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import fs from 'fs';
 import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
 import getIIRData from './api/getIIRData';
@@ -22,11 +23,39 @@ import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
 import pjson from './package.json';
 
+function saveUpdaterLogs() {
+  const testLog = log.transports.file.readAllLogs();
+  console.log('testLog: ', testLog[0].lines);
+
+  const fileLocation = `\\\\AMR-FS1\\Users\\TearDownUpdaterLogs\\TearDownUpdaterLogs.txt`;
+
+  fs.writeFileSync(fileLocation, JSON.stringify(testLog[0].lines));
+}
+
 export default class AppUpdater {
+  static default: any;
+
   constructor() {
     log.transports.file.level = 'info';
     autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
+
+    autoUpdater
+      .checkForUpdatesAndNotify()
+      .then(() => {
+        saveUpdaterLogs();
+        // eslint-disable-next-line no-useless-return
+        return;
+      })
+      .catch(err => {
+        console.log('catch err: ', err);
+      });
+
+    // TODO: Setup to save logs to my location
+    // const testLog = log.transports.file.readAllLogs();
+
+    // console.log(testLog);
+
+    // console.log('end of log test');
   }
 }
 
@@ -114,37 +143,6 @@ const createWindow = async () => {
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
-
-  mainWindow.webContents.on('context-menu', (_event: {}, params: {} | any) => {
-    const menu = new Menu();
-
-    // Add each spelling suggestion
-    // eslint-disable-next-line no-restricted-syntax
-    for (const suggestion of params.dictionarySuggestions) {
-      menu.append(
-        new MenuItem({
-          label: suggestion,
-          // eslint-disable-next-line no-loop-func
-          click: () => mainWindow!.webContents.replaceMisspelling(suggestion)
-        })
-      );
-    }
-
-    // Allow users to add the misspelled word to the dictionary
-    if (params.misspelledWord) {
-      menu.append(
-        new MenuItem({
-          label: 'Add to dictionary',
-          click: () =>
-            mainWindow!.webContents.session.addWordToSpellCheckerDictionary(
-              params.misspelledWord
-            )
-        })
-      );
-    }
-
-    menu.popup();
-  });
 };
 
 /**
@@ -159,7 +157,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Added Auto-Update check here.
 app.on('ready', () => {
   createWindow();
 });
