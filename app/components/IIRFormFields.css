@@ -41,36 +41,3 @@
 .form-btn-container > div > a {
   opacity: unset;
 }
-
-.form-ts-data {
-  padding-bottom: 20px;
-  border-bottom: 1px solid black;
-  margin: unset;
-  width: 100%;
-  display: block;
-  text-align: center;
-}
-
-.form-ts-data > div > div {
-  display: flex;
-}
-
-.form-ts-data > div > div > div {
-  margin: auto;
-}
-
-.form-ts-data > div:first-child {
-  margin: 10px 0;
-}
-
-.form-ts-data > div > div:first-child {
-  display: block;
-}
-
-.form-ts-data > div:nth-child(2) > div:first-child {
-  margin: 10px 0;
-}
-
-.form-ts-data > div > div > div > div > input {
-  width: 60px;
-}

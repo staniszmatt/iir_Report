@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react/destructuring-assignment */
@@ -7,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import routes from '../constants/routes.json';
 import FormTextInput from './forms/formTextArea';
-import FormInput from './forms/formInput';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './IIRFormFields.css';
 
@@ -22,10 +22,6 @@ interface DispatchProps {
     evalFindings: string;
     genConditionReceived: string;
     workedPerformedNote: string;
-    tsnValue: string;
-    tsoValue: string;
-    tsrValue: string;
-    displayTSData: boolean;
   };
 }
 
@@ -39,11 +35,7 @@ const IIRForm = (
     evalFindings,
     genConditionReceived,
     workedPerformedNote,
-    handleReviewIIRPDF,
-    tsnValue,
-    tsoValue,
-    tsrValue,
-    displayTSData
+    handleReviewIIRPDF
   } = props.props;
 
   // Setup of label text to include some new line editing here.
@@ -73,51 +65,6 @@ const IIRForm = (
       className={styles['form-container']}
     >
       <div>
-        <div className={styles['form-ts-data']}>
-          {displayTSData && (
-            <div>
-              NOTE: TS numbers can be edited only after notes have been added.
-            </div>
-          )}
-          {!displayTSData && <div />}
-
-          <div>
-            <div>(FINAL TABLE)</div>
-
-            <div>
-              <div>
-                <Field
-                  label="TSO"
-                  component={FormInput}
-                  defaultValue={tsoValue}
-                  name="tsoValue"
-                  type="text"
-                  disabled={displayTSData}
-                />
-              </div>
-              <div>
-                <Field
-                  label="TSR"
-                  component={FormInput}
-                  defaultValue={tsrValue}
-                  name="tsrValue"
-                  type="text"
-                  disabled={displayTSData}
-                />
-              </div>
-              <div>
-                <Field
-                  label="TSN"
-                  component={FormInput}
-                  defaultValue={tsnValue}
-                  name="tsnValue"
-                  type="text"
-                  disabled={displayTSData}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
         <div>
           <Field
             label={custRemoval}

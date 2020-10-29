@@ -1,7 +1,7 @@
 {
   "name": "tear-down-app",
   "productName": "TearDownReport",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Electron-React application with Redux, TypeScript, Webpack, React Hot Loader, and Thunk to generate and update tear down reports",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",

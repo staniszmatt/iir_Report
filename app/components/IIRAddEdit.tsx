@@ -33,12 +33,6 @@ interface Props {
       SalesOrderAndLineNumber: string;
       SalesOrderNumber: string;
       SerialNumber: string;
-      TSN: number;
-      TSO: number;
-      TSR: number;
-      tearDownTSO: string;
-      tearDownTSN: string;
-      tearDownTSR: string;
       Trv_Num: string;
       Warrenty_Y_N: string;
       Work_Order_Number: string;
@@ -66,44 +60,13 @@ export default function IIRAddEdit(props: Props | any) {
     displayOpenPDFBtn
     // eslint-disable-next-line react/destructuring-assignment
   } = props.iir;
-  const {
-    TSN,
-    TSO,
-    TSR,
-    tearDownTSO,
-    tearDownTSN,
-    tearDownTSR
-    // eslint-disable-next-line react/destructuring-assignment
-  } = props.iir.workOrderInfo;
-
-  // Check if we need to send the JobCost data or AeroParts Data
-  let tsnProps: string;
-  let tsoProps: string;
-  let tsrProps: string;
-  let displayTSData: boolean;
-
-  if (tearDownTSO === null || tearDownTSN === null || tearDownTSR === null) {
-    tsnProps = TSN.toString();
-    tsoProps = TSO.toString();
-    tsrProps = TSR.toString();
-    displayTSData = true;
-  } else {
-    tsnProps = tearDownTSN;
-    tsoProps = tearDownTSO;
-    tsrProps = tearDownTSR;
-    displayTSData = false;
-  }
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
     workedPerformedNote: workOrderInfo.workedPerformed,
-    handleReviewIIRPDF,
-    tsnValue: tsnProps,
-    tsoValue: tsoProps,
-    tsrValue: tsrProps,
-    displayTSData
+    handleReviewIIRPDF
   };
   const cancelProp = { cancelLoading };
 

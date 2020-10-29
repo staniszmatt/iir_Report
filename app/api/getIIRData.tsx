@@ -23,13 +23,9 @@ interface ReturnData {
 
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
-  let returnString = '';
-  if (stringToCheck === null || stringToCheck.length === 0) {
-    returnString = 'NONE';
-  } else {
-    returnString = stringToCheck;
-  }
-  return returnString;
+  return stringToCheck === null || stringToCheck.length === 0
+    ? 'NONE'
+    : stringToCheck;
 }
 
 async function getIIRDataAPI(request: Request) {
@@ -51,7 +47,7 @@ async function getIIRDataAPI(request: Request) {
       .replace(/[`']/g, '"')
       .replace(/[#^&*<>()@~]/g, '');
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
-    sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType
+    sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N
     FROM sales_order_line
     INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
     WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`;
@@ -80,8 +76,7 @@ async function getIIRDataAPI(request: Request) {
         CustomerName,
         CustomerOrderNumber,
         DateIssuedYYMMDD,
-        Warrenty_Y_N,
-        OrderType
+        Warrenty_Y_N
       } = data[0];
 
       returnData.data.SalesOrderAndLineNumber = SalesOrderAndLineNumber;
@@ -99,7 +94,6 @@ async function getIIRDataAPI(request: Request) {
       returnData.data.CustomerOrderNumber = CustomerOrderNumber;
       returnData.data.DateIssuedYYMMDD = DateIssuedYYMMDD;
       returnData.data.Warrenty_Y_N = Warrenty_Y_N;
-      returnData.data.OrderType = OrderType;
 
       try {
         // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
@@ -114,8 +108,6 @@ async function getIIRDataAPI(request: Request) {
         const secondData = await query2.execute();
         query2.close();
         db.close();
-
-        console.log('getIIR traveler header Resp: ', secondData);
 
         if (secondData.length > 0) {
           if (
@@ -201,7 +193,7 @@ async function getIIRDataAPI(request: Request) {
           param2: cleanLineItem
         };
         const iirQuery = `SELECT *
-        FROM tear_down_notes AS i
+        FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
         await preState.prepare(iirQuery);
@@ -209,29 +201,16 @@ async function getIIRDataAPI(request: Request) {
         await preState.unprepare();
 
         if (getIIRData.recordset.length === 0) {
-          returnData.data.customerReasonForRemoval = null;
-          returnData.data.genConditionReceived = null;
-          returnData.data.evalFindings = null;
-          returnData.data.workedPerformed = null;
-          returnData.data.tearDownTSO = null;
-          returnData.data.tearDownTSN = null;
-          returnData.data.tearDownTSR = null;
-        } else {
-          returnData.data.customerReasonForRemoval = '';
-          returnData.data.genConditionReceived = '';
-          returnData.data.evalFindings = '';
-          returnData.data.workedPerformed = '';
-        }
-
-        if (getIIRData.recordset.length > 0) {
+          returnData.data.customerReasonForRemoval = 'NONE';
+          returnData.data.genConditionReceived = 'NONE';
+          returnData.data.evalFindings = 'NONE';
+          returnData.data.workedPerformed = 'NONE';
+        } else if (getIIRData.recordset.length > 0) {
           const {
             customerReasonForRemoval,
             genConditionReceived,
             evalFindings,
-            workedPerformed,
-            tearDownTSN,
-            tearDownTSR,
-            tearDownTSO
+            workedPerformed
           } = getIIRData.recordset[0];
 
           returnData.data.customerReasonForRemoval = checkStringLength(
@@ -243,9 +222,6 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.evalFindings = checkStringLength(evalFindings);
           // eslint-disable-next-line prettier/prettier
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
-          returnData.data.tearDownTSO = tearDownTSO;
-          returnData.data.tearDownTSN = tearDownTSN;
-          returnData.data.tearDownTSR = tearDownTSR;
           returnData.success = true;
         } else {
           returnData.success = true;
