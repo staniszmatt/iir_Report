@@ -205,6 +205,7 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.genConditionReceived = 'NONE';
           returnData.data.evalFindings = 'NONE';
           returnData.data.workedPerformed = 'NONE';
+          returnData.data.recordPresent = false;
         } else if (getIIRData.recordset.length > 0) {
           const {
             customerReasonForRemoval,
@@ -212,6 +213,8 @@ async function getIIRDataAPI(request: Request) {
             evalFindings,
             workedPerformed
           } = getIIRData.recordset[0];
+
+          returnData.data.recordPresent = true;
 
           returnData.data.customerReasonForRemoval = checkStringLength(
             customerReasonForRemoval

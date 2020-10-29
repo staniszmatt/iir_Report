@@ -11,9 +11,6 @@ interface Request {
   genConditionReceived: string | null;
   evalFindings: string | null;
   workedPerformed: string | null;
-  tearDownTSN: string | null;
-  tearDownTSO: string | null;
-  tearDownTSR: string | null;
 }
 
 interface ReturnData {

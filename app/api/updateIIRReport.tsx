@@ -14,8 +14,8 @@ interface Request {
 }
 
 interface ReturnData {
-  error: {};
-  resp: {};
+  error: {} | any;
+  resp: {} | any;
   succuss: boolean;
 }
 
@@ -118,7 +118,12 @@ async function postIIRReport(request: Request) {
       };
     }
   } catch (error) {
-    returnData.error = error;
+    // Not sure if there is a better way but don't need to return the array of key value pairs.
+    // eslint-disable-next-line array-callback-return
+    Object.getOwnPropertyNames(error).map(key => {
+      // eslint-disable-next-line no-useless-return
+      returnData.error[key] = error[key];
+    });
   }
   return returnData;
 }
