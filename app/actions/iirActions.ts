@@ -483,9 +483,6 @@ export function postOrUpdateIIRReport(iirNotes: {
   evalFindings: string | any;
   genConditionReceived: string | any;
   workedPerformed: string | any;
-  tsoValue: string | any;
-  tsrValue: string | any;
-  tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
@@ -515,47 +512,12 @@ export function postOrUpdateIIRReport(iirNotes: {
       iirNotes.workedPerformed
     );
 
-    // Check if values exists in AeroParts DB otherwise use the JobCost DB value.
-    let tsoValueCheck: string;
-    let tsnValueCheck: string;
-    let tsrValueCheck: string;
-
-    if (
-      state.workOrderInfo.tearDownTSO === null &&
-      state.workOrderInfo.tearDownTSN === null &&
-      state.workOrderInfo.tearDownTSR === null
-    ) {
-      tsoValueCheck = state.workOrderInfo.TSO.toString();
-      tsnValueCheck = state.workOrderInfo.TSN.toString();
-      tsrValueCheck = state.workOrderInfo.TSR.toString();
-    } else {
-      tsoValueCheck = state.workOrderInfo.tearDownTSO;
-      tsnValueCheck = state.workOrderInfo.tearDownTSN;
-      tsrValueCheck = state.workOrderInfo.tearDownTSR;
-    }
-
-    const valueChangeChecktso = valueChangeCheck(
-      tsoValueCheck,
-      iirNotes.tsoValue
-    );
-    const valueChangeChecktsn = valueChangeCheck(
-      tsnValueCheck,
-      iirNotes.tsnValue
-    );
-    const valueChangeChecktsr = valueChangeCheck(
-      tsrValueCheck,
-      iirNotes.tsrValue
-    );
-
     // Cancel out if nothing was changed.
     if (
       valueChangeCheckCustomerReasonForRemoval === null &&
       valueChangeCheckEvalFindings === null &&
       valueChangeCheckGenConditionReceived === null &&
-      valueChangeCheckWorkedPerformed === null &&
-      valueChangeChecktso === null &&
-      valueChangeChecktsn === null &&
-      valueChangeChecktsr === null
+      valueChangeCheckWorkedPerformed === null
     ) {
       const returnError = {
         error: 'Nothing was changed! Please make changes to submit.'

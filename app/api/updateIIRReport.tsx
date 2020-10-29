@@ -11,9 +11,6 @@ interface Request {
   genConditionReceived: string | null;
   evalFindings: string | null;
   workedPerformed: string | null;
-  tearDownTSO: string | null;
-  tearDownTSN: string | null;
-  tearDownTSR: string | null;
 }
 
 interface ReturnData {
@@ -29,10 +26,7 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed,
-    tearDownTSO,
-    tearDownTSN,
-    tearDownTSR
+    workedPerformed
   } = request;
   const returnData: ReturnData = {
     error: {},
@@ -44,10 +38,7 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed,
-    tearDownTSO,
-    tearDownTSN,
-    tearDownTSR
+    workedPerformed
   };
 
   const dbQueryRequest: any = {};
