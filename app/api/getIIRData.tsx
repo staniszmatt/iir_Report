@@ -115,8 +115,6 @@ async function getIIRDataAPI(request: Request) {
         query2.close();
         db.close();
 
-        console.log('getIIR traveler header Resp: ', secondData);
-
         if (secondData.length > 0) {
           if (
             Object.prototype.hasOwnProperty.call(
@@ -213,9 +211,6 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.genConditionReceived = null;
           returnData.data.evalFindings = null;
           returnData.data.workedPerformed = null;
-          returnData.data.tearDownTSO = null;
-          returnData.data.tearDownTSN = null;
-          returnData.data.tearDownTSR = null;
         } else {
           returnData.data.customerReasonForRemoval = '';
           returnData.data.genConditionReceived = '';
@@ -228,10 +223,7 @@ async function getIIRDataAPI(request: Request) {
             customerReasonForRemoval,
             genConditionReceived,
             evalFindings,
-            workedPerformed,
-            tearDownTSN,
-            tearDownTSR,
-            tearDownTSO
+            workedPerformed
           } = getIIRData.recordset[0];
 
           returnData.data.customerReasonForRemoval = checkStringLength(
@@ -243,9 +235,6 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.evalFindings = checkStringLength(evalFindings);
           // eslint-disable-next-line prettier/prettier
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
-          returnData.data.tearDownTSO = tearDownTSO;
-          returnData.data.tearDownTSN = tearDownTSN;
-          returnData.data.tearDownTSR = tearDownTSR;
           returnData.success = true;
         } else {
           returnData.success = true;

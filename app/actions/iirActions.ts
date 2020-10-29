@@ -571,25 +571,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       request = 'postIIRReport';
     }
 
-    // Check if we need to send the JobCost Data but the origin null check if we have AeroParts Data.
-    let sendTSOData: string | null;
-    let sendTSNData: string | null;
-    let sendTSRData: string | null;
-
-    if (
-      state.workOrderInfo.tearDownTSO === null &&
-      state.workOrderInfo.tearDownTSN === null &&
-      state.workOrderInfo.tearDownTSR === null
-    ) {
-      sendTSOData = tsoValueCheck;
-      sendTSNData = tsnValueCheck;
-      sendTSRData = tsrValueCheck;
-    } else {
-      sendTSOData = valueChangeChecktso;
-      sendTSNData = valueChangeChecktsn;
-      sendTSRData = valueChangeChecktsr;
-    }
-
     if (
       valueChangeCheckCustomerReasonForRemoval !== null ||
       valueChangeCheckEvalFindings !== null ||
@@ -606,11 +587,9 @@ export function postOrUpdateIIRReport(iirNotes: {
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,
       genConditionReceived: iirNotes.genConditionReceived,
       evalFindings: iirNotes.evalFindings,
-      workedPerformed: iirNotes.workedPerformed,
-      tearDownTSO: sendTSOData,
-      tearDownTSN: sendTSNData,
-      tearDownTSR: sendTSRData
+      workedPerformed: iirNotes.workedPerformed
     };
+
     // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},

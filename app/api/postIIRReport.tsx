@@ -29,10 +29,7 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed,
-    tearDownTSN,
-    tearDownTSO,
-    tearDownTSR
+    workedPerformed
   } = request;
 
   const returnData: ReturnData = {
@@ -47,10 +44,7 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed,
-    tearDownTSN,
-    tearDownTSO,
-    tearDownTSR
+    workedPerformed
   };
 
   const dbQueryRequest: any = {};
