@@ -104,8 +104,8 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    const queryString = `INSERT INTO tear_down_notes_dev (${keyName})
-    OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as userName
+    const queryString = `INSERT INTO tear_down_notes (${keyName})
+    OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES (${params})`;
 
     await preState.prepare(queryString);
