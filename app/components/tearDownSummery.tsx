@@ -75,9 +75,6 @@ function tsDataCheck(tsData: string | number) {
 }
 
 export default function TearDownSummery(props: Props | any) {
-
-  console.log("pdf props", props);
-
   // Action calls:
   const {
     getWorkOrderData,
