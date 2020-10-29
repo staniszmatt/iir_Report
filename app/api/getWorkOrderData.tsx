@@ -47,7 +47,7 @@ async function getWorkOrderData(request: Request) {
       .replace(/[#^&*<>()@~]/g, '');
     // Set this up so it can visually be better when creating the query string.
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
-      sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType FROM sales_order_line INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
+      sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N FROM sales_order_line INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
       WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`;
     // Prepare query statement
     const db = await odbc.connect(odbcDriverString);
@@ -166,9 +166,6 @@ async function getWorkOrderData(request: Request) {
         returnData.data[0].genConditionReceived = 'NONE';
         returnData.data[0].evalFindings = 'NONE';
         returnData.data[0].workedPerformed = 'NONE';
-        returnData.data[0].tearDownTSO = null;
-        returnData.data[0].tearDownTSN = null;
-        returnData.data[0].tearDownTSR = null;
         // Add Data only if there is any.
         if (getIIRData.recordset.length > 0) {
           const {
@@ -188,9 +185,6 @@ async function getWorkOrderData(request: Request) {
           returnData.data[0].workedPerformed = checkStringLength(
             workedPerformed
           );
-          returnData.data[0].tearDownTSO = getIIRData.recordset[0].tearDownTSO;
-          returnData.data[0].tearDownTSN = getIIRData.recordset[0].tearDownTSN;
-          returnData.data[0].tearDownTSR = getIIRData.recordset[0].tearDownTSR;
         }
       } catch (error) {
         // Not sure if there is a better way but don't need to return the array of key value pairs.

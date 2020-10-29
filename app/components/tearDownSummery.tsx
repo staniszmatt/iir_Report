@@ -45,7 +45,6 @@ interface Props {
       Manual_Section: string;
       Manual_Revision: string;
       Manual_Rev_Date_MMDDYY: string;
-      OrderType: string;
       PartDescription: string;
       PartNumber: string;
       Quantity: number;
@@ -76,6 +75,9 @@ function tsDataCheck(tsData: string | number) {
 }
 
 export default function TearDownSummery(props: Props | any) {
+
+  console.log("pdf props", props);
+
   // Action calls:
   const {
     getWorkOrderData,
@@ -94,14 +96,14 @@ export default function TearDownSummery(props: Props | any) {
 
   // Verify TS values and display "-" if zero
   const {
-    tearDownTSO,
-    tearDownTSN,
-    tearDownTSR
+    TSO,
+    TSN,
+    TSR
   } = workOrderInfo
 
-  const tsoValues = tsDataCheck(tearDownTSO);
-  const tsnValues = tsDataCheck(tearDownTSN);
-  const tsrValues = tsDataCheck(tearDownTSR);
+  const tsoValues = tsDataCheck(TSO);
+  const tsnValues = tsDataCheck(TSN);
+  const tsrValues = tsDataCheck(TSR);
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
@@ -251,10 +253,6 @@ export default function TearDownSummery(props: Props | any) {
                             <div>TSO:</div>
                             <div>{tsoValues}</div>
                           </div>
-                        </div>
-                        <div>
-                          <div>Order Type:</div>
-                          <div>{workOrderInfo.OrderType}</div>
                         </div>
                         <div>
                           <div>Warranty:</div>

@@ -47,7 +47,7 @@ async function getIIRDataAPI(request: Request) {
       .replace(/[`']/g, '"')
       .replace(/[#^&*<>()@~]/g, '');
     const queryString = `SELECT sales_order_line.SalesOrderAndLineNumber, sales_order_line.ItemNumber, sales_order_line.PartNumber, sales_order_line.PartDescription, sales_order_line.SerialNumber, sales_order_line.Quantity, sales_order_line.TSN, sales_order_line.TSR, sales_order_line.TSO,
-    sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N, sales_order.OrderType
+    sales_order.SalesOrderNumber, sales_order.CustomerNumber, sales_order.CustomerName, sales_order.CustomerOrderNumber, sales_order.DateIssuedYYMMDD, sales_order.Warrenty_Y_N
     FROM sales_order_line
     INNER JOIN sales_order ON sales_order_line.SalesOrderNumber = sales_order.SalesOrderNumber
     WHERE sales_order_line.SalesOrderNumber = ? AND sales_order_line.ItemNumber = ?`;
@@ -76,8 +76,7 @@ async function getIIRDataAPI(request: Request) {
         CustomerName,
         CustomerOrderNumber,
         DateIssuedYYMMDD,
-        Warrenty_Y_N,
-        OrderType
+        Warrenty_Y_N
       } = data[0];
 
       returnData.data.SalesOrderAndLineNumber = SalesOrderAndLineNumber;
@@ -95,7 +94,6 @@ async function getIIRDataAPI(request: Request) {
       returnData.data.CustomerOrderNumber = CustomerOrderNumber;
       returnData.data.DateIssuedYYMMDD = DateIssuedYYMMDD;
       returnData.data.Warrenty_Y_N = Warrenty_Y_N;
-      returnData.data.OrderType = OrderType;
 
       try {
         // Can't get the server to do more than one join for some reason, work around is a second query to JobCost DB.
