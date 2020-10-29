@@ -45,7 +45,6 @@ interface Props {
       Manual_Section: string;
       Manual_Revision: string;
       Manual_Rev_Date_MMDDYY: string;
-      OrderType: string;
       PartDescription: string;
       PartNumber: string;
       Quantity: number;
@@ -69,6 +68,12 @@ interface Props {
   };
 }
 
+function tsDataCheck(tsData: string | number) {
+  // Could come in as a string or a number so testing for abstract equality
+  // eslint-disable-next-line eqeqeq
+  return (tsData == 0 ? '-' : tsData)
+}
+
 export default function TearDownSummery(props: Props | any) {
   // Action calls:
   const {
@@ -85,29 +90,17 @@ export default function TearDownSummery(props: Props | any) {
   const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = props.iir;
   let displayPDFBtn = true;
   let warrentyString = 'No';
-  // Setup TS data depending if it needs from AeroParts DB or JobCost DB.
-  let tsoValues: string;
-  let tsnValues: string;
-  let tsrValues: string;
 
+  // Verify TS values and display "-" if zero
   const {
-    TSN,
     TSO,
-    TSR,
-    tearDownTSO,
-    tearDownTSN,
-    tearDownTSR
+    TSN,
+    TSR
   } = workOrderInfo
 
-  if (tearDownTSO === null || tearDownTSN === null || tearDownTSR === null) {
-    tsoValues = TSO.toString();
-    tsnValues = TSN.toString();
-    tsrValues = TSR.toString();
-  } else {
-    tsoValues = tearDownTSO;
-    tsnValues = tearDownTSN;
-    tsrValues = tearDownTSR;
-  }
+  const tsoValues = tsDataCheck(TSO);
+  const tsnValues = tsDataCheck(TSN);
+  const tsrValues = tsDataCheck(TSR);
 
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
@@ -207,7 +200,7 @@ export default function TearDownSummery(props: Props | any) {
                 <div className={styles['form-body']}>
                   <div>
                     <div>
-                      <div>
+                      <div className={styles['row-data-container']}>
                         <div>
                           <div>Work Order:</div>
                           <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
@@ -225,7 +218,12 @@ export default function TearDownSummery(props: Props | any) {
                           <div>{workOrderInfo.DateIssuedYYMMDD}</div>
                         </div>
                       </div>
-                      <div>
+                      <div className={styles['row-data-container']}>
+                        <div>
+                          <div>Unit Received Information</div>
+                        </div>
+                      </div>
+                      <div className={styles['row-data-container']}>
                         <div>
                           <div>Part Number:</div>
                           <div>{workOrderInfo.PartNumber}</div>
@@ -243,7 +241,7 @@ export default function TearDownSummery(props: Props | any) {
                           <div>{workOrderInfo.Quantity}</div>
                         </div>
                       </div>
-                      <div>
+                      <div className={styles['ts-data-container']}>
                         <div>
                           <div>
                             <div>TSN:</div>
@@ -257,10 +255,6 @@ export default function TearDownSummery(props: Props | any) {
                             <div>TSO:</div>
                             <div>{tsoValues}</div>
                           </div>
-                        </div>
-                        <div>
-                          <div>Order Type:</div>
-                          <div>{workOrderInfo.OrderType}</div>
                         </div>
                         <div>
                           <div>Warranty:</div>

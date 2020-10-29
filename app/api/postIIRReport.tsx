@@ -29,10 +29,7 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed,
-    tearDownTSN,
-    tearDownTSO,
-    tearDownTSR
+    workedPerformed
   } = request;
 
   const returnData: ReturnData = {
@@ -47,10 +44,7 @@ async function postIIRReport(request: Request) {
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
-    workedPerformed,
-    tearDownTSN,
-    tearDownTSO,
-    tearDownTSR
+    workedPerformed
   };
 
   const dbQueryRequest: any = {};
@@ -113,7 +107,7 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    const queryString = `INSERT INTO tear_down_notes (${keyName})
+    const queryString = `INSERT INTO tear_down_notes_dev (${keyName})
     OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
     VALUES (${params})`;
 

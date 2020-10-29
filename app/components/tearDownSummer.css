@@ -24,6 +24,16 @@
   text-align: center;
 }
 
+.ts-data-container > div {
+  margin: auto;
+  text-align: center;
+}
+
+.row-data-container > div {
+  margin: auto;
+  text-align: center;
+}
+
 .open-pdf-btn > div > div {
   text-align: center;
   margin: auto;
@@ -39,29 +49,14 @@ div.form-footer > div {
   margin-left: 30px;
 }
 
-.form-body > div > div > div {
+.row-data-container {
   display: flex;
   margin: 15px 0;
-}
-
-.form-body > div > div > div > div {
-  margin: auto;
-  text-align: center;
 }
 
 .open-pdf-btn > div:first-child {
   margin-bottom: 20px;
   color: red;
-}
-
-.open-pdf-btn > div > button {
-  margin: auto;
-  margin-bottom: 20px;
-  background-color: #bfffbf;
-}
-
-.open-pdf-btn > div > button:hover {
-  background-color: #50d33c;
 }
 
 .form-container > div:first-child {
@@ -83,12 +78,16 @@ div.form-footer > div {
   object-fit: contain;
 }
 
-.form-page-container {
-  width: 8.5in;
-}
-
 .form-page-container > div:last-child {
   margin: 20px 0;
+}
+
+.ts-data-container {
+  display: flex;
+}
+
+.ts-data-container > div:first-child > div {
+  display: flex;
 }
 
 div.form-footer > div:last-child {
@@ -108,6 +107,11 @@ div.form-footer > div:last-child {
   display: flex;
 }
 
+.row-data-container > div > div:first-child {
+  font-size: 11pt;
+  font-weight: bold;
+}
+
 .form-page-container > div:last-child > div > div {
   margin: auto;
 }
@@ -117,8 +121,33 @@ div.form-footer > div:last-child {
   white-space: pre-wrap;
 }
 
-.form-body > div > div > div:last-child {
-  display: flex;
+.ts-data-container > div:first-child > div > div {
+  margin: 0 5px 0 0;
+}
+
+.ts-data-container > div:nth-child(2) > div:nth-child(odd),
+.ts-data-container > div:last-child > div:nth-child(odd) {
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.ts-data-container > div:first-child > div > div:nth-child(odd) {
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.open-pdf-btn > div > button {
+  margin: auto;
+  margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.open-pdf-btn > div > button:hover {
+  background-color: #50d33c;
+}
+
+.form-page-container {
+  width: 8.5in;
 }
 
 .form-page-container > div > div > a {
@@ -143,44 +172,6 @@ div.form-footer > div:last-child {
   > a
   > button:hover {
   background-color: #50d33c;
-}
-
-.form-body > div > div > div:nth-child(3) > div:first-child > div {
-  display: flex;
-}
-
-.form-body > div > div > div:nth-child(2) > div > div:nth-child(odd),
-.form-body > div > div > div:first-child > div > div:nth-child(odd) {
-  font-size: 11pt;
-  font-weight: bold;
-}
-
-.form-body > div > div > div:nth-child(3) > div:first-child > div > div {
-  margin: 0 5px 0 0;
-}
-
-.form-body
-  > div
-  > div
-  > div:nth-child(3)
-  > div:nth-child(2)
-  > div:nth-child(odd),
-.form-body > div > div > div:nth-child(3) > div:last-child > div:nth-child(odd),
-.form-body
-  > div
-  > div
-  > div:nth-child(3)
-  > div:nth-child(3)
-  > div:nth-child(odd),
-.form-body
-  > div
-  > div
-  > div:nth-child(3)
-  > div:first-child
-  > div
-  > div:nth-child(odd) {
-  font-size: 11pt;
-  font-weight: bold;
 }
 
 .form-page {
