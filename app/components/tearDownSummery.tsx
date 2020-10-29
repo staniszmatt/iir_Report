@@ -200,7 +200,7 @@ export default function TearDownSummery(props: Props | any) {
                 <div className={styles['form-body']}>
                   <div>
                     <div>
-                      <div>
+                      <div className={styles['row-data-container']}>
                         <div>
                           <div>Work Order:</div>
                           <div>{`${workOrder.workOrderSearch}-${workOrder.workOrderSearchLineItem}`}</div>
@@ -218,7 +218,12 @@ export default function TearDownSummery(props: Props | any) {
                           <div>{workOrderInfo.DateIssuedYYMMDD}</div>
                         </div>
                       </div>
-                      <div>
+                      <div className={styles['row-data-container']}>
+                        <div>
+                          <div>Unit Received Information</div>
+                        </div>
+                      </div>
+                      <div className={styles['row-data-container']}>
                         <div>
                           <div>Part Number:</div>
                           <div>{workOrderInfo.PartNumber}</div>
@@ -236,7 +241,7 @@ export default function TearDownSummery(props: Props | any) {
                           <div>{workOrderInfo.Quantity}</div>
                         </div>
                       </div>
-                      <div>
+                      <div className={styles['ts-data-container']}>
                         <div>
                           <div>
                             <div>TSN:</div>
