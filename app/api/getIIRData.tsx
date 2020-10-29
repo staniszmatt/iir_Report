@@ -23,13 +23,9 @@ interface ReturnData {
 
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
-  let returnString = '';
-  if (stringToCheck === null || stringToCheck.length === 0) {
-    returnString = 'NONE';
-  } else {
-    returnString = stringToCheck;
-  }
-  return returnString;
+  return stringToCheck === null || stringToCheck.length === 0
+    ? 'NONE'
+    : stringToCheck;
 }
 
 async function getIIRDataAPI(request: Request) {
@@ -207,18 +203,11 @@ async function getIIRDataAPI(request: Request) {
         await preState.unprepare();
 
         if (getIIRData.recordset.length === 0) {
-          returnData.data.customerReasonForRemoval = null;
-          returnData.data.genConditionReceived = null;
-          returnData.data.evalFindings = null;
-          returnData.data.workedPerformed = null;
-        } else {
-          returnData.data.customerReasonForRemoval = '';
-          returnData.data.genConditionReceived = '';
-          returnData.data.evalFindings = '';
-          returnData.data.workedPerformed = '';
-        }
-
-        if (getIIRData.recordset.length > 0) {
+          returnData.data.customerReasonForRemoval = 'NONE';
+          returnData.data.genConditionReceived = 'NONE';
+          returnData.data.evalFindings = 'NONE';
+          returnData.data.workedPerformed = 'NONE';
+        } else if (getIIRData.recordset.length > 0) {
           const {
             customerReasonForRemoval,
             genConditionReceived,
