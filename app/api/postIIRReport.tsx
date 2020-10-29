@@ -11,9 +11,6 @@ interface Request {
   genConditionReceived: string | null;
   evalFindings: string | null;
   workedPerformed: string | null;
-  tearDownTSN: string | null;
-  tearDownTSO: string | null;
-  tearDownTSR: string | null;
 }
 
 interface ReturnData {
@@ -108,7 +105,7 @@ async function postIIRReport(request: Request) {
 
   try {
     const queryString = `INSERT INTO tear_down_notes_dev (${keyName})
-    OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
+    OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as userName
     VALUES (${params})`;
 
     await preState.prepare(queryString);

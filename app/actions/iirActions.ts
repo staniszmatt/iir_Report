@@ -185,7 +185,11 @@ export function handleGeIIRDataResp(
   _event: {},
   resp: {
     error: { code: string; name: string } | any;
-    data: { length: number; customerReasonForRemoval: string | null };
+    data: {
+      length: number;
+      customerReasonForRemoval: string | null;
+      recordPresent: boolean;
+    };
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
@@ -194,7 +198,7 @@ export function handleGeIIRDataResp(
     dispatch(toggleLoadingScreenStateOff());
     if (Object.keys(resp.error).length === 0) {
       // If there is no note data and set to null, set postIIRNotes to true
-      if (resp.data.customerReasonForRemoval === null) {
+      if (!resp.data.recordPresent) {
         dispatch(togglePostIIRNotes());
       }
 
@@ -252,8 +256,12 @@ export function getIIRData(workOrder: {
     const callBackFunction = (
       event: {},
       resp: {
-        error: { code: string; name: string };
-        data: { length: number; customerReasonForRemoval: string | null };
+        error: { code: string; name: string } | any;
+        data: {
+          length: number;
+          customerReasonForRemoval: string | null;
+          recordPresent: boolean;
+        };
       }
     ) => {
       dispatch(handleGeIIRDataResp(event, resp));
@@ -419,9 +427,6 @@ export function postUpdatePDFCheck(iirNotes: {
   evalFindings: string | any;
   genConditionReceived: string | any;
   workedPerformed: string | any;
-  tsoValue: string | any;
-  tsrValue: string | any;
-  tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
@@ -455,7 +460,6 @@ export function handlePostIIRResp(
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
-
     if (Object.keys(resp.error).length === 0) {
       const workOrder: WorkOrder = {
         workOrderSearch: state.workOrder.workOrderSearch,
