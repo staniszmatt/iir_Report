@@ -107,7 +107,7 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    const queryString = `UPDATE tear_down_notes
+    const queryString = `UPDATE tear_down_notes_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = @param1 AND salesOrderNumberLine = @param2`;
