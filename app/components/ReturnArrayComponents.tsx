@@ -15,7 +15,7 @@ export default function ReturnArrayComponents(props: Props) {
     mappedComponents = propsArray.map((objString: string, index: number) => {
       // If used for other than certs, will need to setup check to ignore slice
       // eslint-disable-next-line react/no-array-index-key
-      return <div key={`arrayComponentKey${index}`}>{objString.slice(3)}</div>;
+      return <div key={`arrayComponentKey${index}`}>{objString.slice(2)}</div>;
     });
   }
   return <div>{mappedComponents}</div>;
