@@ -154,7 +154,7 @@ async function getWorkOrderData(request: Request) {
         };
 
         const iirQuery = `SELECT *
-        FROM tear_down_notes_dev AS i
+        FROM tear_down_notes AS i
         WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
         await preState.prepare(iirQuery);
