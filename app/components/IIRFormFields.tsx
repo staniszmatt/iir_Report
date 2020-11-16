@@ -26,6 +26,7 @@ interface DispatchProps {
     evalFindings: string;
     genConditionReceived: string;
     workedPerformedNote: string;
+    CustomerOrderNumber: string;
   };
 }
 
@@ -39,8 +40,10 @@ const IIRForm = (
     evalFindings,
     genConditionReceived,
     workedPerformedNote,
+    CustomerNumber,
     handleReviewIIRPDF
   } = props.props;
+  let textareaDisabled = false;
 
   // Setup of label text to include some new line editing here.
   const custRemoval = `(INCOMING INSPECTION)
@@ -53,6 +56,12 @@ const IIRForm = (
   (HIDDEN DAMAGE:  N/A, DENTED, DAMAGED FLANGE, LEAKS, CORRODED, CRACKED)`;
   const workPerf = `(FINAL TABLE)
   Worked Performed:`;
+
+  if (CustomerNumber === 'APE') {
+    textareaDisabled = true;
+  }
+
+  console.log('customer order number', CustomerNumber);
 
   if (
     customerReasonForRemoval === null &&
@@ -78,6 +87,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={customerReasonForRemoval}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -89,6 +99,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={genConditionReceived}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -100,6 +111,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={evalFindings}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>

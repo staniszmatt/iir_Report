@@ -28,6 +28,7 @@ export type IIRStateType = {
       ItemNumber: string;
       PartNumber: string;
       CustomerName: string;
+      CustomerNumber: string;
       customerReasonForRemoval: string;
       genConditionReceived: string;
       evalFindings: string;
@@ -45,6 +46,9 @@ export type IIRStateType = {
       SerialNumber: string;
       PartDescription: string;
       DateIssuedYYMMDD: string;
+      recordPresent: string;
+      linkedWorkOrderIfAPE: string;
+      linkedAPEWorkOrder: string;
       Manual_Combined: string;
       Manual: string;
       Manual_Document: string;

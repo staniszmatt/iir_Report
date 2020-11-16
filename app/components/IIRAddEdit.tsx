@@ -32,6 +32,7 @@ export default function IIRAddEdit(props: IIRStateType) {
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
     workedPerformedNote: workOrderInfo.workedPerformed,
+    CustomerNumber: workOrderInfo.CustomerNumber,
     handleReviewIIRPDF
   };
   const cancelProp = { cancelLoading };
