@@ -1,12 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* NOTE:
-   On the DOM when search is first entered, Ignoring Warning: Cannot update a component from inside the function body of a different component.
-  @hot-loader/react-dom is still on version 16.13.0, it's not compatible with react@16.13.1 but don't want to disable @hot-loader/react-dom.
-
-  If for what ever reason it needs disabled, would need to replace @hot-loader/react-dom with @pmmmwh/react-refresh-webpack-plugin
-  and in the configs/webpack.config.renderer.dev.babel.js in resolve: { alias: { 'react-dom': '@hot-loader/react-dom' } }
-  change to resolve: { alias: { 'react-dom': 'react-dom' } }
-*/
 import React from 'react';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import FormInput from './forms/formInput';
@@ -41,14 +33,12 @@ const WorkOrderSearchForm = (
               label="Search For Work Order:"
               component={FormInput}
               name="workOrderSearch"
-              type="text"
               format={toUpperCase}
             />
             <Field
               label="Line Item:"
               component={FormInput}
               name="workOrderSearchLineItem"
-              type="text"
               format={toUpperCase}
             />
           </form>
