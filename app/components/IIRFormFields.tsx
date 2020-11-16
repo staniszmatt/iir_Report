@@ -11,8 +11,12 @@ import FormTextInput from './forms/formTextArea';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './IIRFormFields.css';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface FormProps {}
+interface FormProps {
+  customerReasonForRemoval: string;
+  evalFindings: string;
+  genConditionReceived: string;
+  workedPerformed: string;
+}
 
 interface DispatchProps {
   onSubmit: () => {};
@@ -124,55 +128,15 @@ const IIRForm = (
   );
 };
 
-interface Values {
-  customerReasonForRemoval: string;
-  evalFindings: string;
-  genConditionReceived: string;
-  workedPerformed: string;
-  tsnValue: any;
-  tsoValue: any;
-  tsrValue: any;
-}
-
-// Remove Colon Option for input to verify if its a number
-function testColonNumber(value: any) {
-  const removeColon = value.replace(/:/g, '');
-  return isNaN(removeColon);
-}
-
-function validate(values: Values) {
+function validate(values: FormProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformed,
-    tsnValue,
-    tsrValue,
-    tsoValue
+    workedPerformed
   } = values;
-  // Check if value exists before testing
-  if (tsnValue) {
-    const testValue: boolean = testColonNumber(tsnValue);
-    if (testValue) {
-      errors.tsnValue = 'Must be a number!';
-    }
-  }
-
-  if (tsrValue) {
-    const testValue: boolean = testColonNumber(tsrValue);
-    if (testValue) {
-      errors.tsrValue = 'Must be a number!';
-    }
-  }
-
-  if (tsoValue) {
-    const testValue: boolean = testColonNumber(tsoValue);
-    if (testValue) {
-      errors.tsoValue = 'Must be a number!';
-    }
-  }
 
   if (customerReasonForRemoval) {
     if (customerReasonForRemoval.length > 700) {
@@ -202,15 +166,5 @@ function validate(values: Values) {
 
 export default reduxForm<FormProps, DispatchProps>({
   form: 'iirForm',
-  validate,
-  // Set Initial values to null so returns null if no changes are made.
-  initialValues: {
-    customerReasonForRemoval: null,
-    genConditionReceived: null,
-    evalFindings: null,
-    workedPerformed: null,
-    tsnValue: null,
-    tsrValue: null,
-    tsoValue: null
-  }
+  validate
 })(IIRForm);

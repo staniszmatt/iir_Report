@@ -7,44 +7,9 @@ import ArrayComponents from './ReturnArrayComponents';
 import IIRFormFields from './IIRFormFields';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
+import { IIRStateType } from '../reducers/types';
 
-interface Props {
-  postUpdatePDFCheck: () => {};
-  getIIRData: () => {};
-  handleReviewIIRPDF: () => {};
-  openPDF: () => {};
-  cancelLoading: () => {};
-  iir: {
-    loadingScreen: boolean;
-    iirFormDisplay: boolean;
-    displayOpenPDFBtn: boolean;
-    workOrderInfo: {
-      Cert_type_Description: string;
-      CustomerName: string;
-      CustomerNumber: string;
-      CustomerOrderNumber: string;
-      DateIssuedYYMMDD: string;
-      ItemNumber: string;
-      Manual_Combined: string;
-      OrderType: string;
-      PartDescription: string;
-      PartNumber: string;
-      Quantity: number;
-      SalesOrderAndLineNumber: string;
-      SalesOrderNumber: string;
-      SerialNumber: string;
-      Trv_Num: string;
-      Warrenty_Y_N: string;
-      Work_Order_Number: string;
-      customerReasonForRemoval: string;
-      evalFindings: string;
-      genConditionReceived: string;
-      workedPerformed: string;
-    };
-  };
-}
-
-export default function IIRAddEdit(props: Props | any) {
+export default function IIRAddEdit(props: IIRStateType) {
   console.log('Edit State', props.iir);
   const {
     postUpdatePDFCheck,

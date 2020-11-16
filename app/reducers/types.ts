@@ -1,6 +1,9 @@
 import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 
 export type IIRStateType = {
+  postUpdatePDFCheck: () => {};
+  getIIRData: () => {};
+  handleReviewIIRPDF: () => {};
   getWorkOrderData: () => {};
   postOrUpdateIIRReport: () => {};
   handleEditIIRPDF: () => {};
