@@ -206,6 +206,7 @@ async function getIIRDataAPI(request: Request) {
           returnData.data.evalFindings = 'NONE';
           returnData.data.workedPerformed = 'NONE';
           returnData.data.linkedWorkOrderIfAPE = null;
+          returnData.data.linkedAPEWorkOrder = null;
           returnData.data.recordPresent = false;
         } else if (getIIRData.recordset.length > 0) {
           const {
@@ -213,7 +214,8 @@ async function getIIRDataAPI(request: Request) {
             genConditionReceived,
             evalFindings,
             workedPerformed,
-            linkedWorkOrderIfAPE
+            linkedWorkOrderIfAPE,
+            linkedAPEWorkOrder
           } = getIIRData.recordset[0];
 
           returnData.data.recordPresent = true;
@@ -228,6 +230,7 @@ async function getIIRDataAPI(request: Request) {
           // eslint-disable-next-line prettier/prettier
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
           returnData.data.linkedWorkOrderIfAPE = linkedWorkOrderIfAPE;
+          returnData.data.linkedAPEWorkOrder = linkedAPEWorkOrder;
           returnData.success = true;
         } else {
           returnData.success = true;

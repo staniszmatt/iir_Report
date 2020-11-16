@@ -9,7 +9,6 @@ import {
   SET_WORK_ORDER_DATA,
   TOGGLE_IIR_EDIT_STATE,
   TOGGLE_POST_IIR_NOTES,
-  TOGGLE_APE_ORDER_STATE,
   TOGGLE_DISPLAY_OPEN_PDF_BTN,
   RESET_DISPLAY_STATE,
   TOGGLE_SEND_EMAIL_ON,
@@ -27,7 +26,6 @@ const IState = {
   displayOpenPDFBtn: false,
   sendEmail: false,
   successUpdateModalCall: false,
-  apeWorkOrder: false,
   workOrder: {},
   workOrderInfo: {},
   appVersion: ''
@@ -54,11 +52,6 @@ export default function iir(state = IState, action: CustomAction) {
       return {
         ...state,
         loadingScreen: false
-      };
-    case TOGGLE_APE_ORDER_STATE:
-      return {
-        ...state,
-        apeWorkOrder: true
       };
     case TOGGLE_SEND_EMAIL_ON:
       return {

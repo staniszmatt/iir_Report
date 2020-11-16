@@ -169,6 +169,7 @@ async function getWorkOrderData(request: Request) {
         returnData.data.evalFindings = 'NONE';
         returnData.data.workedPerformed = 'NONE';
         returnData.data.linkedWorkOrderIfAPE = null;
+        returnData.data.linkedAPEWorkOrder = null;
         // Add Data only if there is any.
         if (getIIRData.recordset.length > 0) {
           const {
@@ -176,7 +177,8 @@ async function getWorkOrderData(request: Request) {
             genConditionReceived,
             evalFindings,
             workedPerformed,
-            linkedWorkOrderIfAPE
+            linkedWorkOrderIfAPE,
+            linkedAPEWorkOrder
           } = getIIRData.recordset[0];
 
           returnData.data.customerReasonForRemoval = checkStringLength(
@@ -188,6 +190,7 @@ async function getWorkOrderData(request: Request) {
           returnData.data.evalFindings = checkStringLength(evalFindings);
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
           returnData.data.linkedWorkOrderIfAPE = linkedWorkOrderIfAPE;
+          returnData.data.linkedAPEWorkOrder = linkedAPEWorkOrder;
         }
       } catch (error) {
         // Not sure if there is a better way but don't need to return the array of key value pairs.
