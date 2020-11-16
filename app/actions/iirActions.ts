@@ -17,6 +17,7 @@ export const SET_WORK_ORDER = 'SET_WORK_ORDER';
 export const SET_WORK_ORDER_DATA = 'SET_WORK_ORDER_DATA';
 export const TOGGLE_POST_IIR_NOTES = 'SET_POST_IIR_NOTES';
 export const TOGGLE_DISPLAY_OPEN_PDF_BTN = 'TOGGLE_DISPLAY_OPEN_PDF_BTN';
+export const TOGGLE_APE_ORDER_STATE = 'TOGGLE_APE_ORDER_STATE';
 export const RESET_DISPLAY_STATE = 'RESET_DISPLAY_STATE';
 export const TOGGLE_SEND_EMAIL_ON = 'TOGGLE_SEND_EMAIL_ON';
 export const TOGGLE_SEND_EMAIL_OFF = 'TOGGLE_SEND_EMAIL_OFF';
@@ -42,6 +43,12 @@ export function resetState() {
 export function softResetState() {
   return {
     type: RESET_DISPLAY_STATE
+  };
+}
+
+export function toggleAPEOrderState() {
+  return {
+    type: TOGGLE_APE_ORDER_STATE
   };
 }
 
@@ -189,6 +196,7 @@ export function handleGeIIRDataResp(
       length: number;
       customerReasonForRemoval: string | null;
       recordPresent: boolean;
+      CustomerNumber: string;
     };
   }
 ) {
@@ -201,6 +209,12 @@ export function handleGeIIRDataResp(
       if (!resp.data.recordPresent) {
         dispatch(togglePostIIRNotes());
       }
+      if (resp.data.CustomerNumber === 'APE') {
+        dispatch(toggleAPEOrderState());
+      }
+
+
+
 
       const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
 
@@ -357,7 +371,11 @@ export function handleGetWorkOrderDataResp(
   _event: {},
   resp: {
     error: { code: string; name: string };
-    data: [{ Work_Order_Number: string; ItemNumber: string }];
+    data: {
+      Work_Order_Number: string;
+      ItemNumber: string;
+      CustomerNumber: string;
+    };
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
@@ -365,12 +383,32 @@ export function handleGetWorkOrderDataResp(
     dispatch(toggleLoadingScreenStateOff());
     const { workOrderSearch, workOrderSearchLineItem } = state.workOrder;
 
+    if (resp.data.CustomerNumber === 'APE') {
+      dispatch(toggleAPEOrderState());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (resp.data.CustomerNumber === "APE") {
+      dispatch(toggleAPEOrderState());
+    }
+
     // Checking no errors
     if (Object.keys(resp.error).length === 0) {
       // Checking if data is empty and the edit form search is false
       const workOrderString = `${workOrderSearch}-${workOrderSearchLineItem}`;
 
-      dispatch(setWorkOrderData(resp.data[0]));
+      dispatch(setWorkOrderData(resp.data));
       dispatch(toggleDisplayPDFFormState());
       dispatch(checkForPDFFile(workOrderString));
     } else if (

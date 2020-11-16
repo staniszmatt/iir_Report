@@ -31,7 +31,7 @@ function checkStringLength(stringToCheck: string) {
 async function getWorkOrderData(request: Request) {
   const returnData: ReturnData = {
     error: {},
-    data: [],
+    data: {},
     noData: false
   };
   const odbcDriverString = getDriver();
@@ -59,7 +59,9 @@ async function getWorkOrderData(request: Request) {
     await query.close();
 
     if (data.length > 0) {
-      returnData.data = data;
+      // Initial data object setup so no need to destructor object.
+      // eslint-disable-next-line prefer-destructuring
+      returnData.data = data[0];
       const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Manual, traveler_header.Manual_Document, traveler_header.Manual_Section, traveler_header.Manual_Revision, traveler_header.Manual_Rev_Date_MMDDYY, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
         sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
         FROM traveler_header INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
@@ -88,14 +90,14 @@ async function getWorkOrderData(request: Request) {
             Trv_Num
           } = secondData[0];
 
-          returnData.data[0].Manual_Combined = Manual_Combined;
-          returnData.data[0].Manual = Manual;
-          returnData.data[0].Manual_Document = Manual_Document;
-          returnData.data[0].Manual_Section = Manual_Section;
-          returnData.data[0].Manual_Revision = Manual_Revision;
-          returnData.data[0].Manual_Rev_Date_MMDDYY = Manual_Rev_Date_MMDDYY;
-          returnData.data[0].Work_Order_Number = Work_Order_Number;
-          returnData.data[0].Trv_Num = Trv_Num;
+          returnData.data.Manual_Combined = Manual_Combined;
+          returnData.data.Manual = Manual;
+          returnData.data.Manual_Document = Manual_Document;
+          returnData.data.Manual_Section = Manual_Section;
+          returnData.data.Manual_Revision = Manual_Revision;
+          returnData.data.Manual_Rev_Date_MMDDYY = Manual_Rev_Date_MMDDYY;
+          returnData.data.Work_Order_Number = Work_Order_Number;
+          returnData.data.Trv_Num = Trv_Num;
           // Sometimes Cert type may not be entered yet.
           if (
             Object.prototype.hasOwnProperty.call(
@@ -104,7 +106,7 @@ async function getWorkOrderData(request: Request) {
             )
           ) {
             // Grab all cert types if available and store into array.
-            returnData.data[0].Cert_type_Description = [];
+            returnData.data.Cert_type_Description = [];
             // Set the list of cert types into a array list
             const collectArrayCertList = secondData.map(
               (objData: { Cert_type_Description: string }) => {
@@ -117,20 +119,20 @@ async function getWorkOrderData(request: Request) {
                 return index === arrayData.indexOf(elem);
               }
             );
-            returnData.data[0].Cert_type_Description = removedDuplicates;
+            returnData.data.Cert_type_Description = removedDuplicates;
           } else {
-            returnData.data[0].Cert_type_Description = 'N/A';
+            returnData.data.Cert_type_Description = 'N/A';
           }
         } else {
-          returnData.data[0].Manual_Combined = 'N/A';
-          returnData.data[0].Manual = 'N/A';
-          returnData.data[0].Manual_Document = 'N/A';
-          returnData.data[0].Manual_Section = 'N/A';
-          returnData.data[0].Manual_Revision = 'N/A';
-          returnData.data[0].Manual_Rev_Date_MMDDYY = 'N/A';
-          returnData.data[0].Work_Order_Number = 'N/A';
-          returnData.data[0].Trv_Num = 'N/A';
-          returnData.data[0].Cert_type_Description = 'N/A';
+          returnData.data.Manual_Combined = 'N/A';
+          returnData.data.Manual = 'N/A';
+          returnData.data.Manual_Document = 'N/A';
+          returnData.data.Manual_Section = 'N/A';
+          returnData.data.Manual_Revision = 'N/A';
+          returnData.data.Manual_Rev_Date_MMDDYY = 'N/A';
+          returnData.data.Work_Order_Number = 'N/A';
+          returnData.data.Trv_Num = 'N/A';
+          returnData.data.Cert_type_Description = 'N/A';
         }
       } catch (error) {
         // Not sure if there is a better way but don't need to return the array of key value pairs.
@@ -162,29 +164,30 @@ async function getWorkOrderData(request: Request) {
         await preState.unprepare();
 
         // Setup assuming no data is available.
-        returnData.data[0].customerReasonForRemoval = 'NONE';
-        returnData.data[0].genConditionReceived = 'NONE';
-        returnData.data[0].evalFindings = 'NONE';
-        returnData.data[0].workedPerformed = 'NONE';
+        returnData.data.customerReasonForRemoval = 'NONE';
+        returnData.data.genConditionReceived = 'NONE';
+        returnData.data.evalFindings = 'NONE';
+        returnData.data.workedPerformed = 'NONE';
+        returnData.data.linkedWorkOrderIfAPE = null;
         // Add Data only if there is any.
         if (getIIRData.recordset.length > 0) {
           const {
             customerReasonForRemoval,
             genConditionReceived,
             evalFindings,
-            workedPerformed
+            workedPerformed,
+            linkedWorkOrderIfAPE
           } = getIIRData.recordset[0];
 
-          returnData.data[0].customerReasonForRemoval = checkStringLength(
+          returnData.data.customerReasonForRemoval = checkStringLength(
             customerReasonForRemoval
           );
-          returnData.data[0].genConditionReceived = checkStringLength(
+          returnData.data.genConditionReceived = checkStringLength(
             genConditionReceived
           );
-          returnData.data[0].evalFindings = checkStringLength(evalFindings);
-          returnData.data[0].workedPerformed = checkStringLength(
-            workedPerformed
-          );
+          returnData.data.evalFindings = checkStringLength(evalFindings);
+          returnData.data.workedPerformed = checkStringLength(workedPerformed);
+          returnData.data.linkedWorkOrderIfAPE = linkedWorkOrderIfAPE;
         }
       } catch (error) {
         // Not sure if there is a better way but don't need to return the array of key value pairs.

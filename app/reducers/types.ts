@@ -9,6 +9,7 @@ export type iirStateType = {
     displayOpenPDFBtn: boolean;
     sendEmail: boolean;
     successUpdateModalCall: boolean;
+    apeWorkOrder: boolean;
     workOrder: {
       workOrderSearch: string;
       workOrderSearchLineItem: string;
