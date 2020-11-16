@@ -170,6 +170,7 @@ async function getWorkOrderData(request: Request) {
         returnData.data.workedPerformed = 'NONE';
         returnData.data.linkedWorkOrderIfAPE = null;
         returnData.data.linkedAPEWorkOrder = null;
+        returnData.data.recordPresent = false;
         // Add Data only if there is any.
         if (getIIRData.recordset.length > 0) {
           const {
@@ -181,13 +182,69 @@ async function getWorkOrderData(request: Request) {
             linkedAPEWorkOrder
           } = getIIRData.recordset[0];
 
-          returnData.data.customerReasonForRemoval = checkStringLength(
-            customerReasonForRemoval
-          );
-          returnData.data.genConditionReceived = checkStringLength(
-            genConditionReceived
-          );
-          returnData.data.evalFindings = checkStringLength(evalFindings);
+          console.log('Before lined order check', linkedWorkOrderIfAPE);
+
+          // Use Linked notes for APE jobs excluding workPerformed
+          if (
+            returnData.data.CustomerNumber === 'APE' &&
+            linkedWorkOrderIfAPE
+          ) {
+            console.log('made it to linked request')
+            try {
+              const preAPEState = await new sql.PreparedStatement(dbIIR);
+              preAPEState.input('param1', sql.VarChar(12));
+              preAPEState.input('param2', sql.VarChar(2));
+              const preLinkedStateParams: any = {
+                param1: linkedWorkOrderIfAPE,
+                param2: lineItem
+              };
+              const iirLinkedQuery = `SELECT *
+              FROM tear_down_notes_dev AS i
+              WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
+
+              await preAPEState.prepare(iirLinkedQuery);
+              const getLinkedIIRData = await preAPEState.execute(
+                preLinkedStateParams
+              );
+              await preAPEState.unprepare();
+
+              console.log('lined resp: ', getLinkedIIRData);
+
+              if (getLinkedIIRData.recordset.length > 0) {
+                const linedCustomerReasonForRemoval =
+                  getLinkedIIRData.recordset[0].customerReasonForRemoval;
+                const linedGenConditionReceived =
+                  getLinkedIIRData.recordset[0].genConditionReceived;
+                const linedEvalFindings =
+                  getLinkedIIRData.recordset[0].evalFindings;
+                returnData.data.customerReasonForRemoval = checkStringLength(
+                  linedCustomerReasonForRemoval
+                );
+                returnData.data.genConditionReceived = checkStringLength(
+                  linedGenConditionReceived
+                );
+                returnData.data.evalFindings = checkStringLength(
+                  linedEvalFindings
+                );
+              }
+            } catch (error) {
+              // Not sure if there is a better way but don't need to return the array of key value pairs.
+              // eslint-disable-next-line array-callback-return
+              Object.getOwnPropertyNames(error).map(key => {
+                // eslint-disable-next-line no-useless-return
+                returnData.error[key] = error[key];
+              });
+            }
+          } else {
+            returnData.data.customerReasonForRemoval = checkStringLength(
+              customerReasonForRemoval
+            );
+            returnData.data.genConditionReceived = checkStringLength(
+              genConditionReceived
+            );
+            returnData.data.evalFindings = checkStringLength(evalFindings);
+          }
+          // Use APE workPerformed notes to store and display
           returnData.data.workedPerformed = checkStringLength(workedPerformed);
           returnData.data.linkedWorkOrderIfAPE = linkedWorkOrderIfAPE;
           returnData.data.linkedAPEWorkOrder = linkedAPEWorkOrder;
