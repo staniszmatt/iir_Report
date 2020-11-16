@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bindActionCreators, Dispatch } from 'redux';
-import { reset } from 'redux-form';
 import { connect } from 'react-redux';
 import TearDownSummery from '../components/tearDownSummery';
 import {
@@ -21,9 +20,6 @@ function mapStateToProps(state: iirStateType) {
 }
 
 function mapDispatchToProps(dispatch: Dispatch<any>) {
-  // Reset Search Form when loading the page.
-  dispatch(reset('workOrderSearchForm'));
-
   return bindActionCreators(
     {
       getWorkOrderData,
