@@ -181,6 +181,7 @@ async function getWorkOrderData(request: Request) {
             linkedWorkOrderIfAPE,
             linkedAPEWorkOrder
           } = getIIRData.recordset[0];
+          returnData.data.recordPresent = true;
 
           console.log('Before lined order check', linkedWorkOrderIfAPE);
 

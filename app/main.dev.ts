@@ -17,7 +17,6 @@ import log from 'electron-log';
 import fs from 'fs';
 import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
-import getIIRData from './api/getIIRData';
 import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
@@ -183,9 +182,6 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
       break;
     case 'getWorkOrderData':
       requestToSend = getWorkOrderData;
-      break;
-    case 'getIIRData':
-      requestToSend = getIIRData;
       break;
     case 'postIIRReport':
       requestToSend = postIIRReport;

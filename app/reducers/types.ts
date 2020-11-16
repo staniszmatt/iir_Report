@@ -1,6 +1,13 @@
 import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 
-export type iirStateType = {
+export type IIRStateType = {
+  getWorkOrderData: () => {};
+  postOrUpdateIIRReport: () => {};
+  handleEditIIRPDF: () => {};
+  cancelLoading: () => {};
+  openPDF: () => {};
+  savePDF: (data: {}) => {};
+  softResetState: () => {};
   iir: {
     loadPDF: boolean;
     iirFormDisplay: boolean;
@@ -28,6 +35,14 @@ export type iirStateType = {
       tearDownTSO: string;
       tearDownTSN: string;
       tearDownTSR: string;
+      Warrenty_Y_N: string;
+      CustomerOrderNumber: string;
+      Cert_type_Description: string;
+      Quantity: number;
+      SerialNumber: string;
+      PartDescription: string;
+      DateIssuedYYMMDD: string;
+      Manual_Combined: string;
       Manual: string;
       Manual_Document: string;
       Manual_Section: string;
@@ -49,10 +64,10 @@ export type modalStateType = {
 
 // export type GetState = () => counterStateType;
 export type GetErrorModalState = () => modalStateType;
-export type GetIIRState = () => iirStateType;
+export type GetIIRState = () => IIRStateType;
 
 export type Store =
   | ReduxStore<modalStateType, Action<string>>
-  | ReduxStore<iirStateType, Action<string>>;
+  | ReduxStore<IIRStateType, Action<string>>;
 
 export type Dispatch = ReduxDispatch<Action<string>>;

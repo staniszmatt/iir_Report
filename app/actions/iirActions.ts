@@ -249,9 +249,7 @@ export function getIIRData(workOrder: {
     }
 
     const mainRequest = {
-      // request: 'getIIRData',
       request: 'getWorkOrderData',
-      // workOrder
       workOrderSearch: workOrder.workOrderSearch,
       workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };

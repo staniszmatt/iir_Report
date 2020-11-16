@@ -15,58 +15,7 @@ import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
-
-interface Props {
-  getWorkOrderData: () => {};
-  postOrUpdateIIRReport: () => {};
-  handleEditIIRPDF: () => {};
-  cancelLoading: () => {};
-  openPDF: () => {};
-  savePDF: (data: {}) => {};
-  softResetState: () => {};
-  iir: {
-    loadingScreen: boolean;
-    loadPDF: boolean;
-    displayOpenPDFBtn: boolean;
-    workOrder: {
-      workOrderSearch: string;
-      workOrderSearchLineItem: string;
-    };
-    workOrderInfo: {
-      Cert_type_Description: string;
-      CustomerName: string;
-      CustomerNumber: string;
-      CustomerOrderNumber: string;
-      DateIssuedYYMMDD: string;
-      ItemNumber: string;
-      Manual_Combined: string;
-      Manual: string;
-      Manual_Document: string;
-      Manual_Section: string;
-      Manual_Revision: string;
-      Manual_Rev_Date_MMDDYY: string;
-      PartDescription: string;
-      PartNumber: string;
-      Quantity: number;
-      SalesOrderAndLineNumber: string;
-      SalesOrderNumber: string;
-      SerialNumber: string;
-      TSN: number;
-      TSO: number;
-      TSR: number;
-      tearDownTSO: string;
-      tearDownTSN: string;
-      tearDownTSR: string;
-      Trv_Num: string;
-      Warrenty_Y_N: string;
-      Work_Order_Number: string;
-      customerReasonForRemoval: string;
-      evalFindings: string;
-      genConditionReceived: string;
-      workedPerformed: string;
-    };
-  };
-}
+import { IIRStateType } from '../reducers/types'
 
 function tsDataCheck(tsData: string | number) {
   // Could come in as a string or a number so testing for abstract equality
@@ -74,7 +23,7 @@ function tsDataCheck(tsData: string | number) {
   return (tsData == 0 ? '-' : tsData)
 }
 
-export default function TearDownSummery(props: Props | any) {
+export default function TearDownSummery(props: IIRStateType) {
   // Action calls:
   console.log('PDF Review state', props.iir);
   const {
