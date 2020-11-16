@@ -76,6 +76,7 @@ function tsDataCheck(tsData: string | number) {
 
 export default function TearDownSummery(props: Props | any) {
   // Action calls:
+  console.log('PDF Review state', props.iir);
   const {
     getWorkOrderData,
     postOrUpdateIIRReport,

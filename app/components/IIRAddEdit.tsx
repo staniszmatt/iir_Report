@@ -45,6 +45,7 @@ interface Props {
 }
 
 export default function IIRAddEdit(props: Props | any) {
+  console.log('Edit State', props.iir);
   const {
     postUpdatePDFCheck,
     getIIRData,
