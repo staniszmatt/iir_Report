@@ -191,7 +191,7 @@ export default merge.smart(baseConfig, {
     ]
   },
   /* NOTE:
-   On the DOM when search is first entered, Ignoring Warning: Cannot update a component from inside the function body of a different component.
+  On the DOM when search is first entered, Ignoring Warning: Cannot update a component from inside the function body of a different component.
   @hot-loader/react-dom is still on version 16.13.0, it's not compatible with react@16.13.1 but don't want to disable @hot-loader/react-dom.
 
   If for what ever reason it needs disabled, would need to replace @hot-loader/react-dom with @pmmmwh/react-refresh-webpack-plugin
@@ -200,8 +200,8 @@ export default merge.smart(baseConfig, {
 */
   resolve: {
     alias: {
-      // 'react-dom': '@hot-loader/react-dom'
-      'react-dom': 'react-dom'
+      'react-dom': '@hot-loader/react-dom'
+      // 'react-dom': 'react-dom'
     }
   },
   plugins: [
@@ -232,7 +232,7 @@ export default merge.smart(baseConfig, {
      * NODE_ENV should be production so that modules do not perform certain
      * development checks
      *
-     * By default, use 'development' as NODE_ENV. This can be overriden with
+     * By default, use 'development' as NODE_ENV. This can be overridden with
      * 'staging', for example, by changing the ENV variables in the npm scripts
      */
     new webpack.EnvironmentPlugin({
