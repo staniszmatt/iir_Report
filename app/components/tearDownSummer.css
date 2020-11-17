@@ -34,6 +34,26 @@
   text-align: center;
 }
 
+.base-btn-container > div {
+  margin: auto;
+}
+
+.base-btn-container > div > a {
+  opacity: unset;
+}
+
+.open-pdf-btn > div > button {
+  margin: auto;
+  margin-bottom: 20px;
+  background-color: #bfffbf;
+}
+
+.base-btn-container > div >  button,
+.base-btn-container > div > a > button {
+  font-size: 20px;
+  background-color: #bfffbf;
+}
+
 .open-pdf-btn > div > div {
   text-align: center;
   margin: auto;
@@ -103,17 +123,9 @@ div.form-footer > div:last-child {
   margin: auto;
 }
 
-.form-page-container > div:last-child > div {
-  display: flex;
-}
-
 .row-data-container > div > div:first-child {
   font-size: 11pt;
   font-weight: bold;
-}
-
-.form-page-container > div:last-child > div > div {
-  margin: auto;
 }
 
 .form-page > div > div:nth-child(3) > div {
@@ -136,12 +148,6 @@ div.form-footer > div:last-child {
   font-weight: bold;
 }
 
-.open-pdf-btn > div > button {
-  margin: auto;
-  margin-bottom: 20px;
-  background-color: #bfffbf;
-}
-
 .open-pdf-btn > div > button:hover {
   background-color: #50d33c;
 }
@@ -152,16 +158,6 @@ div.form-footer > div:last-child {
 
 .form-page-container > div > div > a {
   opacity: unset;
-}
-
-.form-page-container > div:last-child > div:first-child > div > a {
-  opacity: unset;
-}
-
-.form-page-container > div:last-child > div:first-child > div > button,
-.form-page-container > div:last-child > div:first-child > div > a > button {
-  font-size: 20px;
-  background-color: #bfffbf;
 }
 
 .form-page-container > div:last-child > div:first-child > div > button:hover,
@@ -233,4 +229,8 @@ div.form-footer > div:last-child {
   80%{    color: transparent; }
   90%{    color:transparent;  }
   100%{   color: red;  }
+}
+
+.base-btn-container {
+  display: flex;
 }

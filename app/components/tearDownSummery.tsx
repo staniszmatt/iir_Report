@@ -248,7 +248,8 @@ export default function TearDownSummery(props: IIRStateType) {
               </div>
             </div>
             <div>
-              <div>
+              {apeOrderNotLinked && <div className={styles['blink-text']}><div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div></div>}
+              <div className={styles['base-btn-container']}>
                 <div>
                   <Link to={routes.EDITFORM}>
                     <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
