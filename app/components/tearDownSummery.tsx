@@ -24,9 +24,9 @@ function tsDataCheck(tsData: string | number) {
 }
 
 export default function TearDownSummery(props: IIRStateType) {
-
-  console.log('PDF Review state', props.iir);
-
+  let displayPDFBtn = true;
+  let warrentyString = 'No';
+  let apeOrderNotLinked = false;
   // Action calls:
   const {
     getWorkOrderData,
@@ -35,15 +35,12 @@ export default function TearDownSummery(props: IIRStateType) {
     cancelLoading,
     openPDF,
     savePDF,
-    softResetState
+    softResetState,
+    iir
   } = props;
   // Tear Down State:
-  // eslint-disable-next-line react/destructuring-assignment
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = props.iir;
+  const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = iir;
   const { linkedWorkOrderIfAPE, CustomerNumber } = workOrderInfo;
-  let displayPDFBtn = true;
-  let warrentyString = 'No';
-  let apeOrderNotLinked = false;
   // Verify TS values and display "-" if zero
   const {
     TSO,
@@ -57,12 +54,7 @@ export default function TearDownSummery(props: IIRStateType) {
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
   }
-  // If an APE job doesn't have a WO linked to it, require link to be added
-  // if (CustomerNumber === 'APE' && !linkedWorkOrderIfAPE) {
-  //   apeOrderNotLinked = true;
-  // }
-
-
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   (CustomerNumber === 'APE' && !linkedWorkOrderIfAPE) ? apeOrderNotLinked = true : apeOrderNotLinked = false;
 

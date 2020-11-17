@@ -11,6 +11,7 @@ export type IIRStateType = {
   openPDF: () => {};
   savePDF: (data: {}) => {};
   softResetState: () => {};
+  linkWorkOrder: () => {};
   iir: {
     loadPDF: boolean;
     iirFormDisplay: boolean;
@@ -69,7 +70,6 @@ export type modalStateType = {
   };
 };
 
-// export type GetState = () => counterStateType;
 export type GetErrorModalState = () => modalStateType;
 export type GetIIRState = () => IIRStateType;
 

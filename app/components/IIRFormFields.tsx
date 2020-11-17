@@ -23,6 +23,7 @@ interface DispatchProps {
   props: {
     handleReviewIIRPDF: () => {};
     CustomerNumber: string;
+    linkedWorkOrderIfAPE: string;
   };
 }
 
@@ -31,7 +32,11 @@ const IIRForm = (
 ) => {
   let btnText = 'UPDATE IIR NOTES';
   const { handleSubmit, onSubmit } = iirFormProps;
-  const { CustomerNumber, handleReviewIIRPDF } = iirFormProps.props;
+  const {
+    CustomerNumber,
+    linkedWorkOrderIfAPE,
+    handleReviewIIRPDF
+  } = iirFormProps.props;
   const {
     customerReasonForRemoval,
     evalFindings,
@@ -39,6 +44,13 @@ const IIRForm = (
     workedPerformed
   } = iirFormProps.initialValues;
   let textareaDisabled = false;
+  let apeOrderNotLinked = false;
+
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
 
   // Setup of label text to include some new line editing here.
   const custRemoval = `(INCOMING INSPECTION)
@@ -64,6 +76,8 @@ const IIRForm = (
   ) {
     btnText = 'ADD NEW IIR NOTES';
   }
+
+  console.log('edit form props:', iirFormProps);
 
   return (
     <form
@@ -119,9 +133,11 @@ const IIRForm = (
           />
         </div>
         <div className={styles['form-btn-container']}>
-          <div>
-            <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
-          </div>
+          {!apeOrderNotLinked && (
+            <div>
+              <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
+            </div>
+          )}
           <div>
             <Link to={routes.IIRFORM}>
               <Btn buttonName="Review PDF" ClickHandler={handleReviewIIRPDF} />

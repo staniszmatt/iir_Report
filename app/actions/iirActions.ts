@@ -126,6 +126,12 @@ export function setGetVersion(resp: string) {
   };
 }
 
+export function linkWorkOrder(workOrder: { linkWorkOrder: string }) {
+  return (dispatch: Dispatch) => {
+    console.log('action link WO clicked', workOrder);
+  };
+}
+
 export function handleGetVersion(_event: {}, resp: { version: string }) {
   return (dispatch: Dispatch) => {
     dispatch(setGetVersion(resp.version));

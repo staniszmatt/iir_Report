@@ -6,7 +6,10 @@ import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './WorkOrderSearchForm.css';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface FormProps {}
+interface FormProps {
+  workOrderSearch: string;
+  workOrderSearchLineItem: string;
+}
 
 interface DispatchProps {
   onSubmit: () => {};
@@ -51,12 +54,7 @@ const WorkOrderSearchForm = (
   );
 };
 
-interface Values {
-  workOrderSearch: string;
-  workOrderSearchLineItem: string;
-}
-
-function validate(values: Values) {
+function validate(values: FormProps) {
   const { workOrderSearch, workOrderSearchLineItem } = values;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};

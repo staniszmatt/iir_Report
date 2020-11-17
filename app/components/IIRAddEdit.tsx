@@ -5,29 +5,36 @@ import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import ArrayComponents from './ReturnArrayComponents';
 import IIRFormFields from './IIRFormFields';
+import LinkWorkOrderForm from './LinkWorkOrderForm';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
+// import { IIRStateType } from '../reducers/types';
+// eslint-disable-next-line import/no-cycle
 import { IIRStateType } from '../reducers/types';
 
 export default function IIRAddEdit(props: IIRStateType) {
+  console.log('edit page props', props);
+
+  let apeOrderNotLinked = false;
   const {
     postUpdatePDFCheck,
     getIIRData,
     handleReviewIIRPDF,
     openPDF,
-    cancelLoading
+    cancelLoading,
+    linkWorkOrder,
+    iir
   } = props;
-  // eslint-disable-next-line react/destructuring-assignment
   const {
     loadingScreen,
     iirFormDisplay,
     workOrderInfo,
     displayOpenPDFBtn
-    // eslint-disable-next-line react/destructuring-assignment
-  } = props.iir;
-
+  } = iir;
+  const { linkedWorkOrderIfAPE, CustomerNumber } = workOrderInfo;
   const iirProps = {
-    CustomerNumber: workOrderInfo.CustomerNumber,
+    CustomerNumber,
+    linkedWorkOrderIfAPE,
     handleReviewIIRPDF
   };
   const initialFormValues = {
@@ -37,6 +44,11 @@ export default function IIRAddEdit(props: IIRStateType) {
     workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
 
   return (
     <div>
@@ -64,7 +76,7 @@ export default function IIRAddEdit(props: IIRStateType) {
         <div>
           {iirFormDisplay && (
             <div>
-              {!displayOpenPDFBtn && (
+              {!displayOpenPDFBtn && !apeOrderNotLinked && (
                 <div className={styles['open-pdf-btn']}>
                   <div>PDF Needs Saved.</div>
                 </div>
@@ -112,6 +124,14 @@ export default function IIRAddEdit(props: IIRStateType) {
                   </div>
                 </div>
               </div>
+              {apeOrderNotLinked && (
+                <div className={styles['link-input-container']}>
+                  <LinkWorkOrderForm
+                    onSubmit={linkWorkOrder}
+                    label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
+                  />
+                </div>
+              )}
               <IIRFormFields
                 onSubmit={postUpdatePDFCheck}
                 initialValues={initialFormValues}

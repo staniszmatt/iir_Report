@@ -83,3 +83,13 @@
 #version {
   display: none;
 }
+
+
+.link-input-container {
+  text-align: center;
+  padding-bottom: 15px;
+  color: red;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+}

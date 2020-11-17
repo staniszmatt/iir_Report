@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
-import { Store, modalStateType, iirStateType } from '../reducers/types';
+import { Store, modalStateType, IIRStateType } from '../reducers/types';
 // import { Store, customerStateType, counterStateType } from '../reducers/types';
 
 const history = createHashHistory();
@@ -62,7 +62,7 @@ function configureStore(initialState?: {
         // eslint-disable-next-line prettier/prettier
       }
     | any
-    | iirStateType;
+    | IIRStateType;
   modals?:
     | {
         modalState: boolean;

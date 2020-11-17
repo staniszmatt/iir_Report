@@ -7,12 +7,28 @@ import {
   getIIRData,
   handleReviewIIRPDF,
   openPDF,
-  cancelLoading
+  cancelLoading,
+  linkWorkOrder
 } from '../actions/iirActions';
-import { iirStateType } from '../reducers/types';
+import { IIRStateType } from '../reducers/types';
 
-function mapStateToProps(state: iirStateType) {
+export interface DispatchFromProps {
+  postUpdatePDFCheck: () => {};
+  getIIRData: () => {};
+  handleReviewIIRPDF: () => {};
+  openPDF: () => {};
+  cancelLoading: () => {};
+  linkWorkOrder: () => {};
+}
+
+function mapStateToProps(state: IIRStateType) {
   return {
+    postUpdatePDFCheck,
+    getIIRData,
+    handleReviewIIRPDF,
+    cancelLoading,
+    openPDF,
+    linkWorkOrder,
     iir: state.iir
   };
 }
@@ -24,10 +40,12 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
       getIIRData,
       handleReviewIIRPDF,
       openPDF,
-      cancelLoading
+      cancelLoading,
+      linkWorkOrder
     },
     dispatch
   );
 }
-// TODO: Fix typescript, either the rules or the interface.
+
 export default connect(mapStateToProps, mapDispatchToProps)(IIRAddEdit);
+// export default connect(mapStateToProps)(IIRAddEdit);

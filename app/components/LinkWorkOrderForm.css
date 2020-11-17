@@ -1,0 +1,25 @@
+.link-form-container > div > div {
+  display: flex;
+}
+
+.link-form-container > div > div > form {
+  width: unset;
+  background-color: #80808073;
+}
+
+.link-form-container > div > div > form > div > input {
+  width: 55px;
+}
+
+.link-form-container > div > div > div {
+  margin: 0 10px;
+}
+
+.link-form-container > div > div > div > button {
+  font-size: 15px;
+  background-color: #bfffbf;
+}
+
+.link-form-container > div > div > div > button:hover {
+  background-color: #50d33c;
+}
