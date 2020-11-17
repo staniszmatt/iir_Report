@@ -22,27 +22,22 @@ interface DispatchProps {
   onSubmit: () => {};
   props: {
     handleReviewIIRPDF: () => {};
-    customerReasonForRemoval: string;
-    evalFindings: string;
-    genConditionReceived: string;
-    workedPerformedNote: string;
-    CustomerOrderNumber: string;
+    CustomerNumber: string;
   };
 }
 
 const IIRForm = (
-  props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
+  iirFormProps: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
   let btnText = 'UPDATE IIR NOTES';
-  const { handleSubmit, onSubmit } = props;
+  const { handleSubmit, onSubmit } = iirFormProps;
+  const { CustomerNumber, handleReviewIIRPDF } = iirFormProps.props;
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformedNote,
-    CustomerNumber,
-    handleReviewIIRPDF
-  } = props.props;
+    workedPerformed
+  } = iirFormProps.initialValues;
   let textareaDisabled = false;
 
   // Setup of label text to include some new line editing here.
@@ -61,13 +56,11 @@ const IIRForm = (
     textareaDisabled = true;
   }
 
-  console.log('customer order number', CustomerNumber);
-
   if (
     customerReasonForRemoval === null &&
     evalFindings === null &&
     genConditionReceived === null &&
-    workedPerformedNote === null
+    workedPerformed === null
   ) {
     btnText = 'ADD NEW IIR NOTES';
   }
@@ -121,7 +114,7 @@ const IIRForm = (
             name="workedPerformed"
             type="textarea"
             aria-multiline
-            defaultValue={workedPerformedNote}
+            defaultValue={workedPerformed}
             rows="10"
           />
         </div>

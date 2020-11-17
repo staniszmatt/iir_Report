@@ -10,7 +10,6 @@ import logo from '../img/logo.png';
 import { IIRStateType } from '../reducers/types';
 
 export default function IIRAddEdit(props: IIRStateType) {
-  console.log('Edit State', props.iir);
   const {
     postUpdatePDFCheck,
     getIIRData,
@@ -28,12 +27,14 @@ export default function IIRAddEdit(props: IIRStateType) {
   } = props.iir;
 
   const iirProps = {
+    CustomerNumber: workOrderInfo.CustomerNumber,
+    handleReviewIIRPDF
+  };
+  const initialFormValues = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
-    workedPerformedNote: workOrderInfo.workedPerformed,
-    CustomerNumber: workOrderInfo.CustomerNumber,
-    handleReviewIIRPDF
+    workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
 
@@ -111,7 +112,11 @@ export default function IIRAddEdit(props: IIRStateType) {
                   </div>
                 </div>
               </div>
-              <IIRFormFields onSubmit={postUpdatePDFCheck} props={iirProps} />
+              <IIRFormFields
+                onSubmit={postUpdatePDFCheck}
+                initialValues={initialFormValues}
+                props={iirProps}
+              />
             </div>
           )}
         </div>

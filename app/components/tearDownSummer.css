@@ -217,3 +217,20 @@ div.form-footer > div:last-child {
   height: 78px;
   position: relative;
 }
+
+.blink-text {
+  animation:blinkingText 1.5s infinite;
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+@keyframes blinkingText{
+  0%{     color: red; }
+  50%{    color: red; }
+  80%{    color: red; }
+  80%{    color: transparent; }
+  90%{    color:transparent;  }
+  100%{   color: red;  }
+}

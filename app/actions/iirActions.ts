@@ -556,7 +556,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       dispatch(toggleSendEmailStateOn());
     }
     dispatch(toggleSuccessUpdateModalOn());
-
     const mainRequest = {
       request,
       SalesOrderNumber: state.workOrder.workOrderSearch,
@@ -566,7 +565,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       evalFindings: iirNotes.evalFindings,
       workedPerformed: iirNotes.workedPerformed
     };
-
     // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},

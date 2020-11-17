@@ -24,8 +24,10 @@ function tsDataCheck(tsData: string | number) {
 }
 
 export default function TearDownSummery(props: IIRStateType) {
-  // Action calls:
+
   console.log('PDF Review state', props.iir);
+
+  // Action calls:
   const {
     getWorkOrderData,
     postOrUpdateIIRReport,
@@ -38,23 +40,32 @@ export default function TearDownSummery(props: IIRStateType) {
   // Tear Down State:
   // eslint-disable-next-line react/destructuring-assignment
   const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = props.iir;
+  const { linkedWorkOrderIfAPE, CustomerNumber } = workOrderInfo;
   let displayPDFBtn = true;
   let warrentyString = 'No';
-
+  let apeOrderNotLinked = false;
   // Verify TS values and display "-" if zero
   const {
     TSO,
     TSN,
     TSR
   } = workOrderInfo
-
   const tsoValues = tsDataCheck(TSO);
   const tsnValues = tsDataCheck(TSN);
   const tsrValues = tsDataCheck(TSR);
-
+  // Convert Y to yes
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
   }
+  // If an APE job doesn't have a WO linked to it, require link to be added
+  // if (CustomerNumber === 'APE' && !linkedWorkOrderIfAPE) {
+  //   apeOrderNotLinked = true;
+  // }
+
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  (CustomerNumber === 'APE' && !linkedWorkOrderIfAPE) ? apeOrderNotLinked = true : apeOrderNotLinked = false;
+
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
@@ -136,7 +147,8 @@ export default function TearDownSummery(props: IIRStateType) {
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!displayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
+            {!displayOpenPDFBtn && !apeOrderNotLinked && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
+            {apeOrderNotLinked && <div className={styles['blink-text']}><div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
@@ -244,7 +256,7 @@ export default function TearDownSummery(props: IIRStateType) {
                 </div>
                 {!displayOpenPDFBtn && (
                   <div>
-                    {displayPDFBtn  && (
+                    {displayPDFBtn  && !apeOrderNotLinked &&  (
                     <button onClick={getPDF} type="button">
                       SAVE PDF
                     </button>
