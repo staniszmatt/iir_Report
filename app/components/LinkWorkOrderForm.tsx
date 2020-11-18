@@ -10,7 +10,7 @@ interface FormProps {
 }
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
   label: string;
 }
 

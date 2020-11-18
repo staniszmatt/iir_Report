@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import IIRAddEdit from '../components/IIRAddEdit';
 import {
   postUpdatePDFCheck,
@@ -12,23 +12,8 @@ import {
 } from '../actions/iirActions';
 import { IIRStateType } from '../reducers/types';
 
-export interface DispatchFromProps {
-  postUpdatePDFCheck: () => {};
-  getIIRData: () => {};
-  handleReviewIIRPDF: () => {};
-  openPDF: () => {};
-  cancelLoading: () => {};
-  linkWorkOrder: () => {};
-}
-
 function mapStateToProps(state: IIRStateType) {
   return {
-    postUpdatePDFCheck,
-    getIIRData,
-    handleReviewIIRPDF,
-    cancelLoading,
-    openPDF,
-    linkWorkOrder,
     iir: state.iir
   };
 }
@@ -47,5 +32,6 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IIRAddEdit);
-// export default connect(mapStateToProps)(IIRAddEdit);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+export type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(IIRAddEdit);

@@ -8,11 +8,10 @@ import IIRFormFields from './IIRFormFields';
 import LinkWorkOrderForm from './LinkWorkOrderForm';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
-// import { IIRStateType } from '../reducers/types';
 // eslint-disable-next-line import/no-cycle
-import { IIRStateType } from '../reducers/types';
+import { PropsFromRedux } from '../containers/IIRAddEditPage';
 
-export default function IIRAddEdit(props: IIRStateType) {
+export default function IIRAddEdit(props: PropsFromRedux) {
   console.log('edit page props', props);
 
   let apeOrderNotLinked = false;

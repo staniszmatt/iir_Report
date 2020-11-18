@@ -19,7 +19,7 @@ interface FormProps {
 }
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
   props: {
     handleReviewIIRPDF: () => {};
     CustomerNumber: string;

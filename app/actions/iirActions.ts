@@ -25,7 +25,7 @@ export const TOGGLE_SUCCESS_UPDATE_MODAL_OFF =
   'TOGGLE_SUCCESS_UPDATE_MODAL_OFF';
 export const GET_VERSION = 'GET_VERSION';
 
-interface WorkOrder {
+export interface WorkOrder {
   callAutoEmailer?: () => {} | any;
   callSuccessModal?: () => {} | any;
   workOrderSearch: string;
@@ -159,7 +159,7 @@ export function checkForPDFFile(workOrderString: string) {
   };
 }
 
-export function savePDF(pdfData: []) {
+export function savePDF(pdfData: {} | any) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     const workOrder = {

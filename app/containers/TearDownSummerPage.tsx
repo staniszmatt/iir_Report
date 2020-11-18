@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import TearDownSummery from '../components/tearDownSummery';
 import {
   getWorkOrderData,
@@ -11,9 +11,9 @@ import {
   savePDF,
   softResetState
 } from '../actions/iirActions';
-import { iirStateType } from '../reducers/types';
+import { IIRStateType } from '../reducers/types';
 
-function mapStateToProps(state: iirStateType) {
+function mapStateToProps(state: IIRStateType) {
   return {
     iir: state.iir
   };
@@ -33,5 +33,7 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
     dispatch
   );
 }
-// TODO: Fix typescript, either the rules or the interface.
-export default connect(mapStateToProps, mapDispatchToProps)(TearDownSummery);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+export type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(TearDownSummery);

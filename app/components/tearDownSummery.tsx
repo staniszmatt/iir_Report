@@ -15,7 +15,8 @@ import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
 import styles from './tearDownSummer.css';
 import logo from '../img/logo.png';
-import { IIRStateType } from '../reducers/types'
+// eslint-disable-next-line import/no-cycle
+import { PropsFromRedux } from '../containers/TearDownSummerPage';
 
 function tsDataCheck(tsData: string | number) {
   // Could come in as a string or a number so testing for abstract equality
@@ -23,7 +24,7 @@ function tsDataCheck(tsData: string | number) {
   return (tsData == 0 ? '-' : tsData)
 }
 
-export default function TearDownSummery(props: IIRStateType) {
+export default function TearDownSummery(props: PropsFromRedux) {
   let displayPDFBtn = true;
   let warrentyString = 'No';
   let apeOrderNotLinked = false;

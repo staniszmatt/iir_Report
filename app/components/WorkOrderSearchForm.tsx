@@ -5,14 +5,13 @@ import FormInput from './forms/formInput';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './WorkOrderSearchForm.css';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface FormProps {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
 }
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
 }
 
 const WorkOrderSearchForm = (
@@ -56,7 +55,6 @@ const WorkOrderSearchForm = (
 
 function validate(values: FormProps) {
   const { workOrderSearch, workOrderSearchLineItem } = values;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
   if (!workOrderSearch) {

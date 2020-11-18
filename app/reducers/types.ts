@@ -1,17 +1,6 @@
 import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
 
 export type IIRStateType = {
-  postUpdatePDFCheck: () => {};
-  getIIRData: () => {};
-  handleReviewIIRPDF: () => {};
-  getWorkOrderData: () => {};
-  postOrUpdateIIRReport: () => {};
-  handleEditIIRPDF: () => {};
-  cancelLoading: () => {};
-  openPDF: () => {};
-  savePDF: (data: {}) => {};
-  softResetState: () => {};
-  linkWorkOrder: () => {};
   iir: {
     loadPDF: boolean;
     iirFormDisplay: boolean;

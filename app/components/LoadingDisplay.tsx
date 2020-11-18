@@ -43,5 +43,3 @@ export default function LoadingScreen(props: Props) {
     </div>
   );
 }
-
-// May need to change to this on packaged app : src="../../internals/img/loadingImg.gif"
