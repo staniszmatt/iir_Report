@@ -6,7 +6,7 @@ import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './LinkWorkOrderForm.css';
 
 interface FormProps {
-  workOrder: string;
+  linkWorkOrder: string;
 }
 
 interface DispatchProps {
@@ -45,16 +45,16 @@ const LinkWorkOrderForm = (
 };
 
 function validate(values: FormProps) {
-  const { workOrder } = values;
+  const { linkWorkOrder } = values;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
-  if (!workOrder) {
-    errors.workOrderSearch = 'Please Enter A Work Order Number!';
+  if (!linkWorkOrder) {
+    errors.linkWorkOrder = 'Please Enter A Work Order Number!';
   }
-  if (workOrder) {
-    if (workOrder.length > 5) {
-      errors.workOrderSearch =
+  if (linkWorkOrder) {
+    if (linkWorkOrder.length > 5 || linkWorkOrder.length < 5) {
+      errors.linkWorkOrder =
         'Work Order Number should only be 5 characters long!';
     }
   }

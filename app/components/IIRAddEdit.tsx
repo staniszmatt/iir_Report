@@ -30,7 +30,11 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     workOrderInfo,
     displayOpenPDFBtn
   } = iir;
-  const { linkedWorkOrderIfAPE, CustomerNumber } = workOrderInfo;
+  const {
+    linkedWorkOrderIfAPE,
+    CustomerNumber,
+    linkedAPEWorkOrder
+  } = workOrderInfo;
   const iirProps = {
     CustomerNumber,
     linkedWorkOrderIfAPE,
@@ -75,9 +79,14 @@ export default function IIRAddEdit(props: PropsFromRedux) {
         <div>
           {iirFormDisplay && (
             <div>
-              {!displayOpenPDFBtn && !apeOrderNotLinked && (
+              {!displayOpenPDFBtn && !apeOrderNotLinked && !linkedAPEWorkOrder && (
                 <div className={styles['open-pdf-btn']}>
                   <div>PDF Needs Saved.</div>
+                </div>
+              )}
+              {linkedAPEWorkOrder && (
+                <div className={styles['open-pdf-btn']}>
+                  <div>{`LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}!`}</div>
                 </div>
               )}
               <div className={styles['header-info']}>

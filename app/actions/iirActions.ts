@@ -126,9 +126,37 @@ export function setGetVersion(resp: string) {
   };
 }
 
-export function linkWorkOrder(workOrder: { linkWorkOrder: string }) {
-  return (dispatch: Dispatch) => {
-    console.log('action link WO clicked', workOrder);
+export function linkWorkOrder(workOrderToLink: { linkWorkOrder: string }) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('action link WO clicked', workOrderToLink);
+    // const state = getState().iir;
+    // const { workOrderSearch, workOrderSearchLineItem } = state.workOrder;
+    // // Reset states and clear the current iir form if displayed
+
+    // debugger;
+
+    // const mainRequest = {
+    //   request: 'linkWorkOrder',
+    //   workOrderToLink,
+    //   workOrderSearch,
+    //   workOrderSearchLineItem
+    // };
+
+    // const callBackFunction = (
+    //   event: {},
+    //   resp: {
+    //     error: { code: string; name: string };
+    //     data: {};
+    //   }
+    // ) => {
+    //   dispatch(handleLinkWorkOrder(event, resp));
+    //   ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
+    // };
+
+    // ipcRenderer.send('asynchronous-message', mainRequest);
+    // dispatch(toggleLoadingScreenState());
+    // ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
 
@@ -562,8 +590,18 @@ export function postOrUpdateIIRReport(iirNotes: {
       dispatch(toggleSendEmailStateOn());
     }
     dispatch(toggleSuccessUpdateModalOn());
+
+    let linkedWorkOrderIfAPE = null;
+    if (
+      state.workOrderInfo.linkedWorkOrderIfAPE &&
+      state.workOrderInfo.linkedWorkOrderIfAPE.length > 0
+    ) {
+      linkedWorkOrderIfAPE = state.workOrderInfo.linkedWorkOrderIfAPE;
+    }
+
     const mainRequest = {
       request,
+      linkedWorkOrderIfAPE,
       SalesOrderNumber: state.workOrder.workOrderSearch,
       salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,

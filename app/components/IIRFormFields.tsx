@@ -1,8 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-useless-escape */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
@@ -64,7 +59,7 @@ const IIRForm = (
   const workPerf = `(FINAL TABLE)
   Worked Performed:`;
 
-  if (CustomerNumber === 'APE') {
+  if (CustomerNumber === 'APE' && apeOrderNotLinked) {
     textareaDisabled = true;
   }
 

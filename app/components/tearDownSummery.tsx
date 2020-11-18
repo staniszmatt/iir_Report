@@ -41,7 +41,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
   } = props;
   // Tear Down State:
   const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = iir;
-  const { linkedWorkOrderIfAPE, CustomerNumber } = workOrderInfo;
+  const { linkedWorkOrderIfAPE, CustomerNumber, linkedAPEWorkOrder } = workOrderInfo;
   // Verify TS values and display "-" if zero
   const {
     TSO,
@@ -140,8 +140,9 @@ export default function TearDownSummery(props: PropsFromRedux) {
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!displayOpenPDFBtn && !apeOrderNotLinked && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
+            {!displayOpenPDFBtn && !apeOrderNotLinked && !linkedAPEWorkOrder && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
             {apeOrderNotLinked && <div className={styles['blink-text']}><div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div></div>}
+            {linkedAPEWorkOrder && <div className={styles['blink-text']}><div>{`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}!`}</div></div>}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
@@ -248,7 +249,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
                     <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
                   </Link>
                 </div>
-                {!displayOpenPDFBtn && (
+                {!displayOpenPDFBtn && !linkedAPEWorkOrder && (
                   <div>
                     {displayPDFBtn  && !apeOrderNotLinked &&  (
                     <button onClick={getPDF} type="button">
