@@ -183,14 +183,11 @@ async function getWorkOrderData(request: Request) {
           } = getIIRData.recordset[0];
           returnData.data.recordPresent = true;
 
-          console.log('Before lined order check', linkedWorkOrderIfAPE);
-
           // Use Linked notes for APE jobs excluding workPerformed
           if (
             returnData.data.CustomerNumber === 'APE' &&
             linkedWorkOrderIfAPE
           ) {
-            console.log('made it to linked request')
             try {
               const preAPEState = await new sql.PreparedStatement(dbIIR);
               preAPEState.input('param1', sql.VarChar(12));
@@ -208,8 +205,6 @@ async function getWorkOrderData(request: Request) {
                 preLinkedStateParams
               );
               await preAPEState.unprepare();
-
-              console.log('lined resp: ', getLinkedIIRData);
 
               if (getLinkedIIRData.recordset.length > 0) {
                 const linedCustomerReasonForRemoval =

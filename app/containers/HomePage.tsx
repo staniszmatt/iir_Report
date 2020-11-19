@@ -1,5 +1,4 @@
 import { bindActionCreators, Dispatch } from 'redux';
-import { reset } from 'redux-form';
 import { connect } from 'react-redux';
 import Home from '../components/Home';
 import { getVersion } from '../actions/iirActions';

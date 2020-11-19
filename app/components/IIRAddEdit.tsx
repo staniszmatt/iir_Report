@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import LoadingScreen from './LoadingDisplay';
@@ -8,25 +9,26 @@ import IIRFormFields from './IIRFormFields';
 import LinkWorkOrderForm from './LinkWorkOrderForm';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
+// Need to pull PropsFormRedux in IIRAddEditPage to set variable types
 // eslint-disable-next-line import/no-cycle
 import { PropsFromRedux } from '../containers/IIRAddEditPage';
 
 export default function IIRAddEdit(props: PropsFromRedux) {
-  console.log('edit page props', props);
-
   let apeOrderNotLinked = false;
+  // let displayUpdateAPELink = false;
   const {
     postUpdatePDFCheck,
     getIIRData,
     handleReviewIIRPDF,
     openPDF,
     cancelLoading,
-    linkWorkOrder,
+    linkAPEWorkOrder,
     iir
   } = props;
   const {
     loadingScreen,
     iirFormDisplay,
+    workOrder,
     workOrderInfo,
     displayOpenPDFBtn
   } = iir;
@@ -48,11 +50,15 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
+
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
     ? (apeOrderNotLinked = true)
     : (apeOrderNotLinked = false);
+
+  // linkedAPEWorkOrder
+  //   ? (displayUpdateAPELink = true)
+  //   : (displayUpdateAPELink = false);
 
   return (
     <div>
@@ -141,11 +147,30 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               {apeOrderNotLinked && (
                 <div className={styles['link-input-container']}>
                   <LinkWorkOrderForm
-                    onSubmit={linkWorkOrder}
+                    onSubmit={linkAPEWorkOrder}
+                    props={workOrder}
                     label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
                   />
                 </div>
               )}
+              {/**
+              {displayUpdateAPELink && (
+                <div className={styles['link-input-container']}>
+                  <LinkWorkOrderForm
+                    onSubmit={}
+                    label="Change APE Work Order To Link:"
+                  />
+                </div>
+                <div>
+                  <div>
+                    <div>Separate Link To APE Work Order</div>
+                  </div>
+                  <div>
+                    <button type="button" onClick={}>Remove Link</button>
+                  </div>
+                </div>
+              )}
+              */}
               <IIRFormFields
                 onSubmit={postUpdatePDFCheck}
                 initialValues={initialFormValues}

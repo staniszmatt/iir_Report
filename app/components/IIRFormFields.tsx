@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
@@ -72,8 +73,6 @@ const IIRForm = (
     btnText = 'ADD NEW IIR NOTES';
   }
 
-  console.log('edit form props:', iirFormProps);
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -125,6 +124,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={workedPerformed}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div className={styles['form-btn-container']}>

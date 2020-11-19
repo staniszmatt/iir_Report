@@ -12,12 +12,16 @@ interface FormProps {
 interface DispatchProps {
   onSubmit: any | (() => void);
   label: string;
+  props: {
+    workOrderSearch: string;
+  };
 }
 
 const LinkWorkOrderForm = (
-  props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
+  linkWorkOrderProps: DispatchProps &
+    InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  const { handleSubmit, onSubmit, label } = props;
+  const { handleSubmit, onSubmit, label } = linkWorkOrderProps;
 
   function toUpperCase(value: string) {
     return value && value.toUpperCase();
@@ -44,7 +48,7 @@ const LinkWorkOrderForm = (
   );
 };
 
-function validate(values: FormProps) {
+function validate(values: FormProps, linkWorkOrderProps: DispatchProps) {
   const { linkWorkOrder } = values;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
@@ -56,6 +60,9 @@ function validate(values: FormProps) {
     if (linkWorkOrder.length > 5 || linkWorkOrder.length < 5) {
       errors.linkWorkOrder =
         'Work Order Number should only be 5 characters long!';
+    }
+    if (linkWorkOrder === linkWorkOrderProps.props.workOrderSearch) {
+      errors.linkWorkOrder = 'Trying to link APE to itself';
     }
   }
   return errors;
