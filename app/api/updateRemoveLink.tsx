@@ -22,12 +22,9 @@ interface ReturnData {
 }
 
 async function updateRemoveLink(request: Request) {
+
   console.log('Remove Link Request: ', request);
-  const returnData = {
-    error: {},
-    resp: { request },
-    succuss: true
-  };
+
   // const { workOrderToLink, originalWorkOrder } = request;
   // const { workOrder, lineItem } = originalWorkOrder;
   // const returnData: ReturnData = {

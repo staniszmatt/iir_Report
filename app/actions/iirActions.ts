@@ -149,14 +149,51 @@ export function updateAPELinkWorkOrder(workOrderToLink: {
 
 
 
-
+export function handleRemoveAPELinkWorkOrder(
+  _event: {},
+  resp: {
+    error: { code: string; name: string } | any;
+    data: {};
+  }
+) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    console.log('remove link resp: ', resp)
+  }
+}
 
 // TODO: Setup Testing
-export function removeAPELinkWorkOrder(event: {}) {
+export function removeAPELinkWorkOrder() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
 
-    console.log('Remove APE Link Clicked', event);
+    console.log('Remove APE Link Clicked');
+    const state = getState().iir;
+    const { workOrder, workOrderInfo } = state;
+    const { workOrderSearch, workOrderSearchLineItem } = workOrder;
+    const { linkedWorkOrderIfAPE } = workOrderInfo;
 
+    dispatch(softResetState());
+
+    const mainRequest = {
+      request: 'updateRemoveLink',
+      workOrderAPE: workOrderSearch,
+      workOrderLink: linkedWorkOrderIfAPE,
+      lineItem: workOrderSearchLineItem
+    };
+
+    const callBackFunction = (
+      event: {},
+      resp: {
+        error: { code: string; name: string };
+        data: {};
+      }
+    ) => {
+      dispatch(handleRemoveAPELinkWorkOrder(event, resp));
+      ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
+    };
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
 
@@ -170,23 +207,19 @@ export function removeAPELinkWorkOrder(event: {}) {
 
 
 // TODO: Setup Testing
-export function warnRemoveAPELinkWorkOrder(event) {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-
-    console.log('Warn Clicked', event);
-
-    const state = getState();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function warnRemoveAPELinkWorkOrder(_event: {}) {
+  return (dispatch: Dispatch) => {
     const warningModalResp = {
       warningMsg: `Are you sure you wish to remove link to WO?`,
       btnLbl: 'Remove Link',
       actionFunction: () => {
-        dispatch(removeAPELinkWorkOrder(event));
+        dispatch(removeAPELinkWorkOrder());
       },
       closeModal: () => {
-        toggleModalState();
+        dispatch(toggleModalState());
       }
     };
-
     dispatch(toggleWarningModalState(warningModalResp));
   };
 }

@@ -160,12 +160,12 @@ export default function IIRAddEdit(props: PropsFromRedux) {
                   <div>
                     <LinkWorkOrderForm
                       onSubmit={updateAPELinkWorkOrder}
-                      label="Change Link To APE:"
+                      label="Change Work Order Link :"
                     />
                   </div>
                   <div>
                     <div>
-                      <div>Separate Link To APE Work Order:</div>
+                      <div>Separate Work Order Link:</div>
                     </div>
                     <div>
                       <button
