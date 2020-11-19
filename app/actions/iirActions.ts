@@ -4,7 +4,12 @@ import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
 import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
-import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
+import {
+  toggleModalState,
+  toggleWarningModalState,
+  toggleErrorModalState,
+  toggleSuccessModalState
+} from './modalActions';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -126,6 +131,10 @@ export function setGetVersion(resp: string) {
   };
 }
 
+
+
+
+
 // TODO: Setup Testing
 export function updateAPELinkWorkOrder(workOrderToLink: {
   linkWorkOrder: string;
@@ -135,10 +144,50 @@ export function updateAPELinkWorkOrder(workOrderToLink: {
   };
 }
 
+
+
+
+
+
+
+
 // TODO: Setup Testing
 export function removeAPELinkWorkOrder(event: {}) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
     console.log('Remove APE Link Clicked', event);
+
+  };
+}
+
+
+
+
+
+
+
+
+
+
+// TODO: Setup Testing
+export function warnRemoveAPELinkWorkOrder(event) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('Warn Clicked', event);
+
+    const state = getState();
+    const warningModalResp = {
+      warningMsg: `Are you sure you wish to remove link to WO?`,
+      btnLbl: 'Remove Link',
+      actionFunction: () => {
+        dispatch(removeAPELinkWorkOrder(event));
+      },
+      closeModal: () => {
+        toggleModalState();
+      }
+    };
+
+    dispatch(toggleWarningModalState(warningModalResp));
   };
 }
 

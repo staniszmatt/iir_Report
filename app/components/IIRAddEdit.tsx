@@ -24,7 +24,7 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     cancelLoading,
     linkWorkOrder,
     updateAPELinkWorkOrder,
-    removeAPELinkWorkOrder,
+    warnRemoveAPELinkWorkOrder,
     iir
   } = props;
   const {
@@ -168,7 +168,10 @@ export default function IIRAddEdit(props: PropsFromRedux) {
                       <div>Separate Link To APE Work Order:</div>
                     </div>
                     <div>
-                      <button type="button" onClick={removeAPELinkWorkOrder}>
+                      <button
+                        type="button"
+                        onClick={warnRemoveAPELinkWorkOrder}
+                      >
                         Remove Link
                       </button>
                     </div>

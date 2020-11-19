@@ -18,6 +18,7 @@ import fs from 'fs';
 import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
 import updateLinkWorkOrderToAPE from './api/updateLinkWorkOrderToAPE';
+import updateRemoveLink from './api/updateRemoveLink';
 import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
@@ -179,6 +180,9 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
       break;
     case 'updateLinkWorkOrderToAPE':
       requestToSend = updateLinkWorkOrderToAPE;
+      break;
+    case 'updateRemoveLink':
+      requestToSend = updateRemoveLink;
       break;
     case 'postIIRReport':
       requestToSend = postIIRReport;

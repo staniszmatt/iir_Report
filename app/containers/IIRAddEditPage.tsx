@@ -12,7 +12,7 @@ import {
   cancelLoading,
   linkWorkOrder,
   updateAPELinkWorkOrder,
-  removeAPELinkWorkOrder
+  warnRemoveAPELinkWorkOrder
 } from '../actions/iirActions';
 import { IIRStateType } from '../reducers/types';
 
@@ -32,7 +32,7 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
       cancelLoading,
       linkWorkOrder,
       updateAPELinkWorkOrder,
-      removeAPELinkWorkOrder
+      warnRemoveAPELinkWorkOrder
     },
     dispatch
   );
