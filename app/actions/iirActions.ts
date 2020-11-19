@@ -127,7 +127,23 @@ export function setGetVersion(resp: string) {
 }
 
 // TODO: Setup Testing
-export function handleLinkAPEWorkOrder(
+export function updateAPELinkWorkOrder(workOrderToLink: {
+  linkWorkOrder: string;
+}) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    console.log('Update APE Link Clicked', workOrderToLink);
+  };
+}
+
+// TODO: Setup Testing
+export function removeAPELinkWorkOrder(event: {}) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    console.log('Remove APE Link Clicked', event);
+  };
+}
+
+// TODO: Setup Testing
+export function handleLinkWorkOrder(
   _event: {},
   resp: {
     error: { code: string; name: string } | any;
@@ -149,16 +165,16 @@ export function handleLinkAPEWorkOrder(
 }
 
 // TODO: Setup Testing
-export function linkAPEWorkOrder(workOrderToLink: { linkWorkOrder: string }) {
+export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     // Soft Reset to keep current work order info.
     dispatch(softResetState());
     const state = getState().iir;
-    const { linkWorkOrder } = workOrderToLink;
+    const { linkWorkOrderToAPE } = workOrderToLink;
 
     const mainRequest = {
       request: 'updateLinkWorkOrderToAPE',
-      workOrderToLink: linkWorkOrder,
+      workOrderToLink: linkWorkOrderToAPE,
       originalWorkOrder: {
         workOrder: state.workOrder.workOrderSearch,
         lineItem: state.workOrder.workOrderSearchLineItem
@@ -171,7 +187,7 @@ export function linkAPEWorkOrder(workOrderToLink: { linkWorkOrder: string }) {
         data: {};
       }
     ) => {
-      dispatch(handleLinkAPEWorkOrder(event, resp));
+      dispatch(handleLinkWorkOrder(event, resp));
       ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
     };
 

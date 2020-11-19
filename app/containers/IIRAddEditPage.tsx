@@ -10,7 +10,9 @@ import {
   handleReviewIIRPDF,
   openPDF,
   cancelLoading,
-  linkAPEWorkOrder
+  linkWorkOrder,
+  updateAPELinkWorkOrder,
+  removeAPELinkWorkOrder
 } from '../actions/iirActions';
 import { IIRStateType } from '../reducers/types';
 
@@ -28,7 +30,9 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
       handleReviewIIRPDF,
       openPDF,
       cancelLoading,
-      linkAPEWorkOrder
+      linkWorkOrder,
+      updateAPELinkWorkOrder,
+      removeAPELinkWorkOrder
     },
     dispatch
   );

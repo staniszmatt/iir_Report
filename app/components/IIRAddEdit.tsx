@@ -15,14 +15,16 @@ import { PropsFromRedux } from '../containers/IIRAddEditPage';
 
 export default function IIRAddEdit(props: PropsFromRedux) {
   let apeOrderNotLinked = false;
-  // let displayUpdateAPELink = false;
+  let displayUpdateAPELink = false;
   const {
     postUpdatePDFCheck,
     getIIRData,
     handleReviewIIRPDF,
     openPDF,
     cancelLoading,
-    linkAPEWorkOrder,
+    linkWorkOrder,
+    updateAPELinkWorkOrder,
+    removeAPELinkWorkOrder,
     iir
   } = props;
   const {
@@ -56,9 +58,9 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     ? (apeOrderNotLinked = true)
     : (apeOrderNotLinked = false);
 
-  // linkedAPEWorkOrder
-  //   ? (displayUpdateAPELink = true)
-  //   : (displayUpdateAPELink = false);
+  linkedWorkOrderIfAPE
+    ? (displayUpdateAPELink = true)
+    : (displayUpdateAPELink = false);
 
   return (
     <div>
@@ -147,30 +149,32 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               {apeOrderNotLinked && (
                 <div className={styles['link-input-container']}>
                   <LinkWorkOrderForm
-                    onSubmit={linkAPEWorkOrder}
+                    onSubmit={linkWorkOrder}
                     props={workOrder}
                     label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
                   />
                 </div>
               )}
-              {/**
               {displayUpdateAPELink && (
-                <div className={styles['link-input-container']}>
-                  <LinkWorkOrderForm
-                    onSubmit={}
-                    label="Change APE Work Order To Link:"
-                  />
-                </div>
-                <div>
+                <div className={styles['link-edit-container']}>
                   <div>
-                    <div>Separate Link To APE Work Order</div>
+                    <LinkWorkOrderForm
+                      onSubmit={updateAPELinkWorkOrder}
+                      label="Change Link To APE:"
+                    />
                   </div>
                   <div>
-                    <button type="button" onClick={}>Remove Link</button>
+                    <div>
+                      <div>Separate Link To APE Work Order:</div>
+                    </div>
+                    <div>
+                      <button type="button" onClick={removeAPELinkWorkOrder}>
+                        Remove Link
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
-              */}
               <IIRFormFields
                 onSubmit={postUpdatePDFCheck}
                 initialValues={initialFormValues}

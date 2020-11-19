@@ -25,6 +25,11 @@
   color: #c20e0e;
 }
 
+.link-edit-container > div {
+  margin: auto;
+  display: flex;
+}
+
 .header-info > div > div {
   margin: auto;
 }
@@ -46,6 +51,11 @@
   margin: auto;
   margin-bottom: 20px;
   background-color: #bfffbf;
+}
+
+.link-edit-container > div > div > button {
+  font-size: 15px;
+  background-color: #faa4a4;
 }
 
 .open-pdf-btn > div > button:hover {
@@ -101,4 +111,35 @@
   font-size: 18px;
   font-weight: bold;
   border-bottom: 1px solid black;
+}
+
+.link-edit-container {
+  text-align: center;
+  background-color: lightgray;
+  border-bottom: 1px solid black;
+  display: flex;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.link-edit-container > div > div:first-child {
+  padding-right: 10px;
+}
+
+.link-edit-container > div > div > button:hover {
+  background-color: #f00;
+}
+
+.link-edit-container > div > div:first-child > div > div > form {
+  background-color: unset;
+}
+
+.link-edit-container > div > div:first-child > div > div > div > button {
+  font-size: 15px;
+  background-color: #faa4a4;
+}
+
+.link-edit-container > div > div:first-child > div > div > div > button:hover {
+  background-color: #f00;
 }

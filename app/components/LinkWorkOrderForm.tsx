@@ -12,7 +12,7 @@ interface FormProps {
 interface DispatchProps {
   onSubmit: any | (() => void);
   label: string;
-  props: {
+  props?: {
     workOrderSearch: string;
   };
 }
@@ -61,7 +61,7 @@ function validate(values: FormProps, linkWorkOrderProps: DispatchProps) {
       errors.linkWorkOrder =
         'Work Order Number should only be 5 characters long!';
     }
-    if (linkWorkOrder === linkWorkOrderProps.props.workOrderSearch) {
+    if (linkWorkOrder === linkWorkOrderProps.props?.workOrderSearch) {
       errors.linkWorkOrder = 'Trying to link APE to itself';
     }
   }
