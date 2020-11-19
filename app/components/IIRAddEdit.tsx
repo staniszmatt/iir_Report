@@ -33,7 +33,8 @@ export default function IIRAddEdit(props: PropsFromRedux) {
   const {
     linkedWorkOrderIfAPE,
     CustomerNumber,
-    linkedAPEWorkOrder
+    linkedAPEWorkOrder,
+    ItemNumber
   } = workOrderInfo;
   const iirProps = {
     CustomerNumber,
@@ -84,11 +85,6 @@ export default function IIRAddEdit(props: PropsFromRedux) {
                   <div>PDF Needs Saved.</div>
                 </div>
               )}
-              {linkedAPEWorkOrder && (
-                <div className={styles['open-pdf-btn']}>
-                  <div>{`LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}!`}</div>
-                </div>
-              )}
               <div className={styles['header-info']}>
                 <div>
                   <div>Work Order Information:</div>
@@ -132,6 +128,16 @@ export default function IIRAddEdit(props: PropsFromRedux) {
                   </div>
                 </div>
               </div>
+              {linkedAPEWorkOrder && (
+                <div className={styles['link-ape-display']}>
+                  <div>{`LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}.`}</div>
+                </div>
+              )}
+              {linkedWorkOrderIfAPE && (
+                <div className={styles['link-ape-display']}>
+                  <div>{`APE LINKED TO WORK ORDER ${linkedWorkOrderIfAPE}-${ItemNumber}.`}</div>
+                </div>
+              )}
               {apeOrderNotLinked && (
                 <div className={styles['link-input-container']}>
                   <LinkWorkOrderForm

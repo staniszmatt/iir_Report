@@ -15,6 +15,16 @@
   font-size: 16px;
 }
 
+.link-ape-display > div {
+  text-align: center;
+  font-size: 18px;
+  border-bottom: 1px solid black;
+  padding-bottom: 15px;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #c20e0e;
+}
+
 .header-info > div > div {
   margin: auto;
 }
@@ -83,7 +93,6 @@
 #version {
   display: none;
 }
-
 
 .link-input-container {
   text-align: center;

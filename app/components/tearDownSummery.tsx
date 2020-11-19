@@ -1,6 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 import React from 'react';
@@ -40,14 +37,21 @@ export default function TearDownSummery(props: PropsFromRedux) {
     iir
   } = props;
   // Tear Down State:
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = iir;
-  const { linkedWorkOrderIfAPE, CustomerNumber, linkedAPEWorkOrder } = workOrderInfo;
-  // Verify TS values and display "-" if zero
   const {
-    TSO,
-    TSN,
-    TSR
-  } = workOrderInfo
+    loadingScreen,
+    loadPDF,
+    workOrder,
+    workOrderInfo,
+    displayOpenPDFBtn
+  } = iir;
+  const {
+    linkedWorkOrderIfAPE,
+    CustomerNumber,
+    linkedAPEWorkOrder,
+    ItemNumber
+  } = workOrderInfo;
+  // Verify TS values and display "-" if zero
+  const { TSO, TSN, TSR } = workOrderInfo;
   const tsoValues = tsDataCheck(TSO);
   const tsnValues = tsDataCheck(TSN);
   const tsrValues = tsDataCheck(TSR);
@@ -57,8 +61,9 @@ export default function TearDownSummery(props: PropsFromRedux) {
   }
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  (CustomerNumber === 'APE' && !linkedWorkOrderIfAPE) ? apeOrderNotLinked = true : apeOrderNotLinked = false;
-
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
@@ -98,16 +103,17 @@ export default function TearDownSummery(props: PropsFromRedux) {
     input.style.width = '8.3in';
     input.style.height = '10.9in';
 
+    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(
+      canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new JsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
 
-    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new JsPDF('p', 'mm', 'a4');
-      const width = pdf.internal.pageSize.getWidth();
-      const height = pdf.internal.pageSize.getHeight();
-
-      pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
-      savePDF(pdf.output('arraybuffer'));
-    });
+        pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
+        savePDF(pdf.output('arraybuffer'));
+      }
+    );
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
     input.style.position = 'unset';
@@ -140,9 +146,26 @@ export default function TearDownSummery(props: PropsFromRedux) {
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!displayOpenPDFBtn && !apeOrderNotLinked && !linkedAPEWorkOrder && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
-            {apeOrderNotLinked && <div className={styles['blink-text']}><div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div></div>}
-            {linkedAPEWorkOrder && <div className={styles['blink-text']}><div>{`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}!`}</div></div>}
+            {!displayOpenPDFBtn && !apeOrderNotLinked && !linkedAPEWorkOrder && (
+              <div className={styles['open-pdf-btn']}>
+                <div>PDF Needs Saved.</div>
+              </div>
+            )}
+            {linkedWorkOrderIfAPE && (
+              <div className={styles['open-pdf-btn']}>
+                <div>{`APE Linked To Customer Work Order: ${linkedWorkOrderIfAPE}-${ItemNumber}`}</div>
+              </div>
+            )}
+            {apeOrderNotLinked && (
+              <div className={styles['blink-text']}>
+                <div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div>
+              </div>
+            )}
+            {linkedAPEWorkOrder && (
+              <div className={styles['blink-text']}>
+                <div>{`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}!`}</div>
+              </div>
+            )}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
