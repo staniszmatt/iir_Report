@@ -35,7 +35,7 @@ const LinkWorkOrderForm = (
             <Field
               label={label}
               component={FormInput}
-              name="linkWorkOrder"
+              name="linkWorkOrderToAPE"
               format={toUpperCase}
             />
           </form>

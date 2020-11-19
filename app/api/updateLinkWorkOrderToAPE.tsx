@@ -32,6 +32,8 @@ async function postLinkWorkOrderToAPE(request: Request) {
     },
     succuss: false
   };
+
+  console.log('link request', request);
   // Sanitize work order strings.
   const cleanWorkOrder = workOrder
     .replace(/  +/g, '')

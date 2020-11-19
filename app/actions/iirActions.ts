@@ -157,7 +157,15 @@ export function handleRemoveAPELinkWorkOrder(
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-    console.log('remove link resp: ', resp)
+    console.log('remove link resp: ', resp);
+    const state = getState().iir;
+    dispatch(toggleLoadingScreenStateOff());
+
+    if (Object.keys(resp.error).length === 0) {
+      dispatch(getIIRData(state.workOrder));
+    } else {
+      dispatch(toggleErrorModalState(resp.error));
+    }
   }
 }
 
@@ -233,13 +241,13 @@ export function handleLinkWorkOrder(
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+    console.log(' Link DAta resp: ', resp)
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
 
     if (Object.keys(resp.error).length === 0) {
       dispatch(getIIRData(state.workOrder));
-      dispatch(toggleSuccessModalState('Successfully Linked Orders!'));
     } else {
       dispatch(toggleErrorModalState(resp.error));
     }
@@ -249,6 +257,8 @@ export function handleLinkWorkOrder(
 // TODO: Setup Testing
 export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
+
+    console.log('Submitted Link Request: ', workOrderToLink);
     // Soft Reset to keep current work order info.
     dispatch(softResetState());
     const state = getState().iir;
