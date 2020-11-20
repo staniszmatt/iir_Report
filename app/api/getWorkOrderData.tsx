@@ -111,18 +111,12 @@ async function getWorkOrderData(request: Request) {
             // Set the list of cert types into a array list
             const collectArrayCertList = secondData.map(
               (objData: { Cert_type_Description: string; Cert_Type_Code: string; }) => {
-                console.log('objData', objData);
-                console.log('objData.Cert_Type_Code', objData.Cert_Type_Code)
-                console.log('lineItem', lineItem)
-                console.log('objData.Cert_type_Description', objData.Cert_type_Description)
                 if (objData.Cert_Type_Code === lineItem) {
                   return objData.Cert_type_Description;
                 }
                 return null;
               }
             );
-
-            console.log('collectArrayCertList', collectArrayCertList)
 
             // Filter out all the duplicates
             const removedDuplicates = collectArrayCertList.filter(
