@@ -56,12 +56,12 @@ async function updateRemoveLink(request: Request) {
       line: cleanLineItem
     };
     const queryStringAPE = `
-      UPDATE tear_down_notes_dev
+      UPDATE tear_down_notes
         SET linkedWorkOrderIfAPE = null
         OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
           WHERE SalesOrderNumber = @ape AND salesOrderNumberLine = @line
 
-      UPDATE tear_down_notes_dev
+      UPDATE tear_down_notes
         SET linkedAPEWorkOrder = null
           WHERE SalesOrderNumber = @wo AND salesOrderNumberLine = @line`;
 
