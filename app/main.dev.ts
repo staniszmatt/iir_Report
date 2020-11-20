@@ -17,7 +17,8 @@ import log from 'electron-log';
 import fs from 'fs';
 import MenuBuilder from './menu';
 import getWorkOrderData from './api/getWorkOrderData';
-import getIIRData from './api/getIIRData';
+import updateLinkWorkOrderToAPE from './api/updateLinkWorkOrderToAPE';
+import updateRemoveLink from './api/updateRemoveLink';
 import postIIRReport from './api/postIIRReport';
 import updateIIRReport from './api/updateIIRReport';
 import emailer from './api/emailer';
@@ -49,13 +50,6 @@ export default class AppUpdater {
       .catch(err => {
         console.log('catch err: ', err);
       });
-
-    // TODO: Setup to save logs to my location
-    // const testLog = log.transports.file.readAllLogs();
-
-    // console.log(testLog);
-
-    // console.log('end of log test');
   }
 }
 
@@ -184,8 +178,11 @@ ipcMain.on('asynchronous-message', async (event, arg) => {
     case 'getWorkOrderData':
       requestToSend = getWorkOrderData;
       break;
-    case 'getIIRData':
-      requestToSend = getIIRData;
+    case 'updateLinkWorkOrderToAPE':
+      requestToSend = updateLinkWorkOrderToAPE;
+      break;
+    case 'updateRemoveLink':
+      requestToSend = updateRemoveLink;
       break;
     case 'postIIRReport':
       requestToSend = postIIRReport;

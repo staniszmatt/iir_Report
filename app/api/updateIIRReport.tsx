@@ -7,6 +7,7 @@ const sql = require('mssql/msnodesqlv8');
 interface Request {
   SalesOrderNumber: string;
   salesOrderNumberLine: string;
+  linkedWorkOrderIfAPE: string;
   customerReasonForRemoval: string | null;
   genConditionReceived: string | null;
   evalFindings: string | null;
@@ -23,6 +24,7 @@ async function postIIRReport(request: Request) {
   const {
     SalesOrderNumber,
     salesOrderNumberLine,
+    linkedWorkOrderIfAPE,
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
@@ -40,8 +42,9 @@ async function postIIRReport(request: Request) {
     evalFindings,
     workedPerformed
   };
-
   const dbQueryRequest: any = {};
+  let cleanWorkOrder = '';
+
   // This will load objects but ignore null value objects.
   // Needed to do this so we can get a count of the total number posts to be made
   // eslint-disable-next-line array-callback-return
@@ -53,13 +56,22 @@ async function postIIRReport(request: Request) {
   });
 
   // Sanitize work order strings.
-  const cleanWorkOrder = SalesOrderNumber.replace(/  +/g, '')
-    .replace(/[`']/g, '"')
-    .replace(/[#^&*<>()@~]/g, '');
+  if (linkedWorkOrderIfAPE) {
+    cleanWorkOrder = linkedWorkOrderIfAPE
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
+  } else {
+    cleanWorkOrder = SalesOrderNumber.replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
+  }
+
   const cleanLineItem = salesOrderNumberLine
     .replace(/  +/g, '')
     .replace(/[`']/g, '"')
     .replace(/[#^&*<>()@~]/g, '');
+
   // Start Setup the @param count to add to query string to help setup prepare statement
   let keyValue = '';
   // Setup the values for params to pass through execute below.
@@ -98,7 +110,7 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    const queryString = `UPDATE tear_down_notes
+    const queryString = `UPDATE tear_down_notes_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = @param1 AND salesOrderNumberLine = @param2`;

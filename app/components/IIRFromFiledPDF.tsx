@@ -1,17 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/camelcase */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-useless-escape */
 import React from 'react';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import FormTextInput from './forms/formTextArea';
 import styles from './IIRFormFields.css';
 
+// Not using any validation or using any of the form props but need to pass typescript
+// error when calling (IIRForm)
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface FormProps {}
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
   props: {
     customerReasonForRemoval: string;
     evalFindings: string;
@@ -27,9 +27,9 @@ interface DispatchProps {
 }
 
 const IIRForm = (
-  props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
+  iirFormProps: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  const { handleSubmit, onSubmit } = props;
+  const { handleSubmit, onSubmit } = iirFormProps;
   const {
     customerReasonForRemoval,
     evalFindings,
@@ -41,8 +41,8 @@ const IIRForm = (
     Manual_Section,
     Manual_Revision,
     Manual_Rev_Date_MMDDYY
-  } = props.props;
-
+  } = iirFormProps.props;
+  const disableTextArea = true;
   let fixManual_RevisionString = 'N/A';
   let workPerformedDefault = 'N/A';
 
@@ -76,7 +76,7 @@ const IIRForm = (
           aria-multiline
           defaultValue={customerReasonForRemoval}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
       <div>
@@ -88,7 +88,7 @@ const IIRForm = (
           aria-multiline
           defaultValue={genConditionReceived}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
       <div>
@@ -100,7 +100,7 @@ const IIRForm = (
           aria-multiline
           defaultValue={evalFindings}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
       <div style={warningCheck}>
@@ -112,7 +112,7 @@ const IIRForm = (
           aria-multiline
           defaultValue={workPerformedDefault}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
     </form>

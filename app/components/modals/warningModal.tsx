@@ -1,21 +1,25 @@
-/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import styles from './modal.css';
 import ModalBtn from '../buttonFunctions/buttonClickHandler';
 
-interface Props {
+interface WarnModalProps {
   props: {
     warningMsg: string;
+    btnLbl: string;
     actionFunction: () => {};
     closeModal: () => {};
   };
 }
 
-export default function WarningModal(props: Props) {
-  const { actionFunction } = props.props;
-  const { closeModal } = props.props;
+export default function WarningModal(warnModalProps: WarnModalProps) {
+  const {
+    warningMsg,
+    btnLbl,
+    actionFunction,
+    closeModal
+  } = warnModalProps.props;
 
-  const handDeleteBtn = () => {
+  const handleBtn = () => {
     actionFunction();
     closeModal();
   };
@@ -26,10 +30,10 @@ export default function WarningModal(props: Props) {
         <p>WARNING!</p>
       </div>
       <div>
-        <p>{props.props.warningMsg}</p>
+        <p>{warningMsg}</p>
       </div>
       <div>
-        <ModalBtn buttonName="Delete" ClickHandler={handDeleteBtn} />
+        <ModalBtn buttonName={btnLbl} ClickHandler={handleBtn} />
       </div>
     </div>
   );

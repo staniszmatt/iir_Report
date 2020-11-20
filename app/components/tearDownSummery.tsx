@@ -1,6 +1,5 @@
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 import React from 'react';
@@ -13,68 +12,21 @@ import ArrayComponents from './ReturnArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
-import styles from './tearDownSummer.css';
+import styles from './TearDownSummer.css';
 import logo from '../img/logo.png';
-
-interface Props {
-  getWorkOrderData: () => {};
-  postOrUpdateIIRReport: () => {};
-  handleEditIIRPDF: () => {};
-  cancelLoading: () => {};
-  openPDF: () => {};
-  savePDF: (data: {}) => {};
-  softResetState: () => {};
-  iir: {
-    loadingScreen: boolean;
-    loadPDF: boolean;
-    displayOpenPDFBtn: boolean;
-    workOrder: {
-      workOrderSearch: string;
-      workOrderSearchLineItem: string;
-    };
-    workOrderInfo: {
-      Cert_type_Description: string;
-      CustomerName: string;
-      CustomerNumber: string;
-      CustomerOrderNumber: string;
-      DateIssuedYYMMDD: string;
-      ItemNumber: string;
-      Manual_Combined: string;
-      Manual: string;
-      Manual_Document: string;
-      Manual_Section: string;
-      Manual_Revision: string;
-      Manual_Rev_Date_MMDDYY: string;
-      PartDescription: string;
-      PartNumber: string;
-      Quantity: number;
-      SalesOrderAndLineNumber: string;
-      SalesOrderNumber: string;
-      SerialNumber: string;
-      TSN: number;
-      TSO: number;
-      TSR: number;
-      tearDownTSO: string;
-      tearDownTSN: string;
-      tearDownTSR: string;
-      Trv_Num: string;
-      Warrenty_Y_N: string;
-      Work_Order_Number: string;
-      customerReasonForRemoval: string;
-      evalFindings: string;
-      genConditionReceived: string;
-      workedPerformed: string;
-    };
-  };
-}
+// eslint-disable-next-line import/no-cycle
+import { PropsFromRedux } from '../containers/TearDownSummeryPage';
 
 function tsDataCheck(tsData: string | number) {
   // Could come in as a string or a number so testing for abstract equality
   // eslint-disable-next-line eqeqeq
-  return (tsData == 0 ? '-' : tsData)
+  return tsData == 0 ? '-' : tsData;
 }
 
-export default function TearDownSummery(props: Props | any) {
+export default function TearDownSummery(props: PropsFromRedux) {
+  let displayPDFBtn = true;
+  let warrentyString = 'No';
+  let apeOrderNotLinked = false;
   // Action calls:
   const {
     getWorkOrderData,
@@ -83,28 +35,44 @@ export default function TearDownSummery(props: Props | any) {
     cancelLoading,
     openPDF,
     savePDF,
-    softResetState
+    softResetState,
+    iir
   } = props;
   // Tear Down State:
-  // eslint-disable-next-line react/destructuring-assignment
-  const { loadingScreen, loadPDF, workOrder, workOrderInfo, displayOpenPDFBtn } = props.iir;
-  let displayPDFBtn = true;
-  let warrentyString = 'No';
-
-  // Verify TS values and display "-" if zero
   const {
-    TSO,
-    TSN,
-    TSR
-  } = workOrderInfo
-
+    loadingScreen,
+    loadPDF,
+    workOrder,
+    workOrderInfo,
+    displayOpenPDFBtn
+  } = iir;
+  const {
+    linkedWorkOrderIfAPE,
+    CustomerNumber,
+    linkedAPEWorkOrder,
+    ItemNumber
+  } = workOrderInfo;
+  // Verify TS values and display "-" if zero
+  const { TSO, TSN, TSR } = workOrderInfo;
   const tsoValues = tsDataCheck(TSO);
   const tsnValues = tsDataCheck(TSN);
   const tsrValues = tsDataCheck(TSR);
-
+  const openAPEOrder = () => {
+    const apeWorkOrder = {
+      workOrderSearch: linkedAPEWorkOrder,
+      workOrderSearchLineItem: ItemNumber
+    };
+    getWorkOrderData(apeWorkOrder);
+  };
+  // Convert Y to yes
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
   }
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
 
   const iirProps = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
@@ -144,16 +112,17 @@ export default function TearDownSummery(props: Props | any) {
     input.style.width = '8.3in';
     input.style.height = '10.9in';
 
+    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(
+      canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new JsPDF('p', 'mm', 'a4');
+        const width = pdf.internal.pageSize.getWidth();
+        const height = pdf.internal.pageSize.getHeight();
 
-    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new JsPDF('p', 'mm', 'a4');
-      const width = pdf.internal.pageSize.getWidth();
-      const height = pdf.internal.pageSize.getHeight();
-
-      pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
-      savePDF(pdf.output('arraybuffer'));
-    });
+        pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
+        savePDF(pdf.output('arraybuffer'));
+      }
+    );
     input.style.margin = 'auto';
     input.style.border = '1px solid black';
     input.style.position = 'unset';
@@ -177,16 +146,35 @@ export default function TearDownSummery(props: Props | any) {
         {displayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
             <div>
-              File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
-            </div>
-            <div>
-              <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />
+              <Btn buttonName="Open PDF" ClickHandler={openPDF} />
             </div>
           </div>
         )}
         {loadPDF && (
           <div className={styles['form-page-container']}>
-            {!displayOpenPDFBtn && <div className={styles['open-pdf-btn']}><div>PDF Needs Saved.</div></div>}
+            {!displayOpenPDFBtn && !apeOrderNotLinked && !linkedAPEWorkOrder && (
+              <div className={styles['open-pdf-btn']}>
+                <div>PDF Needs Saved.</div>
+              </div>
+            )}
+            {linkedWorkOrderIfAPE && (
+              <div className={styles['open-pdf-btn']}>
+                <div>{`APE Linked To Customer Work Order: ${linkedWorkOrderIfAPE}-${ItemNumber}`}</div>
+              </div>
+            )}
+            {apeOrderNotLinked && (
+              <div className={styles['blink-text']}>
+                <div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div>
+              </div>
+            )}
+            {linkedAPEWorkOrder && (
+              <div className={styles['blink-text']}>
+                <div>
+                  {`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}!`}
+                  <button type="button" onClick={openAPEOrder}>Open</button>
+                </div>
+              </div>
+            )}
             <div className={styles['form-page']}>
               <div id="capture">
                 <div className={styles['form-header']}>
@@ -286,19 +274,25 @@ export default function TearDownSummery(props: Props | any) {
               </div>
             </div>
             <div>
-              <div>
+              {apeOrderNotLinked && <div className={styles['blink-text']}><div>LINK CUSTOMER WORK ORDER TO APE WORK ORDER!</div></div>}
+              <div className={styles['base-btn-container']}>
                 <div>
                   <Link to={routes.EDITFORM}>
                     <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
                   </Link>
                 </div>
-                {!displayOpenPDFBtn && (
+                {displayOpenPDFBtn && (
                   <div>
-                    {displayPDFBtn  && (
-                    <button onClick={getPDF} type="button">
-                      SAVE PDF
-                    </button>
-                  )}
+                    <Btn buttonName="Open PDF" ClickHandler={openPDF} />
+                  </div>
+                )}
+                {!displayOpenPDFBtn && !linkedAPEWorkOrder && (
+                  <div>
+                    {displayPDFBtn && !apeOrderNotLinked && (
+                      <button onClick={getPDF} type="button">
+                        SAVE PDF
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
