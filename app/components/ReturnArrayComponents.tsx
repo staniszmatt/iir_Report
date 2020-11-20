@@ -1,21 +1,27 @@
-/* eslint-disable react/destructuring-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 
-interface Props {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+interface ReturnArrayProps {
   props: any;
 }
 
-export default function ReturnArrayComponents(props: Props) {
-  const propsArray = props.props;
+export default function ReturnArrayComponents(
+  returnArrayProps: ReturnArrayProps
+) {
+  const propsArray = returnArrayProps.props;
   let mappedComponents: [] | {};
   if (propsArray === 'N/A') {
     mappedComponents = <div>N/A</div>;
   } else {
     mappedComponents = propsArray.map((objString: string, index: number) => {
       // If used for other than certs, will need to setup check to ignore slice
-      // eslint-disable-next-line react/no-array-index-key
-      return <div key={`arrayComponentKey${index}`}>{objString.slice(2)}</div>;
+      if (objString) {
+        return (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={`arrayComponentKey${index}`}>{objString.slice(2)}</div>
+        );
+      }
+      return null;
     });
   }
   return <div>{mappedComponents}</div>;
