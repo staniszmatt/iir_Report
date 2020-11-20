@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/camelcase */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import 'mssql/msnodesqlv8';
@@ -183,6 +184,11 @@ async function getWorkOrderData(request: Request) {
           } = getIIRData.recordset[0];
           returnData.data.recordPresent = true;
 
+          let noteCustomerReasonForRemoval;
+          let noteGenConditionReceived;
+          let noteEvalFindings;
+          let noteWorkedPerformed = '';
+
           // Use Linked notes for APE jobs excluding workPerformed
           if (
             returnData.data.CustomerNumber === 'APE' &&
@@ -207,21 +213,10 @@ async function getWorkOrderData(request: Request) {
               await preAPEState.unprepare();
 
               if (getLinkedIIRData.recordset.length > 0) {
-                const linedCustomerReasonForRemoval =
-                  getLinkedIIRData.recordset[0].customerReasonForRemoval;
-                const linedGenConditionReceived =
-                  getLinkedIIRData.recordset[0].genConditionReceived;
-                const linedEvalFindings =
-                  getLinkedIIRData.recordset[0].evalFindings;
-                returnData.data.customerReasonForRemoval = checkStringLength(
-                  linedCustomerReasonForRemoval
-                );
-                returnData.data.genConditionReceived = checkStringLength(
-                  linedGenConditionReceived
-                );
-                returnData.data.evalFindings = checkStringLength(
-                  linedEvalFindings
-                );
+                noteCustomerReasonForRemoval = getLinkedIIRData.recordset[0].customerReasonForRemoval;
+                noteGenConditionReceived = getLinkedIIRData.recordset[0].genConditionReceived;
+                noteEvalFindings = getLinkedIIRData.recordset[0].evalFindings;
+                noteWorkedPerformed = getLinkedIIRData.recordset[0].workedPerformed;
               }
             } catch (error) {
               // Not sure if there is a better way but don't need to return the array of key value pairs.
@@ -232,16 +227,15 @@ async function getWorkOrderData(request: Request) {
               });
             }
           } else {
-            returnData.data.customerReasonForRemoval = checkStringLength(
-              customerReasonForRemoval
-            );
-            returnData.data.genConditionReceived = checkStringLength(
-              genConditionReceived
-            );
-            returnData.data.evalFindings = checkStringLength(evalFindings);
+            noteCustomerReasonForRemoval = customerReasonForRemoval;
+            noteGenConditionReceived = genConditionReceived;
+            noteEvalFindings = evalFindings;
+            noteWorkedPerformed = workedPerformed;
           }
-          // Use APE workPerformed notes to store and display
-          returnData.data.workedPerformed = checkStringLength(workedPerformed);
+          returnData.data.customerReasonForRemoval = checkStringLength(noteCustomerReasonForRemoval);
+          returnData.data.genConditionReceived = checkStringLength(noteGenConditionReceived);
+          returnData.data.evalFindings = checkStringLength(noteEvalFindings);
+          returnData.data.workedPerformed = checkStringLength(noteWorkedPerformed);
           returnData.data.linkedWorkOrderIfAPE = linkedWorkOrderIfAPE;
           returnData.data.linkedAPEWorkOrder = linkedAPEWorkOrder;
         }
@@ -257,6 +251,7 @@ async function getWorkOrderData(request: Request) {
       returnData.error = {
         noWorkOrder: `Couldn't find WO: ${request.workOrderSearch}-${request.workOrderSearchLineItem}. Double check WO is correct.`
       };
+      returnData.noData = true;
     }
   } catch (error) {
     // Not sure if there is a better way but don't need to return the array of key value pairs.

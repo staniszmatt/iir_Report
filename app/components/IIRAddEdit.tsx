@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
@@ -42,6 +43,7 @@ export default function IIRAddEdit(props: PropsFromRedux) {
   const iirProps = {
     CustomerNumber,
     linkedWorkOrderIfAPE,
+    linkedAPEWorkOrder,
     handleReviewIIRPDF
   };
   const initialFormValues = {
@@ -51,6 +53,13 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
+  const openAPEOrder = () => {
+    const apeWorkOrder = {
+      workOrderSearch: linkedAPEWorkOrder,
+      workOrderSearchLineItem: ItemNumber
+    };
+    getIIRData(apeWorkOrder);
+  };
 
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
   CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
@@ -137,7 +146,10 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               </div>
               {linkedAPEWorkOrder && (
                 <div className={styles['link-ape-display']}>
-                  <div>{`LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}.`}</div>
+                  <div>
+                    {`CAN'T EDIT: LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}.`}
+                    <button type="button" onClick={openAPEOrder}>Open</button>
+                  </div>
                 </div>
               )}
               {linkedWorkOrderIfAPE && (

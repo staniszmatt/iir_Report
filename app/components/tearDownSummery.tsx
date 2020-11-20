@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
 /* eslint-disable promise/always-return */
 /* eslint-disable promise/catch-or-return */
 import React from 'react';
@@ -18,7 +20,7 @@ import { PropsFromRedux } from '../containers/TearDownSummerPage';
 function tsDataCheck(tsData: string | number) {
   // Could come in as a string or a number so testing for abstract equality
   // eslint-disable-next-line eqeqeq
-  return (tsData == 0 ? '-' : tsData)
+  return tsData == 0 ? '-' : tsData;
 }
 
 export default function TearDownSummery(props: PropsFromRedux) {
@@ -55,6 +57,13 @@ export default function TearDownSummery(props: PropsFromRedux) {
   const tsoValues = tsDataCheck(TSO);
   const tsnValues = tsDataCheck(TSN);
   const tsrValues = tsDataCheck(TSR);
+  const openAPEOrder = () => {
+    const apeWorkOrder = {
+      workOrderSearch: linkedAPEWorkOrder,
+      workOrderSearchLineItem: ItemNumber
+    };
+    getWorkOrderData(apeWorkOrder);
+  };
   // Convert Y to yes
   if (workOrderInfo.Warrenty_Y_N === 'Y') {
     warrentyString = 'Yes';
@@ -163,7 +172,10 @@ export default function TearDownSummery(props: PropsFromRedux) {
             )}
             {linkedAPEWorkOrder && (
               <div className={styles['blink-text']}>
-                <div>{`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}!`}</div>
+                <div>
+                  {`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}!`}
+                  <button type="button" onClick={openAPEOrder}>Open</button>
+                </div>
               </div>
             )}
             <div className={styles['form-page']}>
@@ -274,10 +286,10 @@ export default function TearDownSummery(props: PropsFromRedux) {
                 </div>
                 {!displayOpenPDFBtn && !linkedAPEWorkOrder && (
                   <div>
-                    {displayPDFBtn  && !apeOrderNotLinked &&  (
-                    <button onClick={getPDF} type="button">
-                      SAVE PDF
-                    </button>
+                    {displayPDFBtn && !apeOrderNotLinked && (
+                      <button onClick={getPDF} type="button">
+                        SAVE PDF
+                      </button>
                   )}
                   </div>
                 )}

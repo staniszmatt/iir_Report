@@ -20,6 +20,7 @@ interface DispatchProps {
     handleReviewIIRPDF: () => {};
     CustomerNumber: string;
     linkedWorkOrderIfAPE: string;
+    linkedAPEWorkOrder: string;
   };
 }
 
@@ -31,6 +32,7 @@ const IIRForm = (
   const {
     CustomerNumber,
     linkedWorkOrderIfAPE,
+    linkedAPEWorkOrder,
     handleReviewIIRPDF
   } = iirFormProps.props;
   const {
@@ -43,6 +45,7 @@ const IIRForm = (
   let apeOrderNotLinked = false;
 
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  // Or if order is lined to an APE
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
     ? (apeOrderNotLinked = true)
@@ -60,9 +63,10 @@ const IIRForm = (
   const workPerf = `(FINAL TABLE)
   Worked Performed:`;
 
-  if (CustomerNumber === 'APE' && apeOrderNotLinked) {
-    textareaDisabled = true;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  (CustomerNumber === 'APE' && apeOrderNotLinked) || linkedAPEWorkOrder
+    ? (textareaDisabled = true)
+    : (textareaDisabled = false);
 
   if (
     customerReasonForRemoval === null &&
