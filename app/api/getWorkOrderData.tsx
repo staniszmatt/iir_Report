@@ -64,7 +64,7 @@ async function getWorkOrderData(request: Request) {
       // eslint-disable-next-line prefer-destructuring
       returnData.data = data[0];
       const query2String = `SELECT traveler_header.Manual_Combined, traveler_header.Manual, traveler_header.Manual_Document, traveler_header.Manual_Section, traveler_header.Manual_Revision, traveler_header.Manual_Rev_Date_MMDDYY, traveler_header.Work_Order_Number, traveler_header.Trv_Num, traveler_header.CustomerName,
-        sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number
+        sales_order_8130_types.Cert_type_Description, sales_order_8130_types.Sales_Order_Number, sales_order_8130_types.Cert_Type_Code
         FROM traveler_header INNER JOIN sales_order_8130_types ON traveler_header.Work_Order_Number = sales_order_8130_types.Sales_Order_Number
         WHERE traveler_header.Work_Order_Number = ? AND traveler_header.Sales_Order_Line_Item = ?`;
       try {
@@ -110,10 +110,14 @@ async function getWorkOrderData(request: Request) {
             returnData.data.Cert_type_Description = [];
             // Set the list of cert types into a array list
             const collectArrayCertList = secondData.map(
-              (objData: { Cert_type_Description: string }) => {
-                return objData.Cert_type_Description;
+              (objData: { Cert_type_Description: string; Cert_Type_Code: string; }) => {
+                if (objData.Cert_Type_Code === lineItem) {
+                  return objData.Cert_type_Description;
+                }
+                return null;
               }
             );
+
             // Filter out all the duplicates
             const removedDuplicates = collectArrayCertList.filter(
               (elem: never, index: number, arrayData: []) => {
@@ -157,7 +161,7 @@ async function getWorkOrderData(request: Request) {
         };
 
         const iirQuery = `SELECT *
-        FROM tear_down_notes_dev AS i
+        FROM tear_down_notes AS i
         WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
         await preState.prepare(iirQuery);
@@ -203,7 +207,7 @@ async function getWorkOrderData(request: Request) {
                 param2: lineItem
               };
               const iirLinkedQuery = `SELECT *
-              FROM tear_down_notes_dev AS i
+              FROM tear_down_notes AS i
               WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
               await preAPEState.prepare(iirLinkedQuery);
