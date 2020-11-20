@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger';
 import createRootReducer from '../reducers';
 import * as iirActions from '../actions/iirActions';
 import * as modalActions from '../actions/modalActions';
-import { modalStateType, iirStateType } from '../reducers/types';
+import { modalStateType, IIRStateType } from '../reducers/types';
 
 declare global {
   interface Window {
@@ -77,7 +77,7 @@ const configureStore = (initialState?: {
         // eslint-disable-next-line prettier/prettier
       }
     | any
-    | iirStateType;
+    | IIRStateType;
   modals?:
     | {
         modalState: boolean;

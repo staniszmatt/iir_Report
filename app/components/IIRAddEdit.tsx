@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import LoadingScreen from './LoadingDisplay';
@@ -5,70 +7,68 @@ import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import ArrayComponents from './ReturnArrayComponents';
 import IIRFormFields from './IIRFormFields';
+import LinkWorkOrderForm from './LinkWorkOrderForm';
 import styles from './IIRAddEdit.css';
 import logo from '../img/logo.png';
+// Need to pull PropsFormRedux in IIRAddEditPage to set variable types
+// eslint-disable-next-line import/no-cycle
+import { PropsFromRedux } from '../containers/IIRAddEditPage';
 
-interface Props {
-  postUpdatePDFCheck: () => {};
-  getIIRData: () => {};
-  handleReviewIIRPDF: () => {};
-  openPDF: () => {};
-  cancelLoading: () => {};
-  iir: {
-    loadingScreen: boolean;
-    iirFormDisplay: boolean;
-    displayOpenPDFBtn: boolean;
-    workOrderInfo: {
-      Cert_type_Description: string;
-      CustomerName: string;
-      CustomerNumber: string;
-      CustomerOrderNumber: string;
-      DateIssuedYYMMDD: string;
-      ItemNumber: string;
-      Manual_Combined: string;
-      OrderType: string;
-      PartDescription: string;
-      PartNumber: string;
-      Quantity: number;
-      SalesOrderAndLineNumber: string;
-      SalesOrderNumber: string;
-      SerialNumber: string;
-      Trv_Num: string;
-      Warrenty_Y_N: string;
-      Work_Order_Number: string;
-      customerReasonForRemoval: string;
-      evalFindings: string;
-      genConditionReceived: string;
-      workedPerformed: string;
-    };
-  };
-}
-
-export default function IIRAddEdit(props: Props | any) {
+export default function IIRAddEdit(props: PropsFromRedux) {
+  let apeOrderNotLinked = false;
+  let displayUpdateAPELink = false;
   const {
     postUpdatePDFCheck,
     getIIRData,
     handleReviewIIRPDF,
     openPDF,
-    cancelLoading
+    cancelLoading,
+    linkWorkOrder,
+    warnRemoveAPELinkWorkOrder,
+    iir
   } = props;
-  // eslint-disable-next-line react/destructuring-assignment
   const {
     loadingScreen,
     iirFormDisplay,
+    workOrder,
     workOrderInfo,
     displayOpenPDFBtn
-    // eslint-disable-next-line react/destructuring-assignment
-  } = props.iir;
-
+  } = iir;
+  const {
+    linkedWorkOrderIfAPE,
+    CustomerNumber,
+    linkedAPEWorkOrder,
+    ItemNumber
+  } = workOrderInfo;
   const iirProps = {
+    CustomerNumber,
+    linkedWorkOrderIfAPE,
+    linkedAPEWorkOrder,
+    handleReviewIIRPDF
+  };
+  const initialFormValues = {
     customerReasonForRemoval: workOrderInfo.customerReasonForRemoval,
     evalFindings: workOrderInfo.evalFindings,
     genConditionReceived: workOrderInfo.genConditionReceived,
-    workedPerformedNote: workOrderInfo.workedPerformed,
-    handleReviewIIRPDF
+    workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
+  const openAPEOrder = () => {
+    const apeWorkOrder = {
+      workOrderSearch: linkedAPEWorkOrder,
+      workOrderSearchLineItem: ItemNumber
+    };
+    getIIRData(apeWorkOrder);
+  };
+
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
+
+  linkedWorkOrderIfAPE
+    ? (displayUpdateAPELink = true)
+    : (displayUpdateAPELink = false);
 
   return (
     <div>
@@ -86,17 +86,14 @@ export default function IIRAddEdit(props: Props | any) {
         {displayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
             <div>
-              File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
-            </div>
-            <div>
-              <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />
+              <Btn buttonName="Open PDF" ClickHandler={openPDF} />
             </div>
           </div>
         )}
         <div>
           {iirFormDisplay && (
             <div>
-              {!displayOpenPDFBtn && (
+              {!displayOpenPDFBtn && !apeOrderNotLinked && !linkedAPEWorkOrder && (
                 <div className={styles['open-pdf-btn']}>
                   <div>PDF Needs Saved.</div>
                 </div>
@@ -144,7 +141,50 @@ export default function IIRAddEdit(props: Props | any) {
                   </div>
                 </div>
               </div>
-              <IIRFormFields onSubmit={postUpdatePDFCheck} props={iirProps} />
+              {linkedAPEWorkOrder && (
+                <div className={styles['link-ape-display']}>
+                  <div>
+                    {`CAN'T EDIT: LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}.`}
+                    <button type="button" onClick={openAPEOrder}>Open</button>
+                  </div>
+                </div>
+              )}
+              {linkedWorkOrderIfAPE && (
+                <div className={styles['link-ape-display']}>
+                  <div>{`APE LINKED TO WORK ORDER ${linkedWorkOrderIfAPE}-${ItemNumber}.`}</div>
+                </div>
+              )}
+              {apeOrderNotLinked && (
+                <div className={styles['link-input-container']}>
+                  <LinkWorkOrderForm
+                    onSubmit={linkWorkOrder}
+                    props={workOrder}
+                    label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
+                  />
+                </div>
+              )}
+              {displayUpdateAPELink && (
+                <div className={styles['link-edit-container']}>
+                  <div>
+                    <div>
+                      <div>Separate Work Order Link:</div>
+                    </div>
+                    <div>
+                      <button
+                        type="button"
+                        onClick={warnRemoveAPELinkWorkOrder}
+                      >
+                        Remove Link
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <IIRFormFields
+                onSubmit={postUpdatePDFCheck}
+                initialValues={initialFormValues}
+                props={iirProps}
+              />
             </div>
           )}
         </div>

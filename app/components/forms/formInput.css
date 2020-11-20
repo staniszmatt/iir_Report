@@ -21,37 +21,11 @@ form {
   margin-right: 5px;
 }
 
-.form-container > p,
-.radio-container > p {
+.form-container > p {
   font-size: inherit;
   margin: 0;
   color: red;
   padding: 5px 10px;
-}
-
-.radio-input {
-  display: inline-flex;
-}
-
-.radio-input > label {
-  display: none;
-}
-
-.radio-input > input {
-  margin: 0 10px;
-}
-
-.radio-container > div {
-  display: inline-flex;
-  padding: 0 5px;
-}
-
-.radio-container > div > label {
-  padding-right: 10px;
-}
-
-.radio-container > div > div > label {
-  padding: 0 5px;
 }
 
 .textarea-container {

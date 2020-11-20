@@ -4,7 +4,12 @@ import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
 import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
-import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
+import {
+  toggleModalState,
+  toggleWarningModalState,
+  toggleErrorModalState,
+  toggleSuccessModalState
+} from './modalActions';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -25,7 +30,7 @@ export const TOGGLE_SUCCESS_UPDATE_MODAL_OFF =
   'TOGGLE_SUCCESS_UPDATE_MODAL_OFF';
 export const GET_VERSION = 'GET_VERSION';
 
-interface WorkOrder {
+export interface WorkOrder {
   callAutoEmailer?: () => {} | any;
   callSuccessModal?: () => {} | any;
   workOrderSearch: string;
@@ -126,12 +131,134 @@ export function setGetVersion(resp: string) {
   };
 }
 
+export function handleRemoveAPELinkWorkOrder(
+  _event: {},
+  resp: {
+    error: { code: string; name: string } | any;
+    data: {};
+  }
+) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    dispatch(toggleLoadingScreenStateOff());
+
+    if (Object.keys(resp.error).length === 0) {
+      dispatch(getIIRData(state.workOrder));
+    } else {
+      dispatch(toggleErrorModalState(resp.error));
+    }
+  };
+}
+
+// TODO: Setup Testing
+export function removeAPELinkWorkOrder() {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    const { workOrder, workOrderInfo } = state;
+    const { workOrderSearch, workOrderSearchLineItem } = workOrder;
+    const { linkedWorkOrderIfAPE } = workOrderInfo;
+    const mainRequest = {
+      request: 'updateRemoveLink',
+      workOrderAPE: workOrderSearch,
+      workOrderLink: linkedWorkOrderIfAPE,
+      lineItem: workOrderSearchLineItem
+    };
+    dispatch(softResetState());
+    const callBackFunction = (
+      event: {},
+      resp: {
+        error: { code: string; name: string };
+        data: {};
+      }
+    ) => {
+      dispatch(handleRemoveAPELinkWorkOrder(event, resp));
+      ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
+    };
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', callBackFunction);
+  };
+}
+
+// TODO: Setup Testing
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function warnRemoveAPELinkWorkOrder(_event: {}) {
+  return (dispatch: Dispatch) => {
+    const warningModalResp = {
+      warningMsg: `Are you sure you wish to remove link to WO?`,
+      btnLbl: 'Remove Link',
+      actionFunction: () => {
+        dispatch(removeAPELinkWorkOrder());
+      },
+      closeModal: () => {
+        dispatch(toggleModalState());
+      }
+    };
+    dispatch(toggleWarningModalState(warningModalResp));
+  };
+}
+
+// TODO: Setup Testing
+export function handleLinkWorkOrder(
+  _event: {},
+  resp: {
+    error: { code: string; name: string } | any;
+    data: {};
+  }
+) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    // Turn off the loading screen once we receive a response.
+    dispatch(toggleLoadingScreenStateOff());
+    if (Object.keys(resp.error).length === 0) {
+      dispatch(getIIRData(state.workOrder));
+    } else {
+      dispatch(toggleErrorModalState(resp.error));
+    }
+  };
+}
+
+// TODO: Setup Testing
+export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    // Soft Reset to keep current work order info.
+    dispatch(softResetState());
+    const state = getState().iir;
+    const { linkWorkOrderToAPE } = workOrderToLink;
+
+    const mainRequest = {
+      request: 'updateLinkWorkOrderToAPE',
+      workOrderToLink: linkWorkOrderToAPE,
+      originalWorkOrder: {
+        workOrder: state.workOrder.workOrderSearch,
+        lineItem: state.workOrder.workOrderSearchLineItem
+      }
+    };
+    const callBackFunction = (
+      event: {},
+      resp: {
+        error: { code: string; name: string };
+        data: {};
+      }
+    ) => {
+      dispatch(handleLinkWorkOrder(event, resp));
+      ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
+    };
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', callBackFunction);
+  };
+}
+
+// TODO: Setup Testing
 export function handleGetVersion(_event: {}, resp: { version: string }) {
   return (dispatch: Dispatch) => {
     dispatch(setGetVersion(resp.version));
   };
 }
-
+// TODO: Setup Testing
 export function getVersion() {
   return (dispatch: Dispatch) => {
     const callHandleGetVersion = (event: {}, resp: { version: string }) => {
@@ -142,7 +269,7 @@ export function getVersion() {
     ipcRenderer.on('app_version', callHandleGetVersion);
   };
 }
-
+// TODO: Setup Testing
 export function checkForPDFFile(workOrderString: string) {
   return (dispatch: Dispatch) => {
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
@@ -152,8 +279,8 @@ export function checkForPDFFile(workOrderString: string) {
     }
   };
 }
-
-export function savePDF(pdfData: []) {
+// TODO: Setup Testing
+export function savePDF(pdfData: {} | any) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     const workOrder = {
@@ -180,7 +307,7 @@ export function savePDF(pdfData: []) {
     dispatch(getWorkOrderData(workOrder));
   };
 }
-
+// TODO: Setup Testing
 export function handleGeIIRDataResp(
   _event: {},
   resp: {
@@ -189,6 +316,7 @@ export function handleGeIIRDataResp(
       length: number;
       customerReasonForRemoval: string | null;
       recordPresent: boolean;
+      CustomerNumber: string;
     };
   }
 ) {
@@ -196,6 +324,7 @@ export function handleGeIIRDataResp(
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
+
     if (Object.keys(resp.error).length === 0) {
       // If there is no note data and set to null, set postIIRNotes to true
       if (!resp.data.recordPresent) {
@@ -229,7 +358,7 @@ export function handleGeIIRDataResp(
     }
   };
 }
-
+// TODO: Setup Testing
 export function getIIRData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
@@ -248,8 +377,9 @@ export function getIIRData(workOrder: {
     }
 
     const mainRequest = {
-      request: 'getIIRData',
-      workOrder
+      request: 'getWorkOrderData',
+      workOrderSearch: workOrder.workOrderSearch,
+      workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
 
     dispatch(setWorkOrder(workOrder));
@@ -261,6 +391,7 @@ export function getIIRData(workOrder: {
           length: number;
           customerReasonForRemoval: string | null;
           recordPresent: boolean;
+          CustomerNumber: string;
         };
       }
     ) => {
@@ -274,7 +405,7 @@ export function getIIRData(workOrder: {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
+// TODO: Setup Testing
 export function handleEmailerResp(
   _event: {},
   resp: {
@@ -299,7 +430,7 @@ export function handleEmailerResp(
     }
   };
 }
-
+// TODO: Setup Testing
 export function autoEmailer() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState();
@@ -324,7 +455,7 @@ export function autoEmailer() {
         evalFindings
       }
     };
-
+    // TODO: Setup Testing
     // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
@@ -342,7 +473,7 @@ export function autoEmailer() {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
+// TODO: Setup Testing
 // This will only be exactable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
   return (_dispatch: Dispatch, getState: GetIIRState) => {
@@ -352,12 +483,16 @@ export function openPDF() {
     shell.openItem(filePath);
   };
 }
-
+// TODO: Setup Testing
 export function handleGetWorkOrderDataResp(
   _event: {},
   resp: {
     error: { code: string; name: string };
-    data: [{ Work_Order_Number: string; ItemNumber: string }];
+    data: {
+      Work_Order_Number: string;
+      ItemNumber: string;
+      CustomerNumber: string;
+    };
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
@@ -370,7 +505,7 @@ export function handleGetWorkOrderDataResp(
       // Checking if data is empty and the edit form search is false
       const workOrderString = `${workOrderSearch}-${workOrderSearchLineItem}`;
 
-      dispatch(setWorkOrderData(resp.data[0]));
+      dispatch(setWorkOrderData(resp.data));
       dispatch(toggleDisplayPDFFormState());
       dispatch(checkForPDFFile(workOrderString));
     } else if (
@@ -382,7 +517,7 @@ export function handleGetWorkOrderDataResp(
     }
   };
 }
-
+// TODO: Setup Testing
 export function getWorkOrderData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
@@ -408,7 +543,11 @@ export function getWorkOrderData(workOrder: {
       event: {},
       resp: {
         error: { code: string; name: string };
-        data: [{ Work_Order_Number: string; ItemNumber: string }];
+        data: {
+          Work_Order_Number: string;
+          ItemNumber: string;
+          CustomerNumber: string;
+        };
       }
     ) => {
       dispatch(handleGetWorkOrderDataResp(event, resp));
@@ -421,7 +560,7 @@ export function getWorkOrderData(workOrder: {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
+// TODO: Setup Testing
 export function postUpdatePDFCheck(iirNotes: {
   customerReasonForRemoval: string | any;
   evalFindings: string | any;
@@ -452,7 +591,7 @@ export function postUpdatePDFCheck(iirNotes: {
     }
   };
 }
-
+// TODO: Setup Testing
 export function handlePostIIRResp(
   _event: {},
   resp: { error: { name: string; code: string }; data: {} }
@@ -481,7 +620,7 @@ export function handlePostIIRResp(
     }
   };
 }
-
+// TODO: Setup Testing
 export function postOrUpdateIIRReport(iirNotes: {
   customerReasonForRemoval: string | any;
   evalFindings: string | any;
@@ -546,8 +685,17 @@ export function postOrUpdateIIRReport(iirNotes: {
     }
     dispatch(toggleSuccessUpdateModalOn());
 
+    let linkedWorkOrderIfAPE = null;
+    if (
+      state.workOrderInfo.linkedWorkOrderIfAPE &&
+      state.workOrderInfo.linkedWorkOrderIfAPE.length > 0
+    ) {
+      linkedWorkOrderIfAPE = state.workOrderInfo.linkedWorkOrderIfAPE;
+    }
+
     const mainRequest = {
       request,
+      linkedWorkOrderIfAPE,
       SalesOrderNumber: state.workOrder.workOrderSearch,
       salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,
@@ -594,7 +742,7 @@ export function handleReviewIIRPDF() {
     dispatch(getWorkOrderData(workOrder));
   };
 }
-
+// TODO: Setup Testing
 export function cancelLoading() {
   // Resets the state, removes loading screen and clears the listener that
   // could be setup to prevent additional server request issues when canceling

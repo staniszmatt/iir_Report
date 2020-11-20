@@ -1,8 +1,4 @@
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-useless-escape */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
@@ -11,32 +7,49 @@ import FormTextInput from './forms/formTextArea';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './IIRFormFields.css';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface FormProps {}
+interface FormProps {
+  customerReasonForRemoval: string;
+  evalFindings: string;
+  genConditionReceived: string;
+  workedPerformed: string;
+}
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
   props: {
     handleReviewIIRPDF: () => {};
-    customerReasonForRemoval: string;
-    evalFindings: string;
-    genConditionReceived: string;
-    workedPerformedNote: string;
+    CustomerNumber: string;
+    linkedWorkOrderIfAPE: string;
+    linkedAPEWorkOrder: string;
   };
 }
 
 const IIRForm = (
-  props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
+  iirFormProps: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
   let btnText = 'UPDATE IIR NOTES';
-  const { handleSubmit, onSubmit } = props;
+  const { handleSubmit, onSubmit } = iirFormProps;
+  const {
+    CustomerNumber,
+    linkedWorkOrderIfAPE,
+    linkedAPEWorkOrder,
+    handleReviewIIRPDF
+  } = iirFormProps.props;
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformedNote,
-    handleReviewIIRPDF
-  } = props.props;
+    workedPerformed
+  } = iirFormProps.initialValues;
+  let textareaDisabled = false;
+  let apeOrderNotLinked = false;
+
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  // Or if order is lined to an APE
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
 
   // Setup of label text to include some new line editing here.
   const custRemoval = `(INCOMING INSPECTION)
@@ -50,11 +63,16 @@ const IIRForm = (
   const workPerf = `(FINAL TABLE)
   Worked Performed:`;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  (CustomerNumber === 'APE' && apeOrderNotLinked) || linkedAPEWorkOrder
+    ? (textareaDisabled = true)
+    : (textareaDisabled = false);
+
   if (
     customerReasonForRemoval === null &&
     evalFindings === null &&
     genConditionReceived === null &&
-    workedPerformedNote === null
+    workedPerformed === null
   ) {
     btnText = 'ADD NEW IIR NOTES';
   }
@@ -74,6 +92,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={customerReasonForRemoval}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -85,6 +104,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={genConditionReceived}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -96,6 +116,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={evalFindings}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -105,14 +126,17 @@ const IIRForm = (
             name="workedPerformed"
             type="textarea"
             aria-multiline
-            defaultValue={workedPerformedNote}
+            defaultValue={workedPerformed}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div className={styles['form-btn-container']}>
-          <div>
-            <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
-          </div>
+          {!apeOrderNotLinked && (
+            <div>
+              <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
+            </div>
+          )}
           <div>
             <Link to={routes.IIRFORM}>
               <Btn buttonName="Review PDF" ClickHandler={handleReviewIIRPDF} />
@@ -124,55 +148,15 @@ const IIRForm = (
   );
 };
 
-interface Values {
-  customerReasonForRemoval: string;
-  evalFindings: string;
-  genConditionReceived: string;
-  workedPerformed: string;
-  tsnValue: any;
-  tsoValue: any;
-  tsrValue: any;
-}
-
-// Remove Colon Option for input to verify if its a number
-function testColonNumber(value: any) {
-  const removeColon = value.replace(/:/g, '');
-  return isNaN(removeColon);
-}
-
-function validate(values: Values) {
+function validate(values: FormProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformed,
-    tsnValue,
-    tsrValue,
-    tsoValue
+    workedPerformed
   } = values;
-  // Check if value exists before testing
-  if (tsnValue) {
-    const testValue: boolean = testColonNumber(tsnValue);
-    if (testValue) {
-      errors.tsnValue = 'Must be a number!';
-    }
-  }
-
-  if (tsrValue) {
-    const testValue: boolean = testColonNumber(tsrValue);
-    if (testValue) {
-      errors.tsrValue = 'Must be a number!';
-    }
-  }
-
-  if (tsoValue) {
-    const testValue: boolean = testColonNumber(tsoValue);
-    if (testValue) {
-      errors.tsoValue = 'Must be a number!';
-    }
-  }
 
   if (customerReasonForRemoval) {
     if (customerReasonForRemoval.length > 700) {
@@ -202,15 +186,5 @@ function validate(values: Values) {
 
 export default reduxForm<FormProps, DispatchProps>({
   form: 'iirForm',
-  validate,
-  // Set Initial values to null so returns null if no changes are made.
-  initialValues: {
-    customerReasonForRemoval: null,
-    genConditionReceived: null,
-    evalFindings: null,
-    workedPerformed: null,
-    tsnValue: null,
-    tsrValue: null,
-    tsoValue: null
-  }
+  validate
 })(IIRForm);

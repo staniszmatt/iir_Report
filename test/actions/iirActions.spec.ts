@@ -173,7 +173,9 @@ describe('iirActions', () => {
       data: [mockData]
     }
     const event = {};
-    const data = resp.data[0];
+    // No need to destructor to test.
+    // eslint-disable-next-line prefer-destructuring
+    const data = resp.data;
     const returnError = { error: '' }
     const getState: any = () => {
       return mockState;

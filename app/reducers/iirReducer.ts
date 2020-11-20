@@ -121,7 +121,8 @@ export default function iir(state = IState, action: CustomAction) {
         loadPDF: false,
         iirFormDisplay: false,
         postIIRNotes: false,
-        displayOpenPDFBtn: false
+        displayOpenPDFBtn: false,
+        apeWorkOrder: false
       };
     default:
       return state;
