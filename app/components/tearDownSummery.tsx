@@ -12,10 +12,10 @@ import ArrayComponents from './ReturnArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
-import styles from './tearDownSummer.css';
+import styles from './TearDownSummer.css';
 import logo from '../img/logo.png';
 // eslint-disable-next-line import/no-cycle
-import { PropsFromRedux } from '../containers/TearDownSummerPage';
+import { PropsFromRedux } from '../containers/TearDownSummeryPage';
 
 function tsDataCheck(tsData: string | number) {
   // Could come in as a string or a number so testing for abstract equality

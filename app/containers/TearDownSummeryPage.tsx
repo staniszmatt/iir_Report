@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
-import TearDownSummery from '../components/tearDownSummery';
+// Need to pass combined TypeScript PropsFromRedux to TearDownSummery component.
+// eslint-disable-next-line import/no-cycle
+import TearDownSummery from '../components/TearDownSummery';
 import {
   getWorkOrderData,
   postOrUpdateIIRReport,
