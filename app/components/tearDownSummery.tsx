@@ -146,10 +146,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
         {displayOpenPDFBtn && (
           <div className={styles['open-pdf-btn']}>
             <div>
-              File Location: scanned (\\amr-fs1)(T:) CPLT_TRAVELERS\TearDowns
-            </div>
-            <div>
-              <Btn buttonName="Open Current PDF" ClickHandler={openPDF} />
+              <Btn buttonName="Open PDF" ClickHandler={openPDF} />
             </div>
           </div>
         )}
@@ -284,13 +281,18 @@ export default function TearDownSummery(props: PropsFromRedux) {
                     <Btn buttonName="EDIT NOTES" ClickHandler={handleEditIIRPDF} />
                   </Link>
                 </div>
+                {displayOpenPDFBtn && (
+                  <div>
+                    <Btn buttonName="Open PDF" ClickHandler={openPDF} />
+                  </div>
+                )}
                 {!displayOpenPDFBtn && !linkedAPEWorkOrder && (
                   <div>
                     {displayPDFBtn && !apeOrderNotLinked && (
                       <button onClick={getPDF} type="button">
                         SAVE PDF
                       </button>
-                  )}
+                    )}
                   </div>
                 )}
               </div>

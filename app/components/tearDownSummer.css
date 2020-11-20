@@ -44,7 +44,6 @@
 
 .open-pdf-btn > div > button {
   margin: auto;
-  margin-bottom: 20px;
   background-color: #bfffbf;
 }
 
@@ -91,6 +90,8 @@ div.form-footer > div {
 .open-pdf-btn > div:first-child {
   margin-bottom: 20px;
   color: red;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .form-container > div:first-child {
