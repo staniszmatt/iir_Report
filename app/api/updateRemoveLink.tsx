@@ -19,9 +19,6 @@ interface ReturnData {
 }
 
 async function updateRemoveLink(request: Request) {
-
-  console.log('Remove Link Request: ', request);
-
   const { workOrderAPE, workOrderLink, lineItem } = request;
   const returnData: ReturnData = {
     error: {},
@@ -71,8 +68,6 @@ async function updateRemoveLink(request: Request) {
     await preState.prepare(queryStringAPE);
     const linkAPEData = await preState.execute(preAPEStateParams);
     await preState.unprepare();
-
-    console.log('remove link resp: ', linkAPEData);
 
     if (linkAPEData.recordset[0].id) {
       returnData.resp.linkAPEData = linkAPEData;

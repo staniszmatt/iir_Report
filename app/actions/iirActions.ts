@@ -131,24 +131,6 @@ export function setGetVersion(resp: string) {
   };
 }
 
-
-
-
-
-// TODO: Setup Testing
-export function updateAPELinkWorkOrder(workOrderToLink: {
-  linkWorkOrder: string;
-}) {
-  return (dispatch: Dispatch, getState: GetIIRState) => {
-    console.log('Update APE Link Clicked', workOrderToLink);
-  };
-}
-
-
-
-
-
-
 export function handleRemoveAPELinkWorkOrder(
   _event: {},
   resp: {
@@ -157,7 +139,6 @@ export function handleRemoveAPELinkWorkOrder(
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-    console.log('remove link resp: ', resp);
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
 
@@ -166,28 +147,23 @@ export function handleRemoveAPELinkWorkOrder(
     } else {
       dispatch(toggleErrorModalState(resp.error));
     }
-  }
+  };
 }
 
 // TODO: Setup Testing
 export function removeAPELinkWorkOrder() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-
-    console.log('Remove APE Link Clicked');
     const state = getState().iir;
     const { workOrder, workOrderInfo } = state;
     const { workOrderSearch, workOrderSearchLineItem } = workOrder;
     const { linkedWorkOrderIfAPE } = workOrderInfo;
-
-    dispatch(softResetState());
-
     const mainRequest = {
       request: 'updateRemoveLink',
       workOrderAPE: workOrderSearch,
       workOrderLink: linkedWorkOrderIfAPE,
       lineItem: workOrderSearchLineItem
     };
-
+    dispatch(softResetState());
     const callBackFunction = (
       event: {},
       resp: {
@@ -204,15 +180,6 @@ export function removeAPELinkWorkOrder() {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
-
-
-
-
-
-
-
-
 
 // TODO: Setup Testing
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -241,11 +208,9 @@ export function handleLinkWorkOrder(
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-    console.log(' Link DAta resp: ', resp)
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
-
     if (Object.keys(resp.error).length === 0) {
       dispatch(getIIRData(state.workOrder));
     } else {
@@ -257,8 +222,6 @@ export function handleLinkWorkOrder(
 // TODO: Setup Testing
 export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
-
-    console.log('Submitted Link Request: ', workOrderToLink);
     // Soft Reset to keep current work order info.
     dispatch(softResetState());
     const state = getState().iir;

@@ -23,7 +23,6 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     openPDF,
     cancelLoading,
     linkWorkOrder,
-    updateAPELinkWorkOrder,
     warnRemoveAPELinkWorkOrder,
     iir
   } = props;
@@ -157,12 +156,6 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               )}
               {displayUpdateAPELink && (
                 <div className={styles['link-edit-container']}>
-                  <div>
-                    <LinkWorkOrderForm
-                      onSubmit={updateAPELinkWorkOrder}
-                      label="Change Work Order Link :"
-                    />
-                  </div>
                   <div>
                     <div>
                       <div>Separate Work Order Link:</div>

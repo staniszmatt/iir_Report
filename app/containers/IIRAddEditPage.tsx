@@ -11,7 +11,6 @@ import {
   openPDF,
   cancelLoading,
   linkWorkOrder,
-  updateAPELinkWorkOrder,
   warnRemoveAPELinkWorkOrder
 } from '../actions/iirActions';
 import { IIRStateType } from '../reducers/types';
@@ -31,7 +30,6 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
       openPDF,
       cancelLoading,
       linkWorkOrder,
-      updateAPELinkWorkOrder,
       warnRemoveAPELinkWorkOrder
     },
     dispatch
