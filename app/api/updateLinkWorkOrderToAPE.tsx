@@ -61,16 +61,16 @@ async function postLinkWorkOrderToAPE(request: Request) {
       line: cleanLineItem
     };
     const queryStringAPE = `
-    IF EXISTS (SELECT * FROM tear_down_notes_dev WHERE SalesOrderNumber = @ape AND tear_down_notes_dev.salesOrderNumberLine = @line)
+    IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line)
       BEGIN
-        UPDATE tear_down_notes_dev
+        UPDATE tear_down_notes
           SET linkedWorkOrderIfAPE = @wo
             OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-              WHERE tear_down_notes_dev.SalesOrderNumber = @ape AND tear_down_notes_dev.salesOrderNumberLine = @line
+              WHERE tear_down_notes.SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line
     END
     ELSE
       BEGIN
-        INSERT INTO tear_down_notes_dev (SalesOrderNumber, linkedWorkOrderIfAPE, salesOrderNumberLine)
+        INSERT INTO tear_down_notes (SalesOrderNumber, linkedWorkOrderIfAPE, salesOrderNumberLine)
           OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
         VALUES (@ape, @wo, @line)
     END`;
@@ -88,16 +88,16 @@ async function postLinkWorkOrderToAPE(request: Request) {
         preStateWO.input('wo', sql.VarChar(12));
         preStateWO.input('line', sql.VarChar(2));
         const queryStringWO = `
-        IF EXISTS (SELECT * FROM tear_down_notes_dev WHERE SalesOrderNumber = @wo AND tear_down_notes_dev.salesOrderNumberLine = @line)
+        IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @line)
         BEGIN
-          UPDATE tear_down_notes_dev
+          UPDATE tear_down_notes
             SET linkedAPEWorkOrder = @ape
               OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-                WHERE tear_down_notes_dev.SalesOrderNumber = @wo AND tear_down_notes_dev.salesOrderNumberLine = @line
+                WHERE tear_down_notes.SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @line
         END
         ELSE
           BEGIN
-            INSERT INTO tear_down_notes_dev (SalesOrderNumber, linkedAPEWorkOrder, salesOrderNumberLine)
+            INSERT INTO tear_down_notes (SalesOrderNumber, linkedAPEWorkOrder, salesOrderNumberLine)
               OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
             VALUES (@wo, @ape, @line)
         END`;
