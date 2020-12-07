@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { bindActionCreators, Dispatch } from 'redux';
-import { reset } from 'redux-form';
-import { connect } from 'react-redux';
-import TearDownSummery from '../components/tearDownSummery';
+import { connect, ConnectedProps } from 'react-redux';
+// Need to pass combined TypeScript PropsFromRedux to TearDownSummery component.
+// eslint-disable-next-line import/no-cycle
+import TearDownSummery from '../components/TearDownSummery';
 import {
   getWorkOrderData,
   postOrUpdateIIRReport,
@@ -12,17 +13,15 @@ import {
   savePDF,
   softResetState
 } from '../actions/iirActions';
-import { iirStateType } from '../reducers/types';
+import { IIRStateType } from '../reducers/types';
 
-function mapStateToProps(state: iirStateType) {
+function mapStateToProps(state: IIRStateType) {
   return {
     iir: state.iir
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch<any>) {
-  // Reset Search Form when loading the page.
-  dispatch(reset('workOrderSearchForm'));
   return bindActionCreators(
     {
       getWorkOrderData,
@@ -36,5 +35,7 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
     dispatch
   );
 }
-// TODO: Fix typescript, either the rules or the interface.
-export default connect(mapStateToProps, mapDispatchToProps)(TearDownSummery);
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+export type PropsFromRedux = ConnectedProps<typeof connector>;
+export default connector(TearDownSummery);

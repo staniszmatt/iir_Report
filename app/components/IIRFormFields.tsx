@@ -1,68 +1,78 @@
-/* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable no-useless-escape */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import routes from '../constants/routes.json';
 import FormTextInput from './forms/formTextArea';
-import FormInput from './forms/formInput';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './IIRFormFields.css';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface FormProps {}
+interface FormProps {
+  customerReasonForRemoval: string;
+  evalFindings: string;
+  genConditionReceived: string;
+  workedPerformed: string;
+}
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
   props: {
     handleReviewIIRPDF: () => {};
-    customerReasonForRemoval: string;
-    evalFindings: string;
-    genConditionReceived: string;
-    workedPerformedNote: string;
-    tsnValue: string;
-    tsoValue: string;
-    tsrValue: string;
-    displayTSData: boolean;
+    CustomerNumber: string;
+    linkedWorkOrderIfAPE: string;
+    linkedAPEWorkOrder: string;
   };
 }
 
 const IIRForm = (
-  props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
+  iirFormProps: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
   let btnText = 'UPDATE IIR NOTES';
-  const { handleSubmit, onSubmit } = props;
+  const { handleSubmit, onSubmit } = iirFormProps;
+  const {
+    CustomerNumber,
+    linkedWorkOrderIfAPE,
+    linkedAPEWorkOrder,
+    handleReviewIIRPDF
+  } = iirFormProps.props;
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformedNote,
-    handleReviewIIRPDF,
-    tsnValue,
-    tsoValue,
-    tsrValue,
-    displayTSData
-  } = props.props;
+    workedPerformed
+  } = iirFormProps.initialValues;
+  let textareaDisabled = false;
+  let apeOrderNotLinked = false;
+
+  // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
+  // Or if order is lined to an APE
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+    ? (apeOrderNotLinked = true)
+    : (apeOrderNotLinked = false);
 
   // Setup of label text to include some new line editing here.
   const custRemoval = `(INCOMING INSPECTION)
   CUSTOMER REASON FOR REMOVAL:`;
   const genCondition = `(INCOMING INSPECTION)
   GENERAL CONDITION AS RECEIVED:
-  (OUT OF BOX VIEW EX: CLEAN, DIRTY, MISSING PARTS, DENTED, SCARTCHES)`;
+  (OUT OF BOX VIEW EX: CLEAN, DIRTY, MISSING PARTS, DENTED, SCRATCHES)`;
   const evalCondition = `(INCOMING INSPECTION)
   EVALUATION FINDINGS:
   (HIDDEN DAMAGE:  N/A, DENTED, DAMAGED FLANGE, LEAKS, CORRODED, CRACKED)`;
   const workPerf = `(FINAL TABLE)
   Worked Performed:`;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  (CustomerNumber === 'APE' && apeOrderNotLinked) || linkedAPEWorkOrder
+    ? (textareaDisabled = true)
+    : (textareaDisabled = false);
+
   if (
     customerReasonForRemoval === null &&
     evalFindings === null &&
     genConditionReceived === null &&
-    workedPerformedNote === null
+    workedPerformed === null
   ) {
     btnText = 'ADD NEW IIR NOTES';
   }
@@ -73,51 +83,6 @@ const IIRForm = (
       className={styles['form-container']}
     >
       <div>
-        <div className={styles['form-ts-data']}>
-          {displayTSData && (
-            <div>
-              NOTE: TS numbers can be edited only after notes have been added.
-            </div>
-          )}
-          {!displayTSData && <div />}
-
-          <div>
-            <div>(FINAL TABLE)</div>
-
-            <div>
-              <div>
-                <Field
-                  label="TSO"
-                  component={FormInput}
-                  defaultValue={tsoValue}
-                  name="tsoValue"
-                  type="text"
-                  disabled={displayTSData}
-                />
-              </div>
-              <div>
-                <Field
-                  label="TSR"
-                  component={FormInput}
-                  defaultValue={tsrValue}
-                  name="tsrValue"
-                  type="text"
-                  disabled={displayTSData}
-                />
-              </div>
-              <div>
-                <Field
-                  label="TSN"
-                  component={FormInput}
-                  defaultValue={tsnValue}
-                  name="tsnValue"
-                  type="text"
-                  disabled={displayTSData}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
         <div>
           <Field
             label={custRemoval}
@@ -127,6 +92,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={customerReasonForRemoval}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -138,6 +104,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={genConditionReceived}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -149,6 +116,7 @@ const IIRForm = (
             aria-multiline
             defaultValue={evalFindings}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div>
@@ -158,14 +126,17 @@ const IIRForm = (
             name="workedPerformed"
             type="textarea"
             aria-multiline
-            defaultValue={workedPerformedNote}
+            defaultValue={workedPerformed}
             rows="10"
+            disabled={textareaDisabled}
           />
         </div>
         <div className={styles['form-btn-container']}>
-          <div>
-            <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
-          </div>
+          {!apeOrderNotLinked && (
+            <div>
+              <Btn buttonName={btnText} ClickHandler={handleSubmit(onSubmit)} />
+            </div>
+          )}
           <div>
             <Link to={routes.IIRFORM}>
               <Btn buttonName="Review PDF" ClickHandler={handleReviewIIRPDF} />
@@ -177,68 +148,37 @@ const IIRForm = (
   );
 };
 
-interface Values {
-  customerReasonForRemoval: string;
-  evalFindings: string;
-  genConditionReceived: string;
-  workedPerformed: string;
-  tsnValue: any;
-  tsoValue: any;
-  tsrValue: any;
-}
-
-function validate(values: Values) {
+function validate(values: FormProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
-    workedPerformed,
-    tsnValue,
-    tsrValue,
-    tsoValue
+    workedPerformed
   } = values;
-
-  if (tsnValue) {
-    if (isNaN(tsnValue)) {
-      errors.tsnValue = 'Must be a number!';
-    }
-  }
-
-  if (tsrValue) {
-    if (isNaN(tsrValue)) {
-      errors.tsrValue = 'Must be a number!';
-    }
-  }
-
-  if (tsoValue) {
-    if (isNaN(tsoValue)) {
-      errors.tsoValue = 'Must be a number!';
-    }
-  }
 
   if (customerReasonForRemoval) {
     if (customerReasonForRemoval.length > 700) {
-      errors.customerReasonForRemoval = 'Over max charictor limit!';
+      errors.customerReasonForRemoval = 'Over max character limit!';
     }
   }
 
   if (evalFindings) {
     if (evalFindings.length > 700) {
-      errors.evalFindings = 'Over max charictor limit!';
+      errors.evalFindings = 'Over max character limit!';
     }
   }
 
   if (genConditionReceived) {
     if (genConditionReceived.length > 700) {
-      errors.genConditionReceived = 'Over max charictor limit!';
+      errors.genConditionReceived = 'Over max character limit!';
     }
   }
 
   if (workedPerformed) {
     if (workedPerformed.length > 616) {
-      errors.workedPerformed = 'Over max charictor limit!';
+      errors.workedPerformed = 'Over max character limit!';
     }
   }
   return errors;
@@ -246,15 +186,5 @@ function validate(values: Values) {
 
 export default reduxForm<FormProps, DispatchProps>({
   form: 'iirForm',
-  validate,
-  // Set Initial values to null so returns null if no changes are made.
-  initialValues: {
-    customerReasonForRemoval: null,
-    genConditionReceived: null,
-    evalFindings: null,
-    workedPerformed: null,
-    tsnValue: null,
-    tsrValue: null,
-    tsoValue: null
-  }
+  validate
 })(IIRForm);

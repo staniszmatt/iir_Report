@@ -1,23 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* NOTE:
-   On the DOM when search is first entered, Ignoreing Warning: Cannot update a component from inside the function body of a different component.
-  @hot-loader/react-dom is still on version 16.13.0, it's not compatible with react@16.13.1 but don't want to disable @hot-loader/react-dom.
-
-  If for what ever reason it needs disabled, would need to replace @hot-loader/react-dom with @pmmmwh/react-refresh-webpack-plugin
-  and in the configs/webpack.config.renderer.dev.babel.js in resolve: { alias: { 'react-dom': '@hot-loader/react-dom' } }
-  change to resolve: { alias: { 'react-dom': 'react-dom' } }
-*/
 import React from 'react';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import FormInput from './forms/formInput';
 import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './WorkOrderSearchForm.css';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface FormProps {}
+interface FormProps {
+  workOrderSearch: string;
+  workOrderSearchLineItem: string;
+}
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
 }
 
 const WorkOrderSearchForm = (
@@ -41,14 +35,12 @@ const WorkOrderSearchForm = (
               label="Search For Work Order:"
               component={FormInput}
               name="workOrderSearch"
-              type="text"
               format={toUpperCase}
             />
             <Field
               label="Line Item:"
               component={FormInput}
               name="workOrderSearchLineItem"
-              type="text"
               format={toUpperCase}
             />
           </form>
@@ -61,14 +53,8 @@ const WorkOrderSearchForm = (
   );
 };
 
-interface Values {
-  workOrderSearch: string;
-  workOrderSearchLineItem: string;
-}
-
-function validate(values: Values) {
+function validate(values: FormProps) {
   const { workOrderSearch, workOrderSearchLineItem } = values;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
   if (!workOrderSearch) {

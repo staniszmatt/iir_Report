@@ -7,7 +7,7 @@ import { createLogger } from 'redux-logger';
 import createRootReducer from '../reducers';
 import * as iirActions from '../actions/iirActions';
 import * as modalActions from '../actions/modalActions';
-import { modalStateType, iirStateType } from '../reducers/types';
+import { modalStateType, IIRStateType } from '../reducers/types';
 
 declare global {
   interface Window {
@@ -34,7 +34,7 @@ const configureStore = (initialState?: {
         iirFormDisplay: boolean;
         loadingScreen: boolean;
         postIIRNotes: boolean;
-        diplayOpenPDFBtn: boolean;
+        displayOpenPDFBtn: boolean;
         sendEmail: boolean;
         successUpdateModalCall: boolean;
         workOrder: {
@@ -48,6 +48,11 @@ const configureStore = (initialState?: {
           DateIssuedYYMMDD: string;
           ItemNumber: string;
           Manual_Combined: string;
+          Manual: string;
+          Manual_Document: string;
+          Manual_Section: string;
+          Manual_Revision: string;
+          Manual_Rev_Date_MMDDYY: string;
           OrderType: string;
           PartDescription: string;
           PartNumber: string;
@@ -72,7 +77,7 @@ const configureStore = (initialState?: {
         // eslint-disable-next-line prettier/prettier
       }
     | any
-    | iirStateType;
+    | IIRStateType;
   modals?:
     | {
         modalState: boolean;

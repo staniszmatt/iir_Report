@@ -4,7 +4,12 @@ import { ipcRenderer, shell } from 'electron';
 import { reset } from 'redux-form';
 import fs from 'fs';
 import { GetIIRState, Dispatch } from '../reducers/types';
-import { toggleErrorModalState, toggleSuccessModalState } from './modalActions';
+import {
+  toggleModalState,
+  toggleWarningModalState,
+  toggleErrorModalState,
+  toggleSuccessModalState
+} from './modalActions';
 
 export const RESET_STATE = 'RESET_STATE';
 export const TOGGLE_PDF_DISPLAY = 'TOGGLE_PDF_DISPLAY';
@@ -23,8 +28,9 @@ export const TOGGLE_SEND_EMAIL_OFF = 'TOGGLE_SEND_EMAIL_OFF';
 export const TOGGLE_SUCCESS_UPDATE_MODAL_ON = 'TOGGLE_SUCCESS_UPDATE_MODAL_ON';
 export const TOGGLE_SUCCESS_UPDATE_MODAL_OFF =
   'TOGGLE_SUCCESS_UPDATE_MODAL_OFF';
+export const GET_VERSION = 'GET_VERSION';
 
-interface WorkOrder {
+export interface WorkOrder {
   callAutoEmailer?: () => {} | any;
   callSuccessModal?: () => {} | any;
   workOrderSearch: string;
@@ -118,6 +124,152 @@ export function setWorkOrderData(resp: {}) {
   };
 }
 
+export function setGetVersion(resp: string) {
+  return {
+    type: GET_VERSION,
+    resp
+  };
+}
+
+export function handleRemoveAPELinkWorkOrder(
+  _event: {},
+  resp: {
+    error: { code: string; name: string } | any;
+    data: {};
+  }
+) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    dispatch(toggleLoadingScreenStateOff());
+
+    if (Object.keys(resp.error).length === 0) {
+      dispatch(getIIRData(state.workOrder));
+    } else {
+      dispatch(toggleErrorModalState(resp.error));
+    }
+  };
+}
+
+// TODO: Setup Testing
+export function removeAPELinkWorkOrder() {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    const { workOrder, workOrderInfo } = state;
+    const { workOrderSearch, workOrderSearchLineItem } = workOrder;
+    const { linkedWorkOrderIfAPE } = workOrderInfo;
+    const mainRequest = {
+      request: 'updateRemoveLink',
+      workOrderAPE: workOrderSearch,
+      workOrderLink: linkedWorkOrderIfAPE,
+      lineItem: workOrderSearchLineItem
+    };
+    dispatch(softResetState());
+    const callBackFunction = (
+      event: {},
+      resp: {
+        error: { code: string; name: string };
+        data: {};
+      }
+    ) => {
+      dispatch(handleRemoveAPELinkWorkOrder(event, resp));
+      ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
+    };
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', callBackFunction);
+  };
+}
+
+// TODO: Setup Testing
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function warnRemoveAPELinkWorkOrder(_event: {}) {
+  return (dispatch: Dispatch) => {
+    const warningModalResp = {
+      warningMsg: `Are you sure you wish to remove link to WO?`,
+      btnLbl: 'Remove Link',
+      actionFunction: () => {
+        dispatch(removeAPELinkWorkOrder());
+      },
+      closeModal: () => {
+        dispatch(toggleModalState());
+      }
+    };
+    dispatch(toggleWarningModalState(warningModalResp));
+  };
+}
+
+// TODO: Setup Testing
+export function handleLinkWorkOrder(
+  _event: {},
+  resp: {
+    error: { code: string; name: string } | any;
+    data: {};
+  }
+) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    const state = getState().iir;
+    // Turn off the loading screen once we receive a response.
+    dispatch(toggleLoadingScreenStateOff());
+    if (Object.keys(resp.error).length === 0) {
+      dispatch(getIIRData(state.workOrder));
+    } else {
+      dispatch(toggleErrorModalState(resp.error));
+    }
+  };
+}
+
+// TODO: Setup Testing
+export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
+  return (dispatch: Dispatch, getState: GetIIRState) => {
+    // Soft Reset to keep current work order info.
+    dispatch(softResetState());
+    const state = getState().iir;
+    const { linkWorkOrderToAPE } = workOrderToLink;
+
+    const mainRequest = {
+      request: 'updateLinkWorkOrderToAPE',
+      workOrderToLink: linkWorkOrderToAPE,
+      originalWorkOrder: {
+        workOrder: state.workOrder.workOrderSearch,
+        lineItem: state.workOrder.workOrderSearchLineItem
+      }
+    };
+    const callBackFunction = (
+      event: {},
+      resp: {
+        error: { code: string; name: string };
+        data: {};
+      }
+    ) => {
+      dispatch(handleLinkWorkOrder(event, resp));
+      ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
+    };
+
+    ipcRenderer.send('asynchronous-message', mainRequest);
+    dispatch(toggleLoadingScreenState());
+    ipcRenderer.on('asynchronous-reply', callBackFunction);
+  };
+}
+
+// TODO: Setup Testing
+export function handleGetVersion(_event: {}, resp: { version: string }) {
+  return (dispatch: Dispatch) => {
+    dispatch(setGetVersion(resp.version));
+  };
+}
+// TODO: Setup Testing
+export function getVersion() {
+  return (dispatch: Dispatch) => {
+    const callHandleGetVersion = (event: {}, resp: { version: string }) => {
+      dispatch(handleGetVersion(event, resp));
+      ipcRenderer.removeListener('app_version', callHandleGetVersion);
+    };
+    ipcRenderer.send('app_version');
+    ipcRenderer.on('app_version', callHandleGetVersion);
+  };
+}
+// TODO: Setup Testing
 export function checkForPDFFile(workOrderString: string) {
   return (dispatch: Dispatch) => {
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
@@ -127,8 +279,8 @@ export function checkForPDFFile(workOrderString: string) {
     }
   };
 }
-
-export function savePDF(pdfData: []) {
+// TODO: Setup Testing
+export function savePDF(pdfData: {} | any) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     const workOrder = {
@@ -155,29 +307,35 @@ export function savePDF(pdfData: []) {
     dispatch(getWorkOrderData(workOrder));
   };
 }
-
+// TODO: Setup Testing
 export function handleGeIIRDataResp(
   _event: {},
   resp: {
-    error: { code: string; name: string };
-    data: { length: number; customerReasonForRemoval: string | null };
+    error: { code: string; name: string } | any;
+    data: {
+      length: number;
+      customerReasonForRemoval: string | null;
+      recordPresent: boolean;
+      CustomerNumber: string;
+    };
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
+
     if (Object.keys(resp.error).length === 0) {
       // If there is no note data and set to null, set postIIRNotes to true
-      if (resp.data.customerReasonForRemoval === null) {
+      if (!resp.data.recordPresent) {
         dispatch(togglePostIIRNotes());
       }
 
       const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
 
       // TODO: Setup async for dispatch(setWorkOrderData(resp.data)); to call workOrder.callAutoEmailer(); when loaded.
-      // Once in a great while autoemailer runs before data is saved to state.
-      // Refernece https://redux.js.org/tutorials/essentials/part-5-async-logic on Detailed Explanation
+      // Once in a great while autoEmailer runs before data is saved to state.
+      // Reference https://redux.js.org/tutorials/essentials/part-5-async-logic on Detailed Explanation
       dispatch(setWorkOrderData(resp.data));
       dispatch(toggleIIRAddEditState());
       dispatch(checkForPDFFile(workOrderString));
@@ -196,18 +354,11 @@ export function handleGeIIRDataResp(
     ) {
       dispatch(toggleErrorModalState(resp.error));
     } else {
-      const returnError = { error: '' };
-      if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
-      } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
-      }
-      dispatch(toggleErrorModalState(returnError));
+      dispatch(toggleErrorModalState(resp.error));
     }
   };
 }
-
+// TODO: Setup Testing
 export function getIIRData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
@@ -226,16 +377,22 @@ export function getIIRData(workOrder: {
     }
 
     const mainRequest = {
-      request: 'getIIRData',
-      workOrder
+      request: 'getWorkOrderData',
+      workOrderSearch: workOrder.workOrderSearch,
+      workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
 
     dispatch(setWorkOrder(workOrder));
     const callBackFunction = (
       event: {},
       resp: {
-        error: { code: string; name: string };
-        data: { length: number; customerReasonForRemoval: string | null };
+        error: { code: string; name: string } | any;
+        data: {
+          length: number;
+          customerReasonForRemoval: string | null;
+          recordPresent: boolean;
+          CustomerNumber: string;
+        };
       }
     ) => {
       dispatch(handleGeIIRDataResp(event, resp));
@@ -248,7 +405,7 @@ export function getIIRData(workOrder: {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
+// TODO: Setup Testing
 export function handleEmailerResp(
   _event: {},
   resp: {
@@ -273,7 +430,7 @@ export function handleEmailerResp(
     }
   };
 }
-
+// TODO: Setup Testing
 export function autoEmailer() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState();
@@ -298,8 +455,8 @@ export function autoEmailer() {
         evalFindings
       }
     };
-
-    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
+    // TODO: Setup Testing
+    // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
       resp: {
@@ -316,8 +473,8 @@ export function autoEmailer() {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
-// This will only be exacutable if checkForPDFFile finds the file and sets the display open pdf btn to true.
+// TODO: Setup Testing
+// This will only be exactable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
   return (_dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
@@ -326,24 +483,29 @@ export function openPDF() {
     shell.openItem(filePath);
   };
 }
-
+// TODO: Setup Testing
 export function handleGetWorkOrderDataResp(
   _event: {},
   resp: {
     error: { code: string; name: string };
-    data: [{ Work_Order_Number: string; ItemNumber: string }];
+    data: {
+      Work_Order_Number: string;
+      ItemNumber: string;
+      CustomerNumber: string;
+    };
   }
 ) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
     const { workOrderSearch, workOrderSearchLineItem } = state.workOrder;
+
     // Checking no errors
     if (Object.keys(resp.error).length === 0) {
       // Checking if data is empty and the edit form search is false
       const workOrderString = `${workOrderSearch}-${workOrderSearchLineItem}`;
 
-      dispatch(setWorkOrderData(resp.data[0]));
+      dispatch(setWorkOrderData(resp.data));
       dispatch(toggleDisplayPDFFormState());
       dispatch(checkForPDFFile(workOrderString));
     } else if (
@@ -351,20 +513,11 @@ export function handleGetWorkOrderDataResp(
     ) {
       dispatch(toggleErrorModalState(resp.error));
     } else {
-      dispatch(reset('iirFormDisabled'));
-      dispatch(resetState());
-      const returnError = { error: '' };
-      if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
-      } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
-      }
-      dispatch(toggleErrorModalState(returnError));
+      dispatch(toggleErrorModalState(resp.error));
     }
   };
 }
-
+// TODO: Setup Testing
 export function getWorkOrderData(workOrder: {
   workOrderSearch: string;
   workOrderSearchLineItem: string;
@@ -385,12 +538,16 @@ export function getWorkOrderData(workOrder: {
       workOrderSearch: workOrder.workOrderSearch,
       workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
-    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
+    // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
       resp: {
         error: { code: string; name: string };
-        data: [{ Work_Order_Number: string; ItemNumber: string }];
+        data: {
+          Work_Order_Number: string;
+          ItemNumber: string;
+          CustomerNumber: string;
+        };
       }
     ) => {
       dispatch(handleGetWorkOrderDataResp(event, resp));
@@ -403,20 +560,17 @@ export function getWorkOrderData(workOrder: {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
+// TODO: Setup Testing
 export function postUpdatePDFCheck(iirNotes: {
   customerReasonForRemoval: string | any;
   evalFindings: string | any;
   genConditionReceived: string | any;
   workedPerformed: string | any;
-  tsoValue: string | any;
-  tsrValue: string | any;
-  tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     // When Work Order is searched, it will set state true if a PDF exists. Then setup to move it to the old folder since a change to notes were made.
-    if (state.diplayOpenPDFBtn) {
+    if (state.displayOpenPDFBtn) {
       const dateTime = Date.now();
       const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
       const oldPath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
@@ -437,7 +591,7 @@ export function postUpdatePDFCheck(iirNotes: {
     }
   };
 }
-
+// TODO: Setup Testing
 export function handlePostIIRResp(
   _event: {},
   resp: { error: { name: string; code: string }; data: {} }
@@ -445,47 +599,43 @@ export function handlePostIIRResp(
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     dispatch(toggleLoadingScreenStateOff());
-
     if (Object.keys(resp.error).length === 0) {
       const workOrder: WorkOrder = {
         workOrderSearch: state.workOrder.workOrderSearch,
         workOrderSearchLineItem: state.workOrder.workOrderSearchLineItem
       };
-      // Callback for autoEmailer and success modal only if the updated workOrder Info succuessfully updates state
+      // Callback for autoEmailer and success modal only if the updated workOrder Info successfully updates state
       dispatch(getIIRData(workOrder));
     } else {
-      const returnError = { error: '' };
+      let returnError = {};
 
       if (Object.keys(resp.error).length > 1) {
-        returnError.error = `${resp.error.code}: ${resp.error.name}`;
+        returnError = resp.error;
       } else {
-        returnError.error =
-          'Something went wrong updating or adding IIR notes!';
+        returnError = {
+          error: 'Something went wrong updating or adding IIR notes!'
+        };
       }
       dispatch(toggleErrorModalState(returnError));
     }
   };
 }
-
+// TODO: Setup Testing
 export function postOrUpdateIIRReport(iirNotes: {
   customerReasonForRemoval: string | any;
   evalFindings: string | any;
   genConditionReceived: string | any;
   workedPerformed: string | any;
-  tsoValue: string | any;
-  tsrValue: string | any;
-  tsnValue: string | any;
 }) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     // When changes are made, need to move the current PDF out to prevent people pulling a none updated PDF.
-
     // If values are not changed, then set them to null
-    const valueChangeCheck = (stateValue: string, recievedValue: string) => {
-      if (stateValue === recievedValue || recievedValue === null) {
+    const valueChangeCheck = (stateValue: string, receivedValue: string) => {
+      if (stateValue === receivedValue || receivedValue === null) {
         return null;
       }
-      return recievedValue;
+      return receivedValue;
     };
     // Setup value checks to use for comparing and returning null values.
     const valueChangeCheckCustomerReasonForRemoval = valueChangeCheck(
@@ -505,47 +655,12 @@ export function postOrUpdateIIRReport(iirNotes: {
       iirNotes.workedPerformed
     );
 
-    // Check if values excists in AeroParts DB otherwise use the JobCost DB value.
-    let tsoValueCheck: string;
-    let tsnValueCheck: string;
-    let tsrValueCheck: string;
-
-    if (
-      state.workOrderInfo.tearDownTSO === null &&
-      state.workOrderInfo.tearDownTSN === null &&
-      state.workOrderInfo.tearDownTSR === null
-    ) {
-      tsoValueCheck = state.workOrderInfo.TSO.toString();
-      tsnValueCheck = state.workOrderInfo.TSN.toString();
-      tsrValueCheck = state.workOrderInfo.TSR.toString();
-    } else {
-      tsoValueCheck = state.workOrderInfo.tearDownTSO;
-      tsnValueCheck = state.workOrderInfo.tearDownTSN;
-      tsrValueCheck = state.workOrderInfo.tearDownTSR;
-    }
-
-    const valueChangeChecktso = valueChangeCheck(
-      tsoValueCheck,
-      iirNotes.tsoValue
-    );
-    const valueChangeChecktsn = valueChangeCheck(
-      tsnValueCheck,
-      iirNotes.tsnValue
-    );
-    const valueChangeChecktsr = valueChangeCheck(
-      tsrValueCheck,
-      iirNotes.tsrValue
-    );
-
     // Cancel out if nothing was changed.
     if (
       valueChangeCheckCustomerReasonForRemoval === null &&
       valueChangeCheckEvalFindings === null &&
       valueChangeCheckGenConditionReceived === null &&
-      valueChangeCheckWorkedPerformed === null &&
-      valueChangeChecktso === null &&
-      valueChangeChecktsn === null &&
-      valueChangeChecktsr === null
+      valueChangeCheckWorkedPerformed === null
     ) {
       const returnError = {
         error: 'Nothing was changed! Please make changes to submit.'
@@ -561,25 +676,6 @@ export function postOrUpdateIIRReport(iirNotes: {
       request = 'postIIRReport';
     }
 
-    // Check if we need to send the JobCost Data but the origin null check if we have AeroParts Data.
-    let sendTSOData: string | null;
-    let sendTSNData: string | null;
-    let sendTSRData: string | null;
-
-    if (
-      state.workOrderInfo.tearDownTSO === null &&
-      state.workOrderInfo.tearDownTSN === null &&
-      state.workOrderInfo.tearDownTSR === null
-    ) {
-      sendTSOData = tsoValueCheck;
-      sendTSNData = tsnValueCheck;
-      sendTSRData = tsrValueCheck;
-    } else {
-      sendTSOData = valueChangeChecktso;
-      sendTSNData = valueChangeChecktsn;
-      sendTSRData = valueChangeChecktsr;
-    }
-
     if (
       valueChangeCheckCustomerReasonForRemoval !== null ||
       valueChangeCheckEvalFindings !== null ||
@@ -589,19 +685,26 @@ export function postOrUpdateIIRReport(iirNotes: {
     }
     dispatch(toggleSuccessUpdateModalOn());
 
+    let linkedWorkOrderIfAPE = null;
+    if (
+      state.workOrderInfo.linkedWorkOrderIfAPE &&
+      state.workOrderInfo.linkedWorkOrderIfAPE.length > 0
+    ) {
+      linkedWorkOrderIfAPE = state.workOrderInfo.linkedWorkOrderIfAPE;
+    }
+
     const mainRequest = {
       request,
+      linkedWorkOrderIfAPE,
       SalesOrderNumber: state.workOrder.workOrderSearch,
       salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,
       genConditionReceived: iirNotes.genConditionReceived,
       evalFindings: iirNotes.evalFindings,
-      workedPerformed: iirNotes.workedPerformed,
-      tearDownTSO: sendTSOData,
-      tearDownTSN: sendTSNData,
-      tearDownTSR: sendTSRData
+      workedPerformed: iirNotes.workedPerformed
     };
-    // Setup to dispatch with callback function and can then cancle that specific listener when recived.
+
+    // Setup to dispatch with callback function and can then cancel that specific listener when received.
     const callBackFunction = (
       event: {},
       resp: { error: { code: string; name: string }; data: object[] }
@@ -615,7 +718,7 @@ export function postOrUpdateIIRReport(iirNotes: {
     ipcRenderer.on('asynchronous-reply', callBackFunction);
   };
 }
-
+// TODO: Setup Testing
 export function handleEditIIRPDF() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
@@ -627,7 +730,7 @@ export function handleEditIIRPDF() {
     dispatch(getIIRData(workOrder));
   };
 }
-
+// TODO: Setup Testing
 export function handleReviewIIRPDF() {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
@@ -639,10 +742,10 @@ export function handleReviewIIRPDF() {
     dispatch(getWorkOrderData(workOrder));
   };
 }
-
+// TODO: Setup Testing
 export function cancelLoading() {
-  // Resets the state, removes loading screen and clears the listner that
-  // could be setup to prevent aditional server request issues when cancling
+  // Resets the state, removes loading screen and clears the listener that
+  // could be setup to prevent additional server request issues when canceling
   // a loading state.
   return (dispatch: Dispatch) => {
     dispatch(resetState());

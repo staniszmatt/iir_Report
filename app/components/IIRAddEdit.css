@@ -15,6 +15,41 @@
   font-size: 16px;
 }
 
+.link-ape-display > div {
+  text-align: center;
+  font-size: 18px;
+  border-bottom: 1px solid black;
+  padding-bottom: 15px;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #c20e0e;
+}
+
+.link-ape-display > div > button {
+  margin: 0 20px;
+  background-color: #bfffbf;
+  font-size: 18px;
+}
+
+.open-pdf-btn > div > button {
+  margin: auto;
+  background-color: #bfffbf;
+}
+
+.link-edit-container > div > div > button {
+  font-size: 15px;
+  background-color: #faa4a4;
+}
+
+.link-ape-display > div > button:hover {
+  background-color: #50d33c;
+}
+
+.link-edit-container > div {
+  margin: auto;
+  display: flex;
+}
+
 .header-info > div > div {
   margin: auto;
 }
@@ -30,12 +65,6 @@
 .open-pdf-btn > div:first-child {
   margin-bottom: 20px;
   color: red;
-}
-
-.open-pdf-btn > div > button {
-  margin: auto;
-  margin-bottom: 20px;
-  background-color: #bfffbf;
 }
 
 .open-pdf-btn > div > button:hover {
@@ -78,4 +107,48 @@
   user-select: none;
   pointer-events: none;
   width: 100%;
+}
+
+#version {
+  display: none;
+}
+
+.link-input-container {
+  text-align: center;
+  padding-bottom: 15px;
+  color: red;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 1px solid black;
+}
+
+.link-edit-container {
+  text-align: center;
+  background-color: lightgray;
+  border-bottom: 1px solid black;
+  display: flex;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.link-edit-container > div > div:first-child {
+  padding-right: 10px;
+}
+
+.link-edit-container > div > div > button:hover {
+  background-color: #f00;
+}
+
+.link-edit-container > div > div:first-child > div > div > form {
+  background-color: unset;
+}
+
+.link-edit-container > div > div:first-child > div > div > div > button {
+  font-size: 15px;
+  background-color: #faa4a4;
+}
+
+.link-edit-container > div > div:first-child > div > div > div > button:hover {
+  background-color: #f00;
 }

@@ -33,12 +33,23 @@ export default function FormField(props: Props) {
     label,
     meta: { error, touched }
   } = props;
+  // IF a default value isn't passed, set initialState to empty string.
+  // This helps resolve error where state change is through redux-form rather than
+  // inside this component.
+  let initialDefaultValue = defaultValue;
+  if (!defaultValue) {
+    initialDefaultValue = '';
+  }
   const [valueState, setValueState] = useState<ValueState>({
-    inputValue: defaultValue
+    inputValue: initialDefaultValue
   });
 
   const valueChange = (event: { currentTarget: { value: string } }) => {
-    const changeCharString = event.currentTarget.value.toUpperCase();
+    const changeCharString = event.currentTarget.value
+      .toUpperCase()
+      .replace(/  +/g, '')
+      .replace(/[^a-zA-Z-0-9-.-: ]/g, '');
+
     setValueState({
       ...valueState,
       inputValue: changeCharString
@@ -57,7 +68,7 @@ export default function FormField(props: Props) {
         disabled={disabled}
         id={name}
       />
-      {error && <p className="red-text darken-2">{touched && error}</p>}
+      {error && touched && <p className="red-text darken-2">{error}</p>}
     </div>
   );
 }

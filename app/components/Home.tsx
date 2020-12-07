@@ -1,28 +1,16 @@
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import React from 'react';
-// import styles from './Home.css';
-// import logo from '../img/Logo.png';
-
-// export default function Home() {
-//   return (
-//     <div className={styles.container} data-tid="container">
-//       <div className={styles.backgroundImageContainer}>
-//         <img src={logo} alt="AeroParts Logo" />
-//       </div>
-//     </div>
-//   );
-// }
 import React, { useState } from 'react';
 import LoadingDisplay from './LoadingDisplay';
 import styles from './Home.css';
 
 interface Props {
   testDB: (queryString: string) => {};
+  getVersion: () => {};
   iir: {
     loadingScreen: boolean;
-  }
-};
+    appVersion: string;
+  };
+}
 
 interface HomeState {
   textInput: string;
@@ -33,13 +21,16 @@ export default function Home(props: Props) {
   const [homeState, setHomeState] = useState<HomeState>({
     textInput: ''
   })
-  const { testDB } = props;
-  const { loadingScreen } = props.iir;
+  const { testDB, getVersion, iir } = props;
+  const { loadingScreen, appVersion } = iir;
+
+  if (appVersion === '') {
+    getVersion();
+  }
 
   const sendData = (event: any) => {
     console.log('test query string send, event:', event);
     console.log('test query sting send, queryString', homeState.textInput);
-
     testDB(homeState.textInput);
   }
 
@@ -63,6 +54,9 @@ export default function Home(props: Props) {
         </div>
         <div>
           <textarea onChange={setText}>{homeState.textInput}</textarea>
+        </div>
+        <div id={styles.version}>
+          <p>{`VERSION: ${appVersion}`}</p>
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
-import { Store, modalStateType, iirStateType } from '../reducers/types';
+import { Store, modalStateType, IIRStateType } from '../reducers/types';
 // import { Store, customerStateType, counterStateType } from '../reducers/types';
 
 const history = createHashHistory();
@@ -19,7 +19,7 @@ function configureStore(initialState?: {
         iirFormDisplay: boolean;
         loadingScreen: boolean;
         postIIRNotes: boolean;
-        diplayOpenPDFBtn: boolean;
+        displayOpenPDFBtn: boolean;
         sendEmail: boolean;
         successUpdateModalCall: boolean;
         workOrder: {
@@ -33,6 +33,11 @@ function configureStore(initialState?: {
           DateIssuedYYMMDD: string;
           ItemNumber: string;
           Manual_Combined: string;
+          Manual: string;
+          Manual_Document: string;
+          Manual_Section: string;
+          Manual_Revision: string;
+          Manual_Rev_Date_MMDDYY: string;
           OrderType: string;
           PartDescription: string;
           PartNumber: string;
@@ -57,7 +62,7 @@ function configureStore(initialState?: {
         // eslint-disable-next-line prettier/prettier
       }
     | any
-    | iirStateType;
+    | IIRStateType;
   modals?:
     | {
         modalState: boolean;

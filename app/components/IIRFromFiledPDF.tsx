@@ -1,51 +1,64 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-useless-escape */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/camelcase */
 import React from 'react';
 import { Field, reduxForm, InjectedFormProps } from 'redux-form';
 import FormTextInput from './forms/formTextArea';
 import styles from './IIRFormFields.css';
 
+// Not using any validation or using any of the form props but need to pass typescript
+// error when calling (IIRForm)
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface FormProps {}
 
 interface DispatchProps {
-  onSubmit: () => {};
+  onSubmit: any | (() => void);
   props: {
     customerReasonForRemoval: string;
     evalFindings: string;
     genConditionReceived: string;
     workedPerformedNote: string;
     workedPerformed: string;
+    Manual: string;
+    Manual_Document: string;
+    Manual_Section: string;
+    Manual_Revision: string;
+    Manual_Rev_Date_MMDDYY: string;
   };
 }
 
 const IIRForm = (
-  props: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
+  iirFormProps: DispatchProps & InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  const { handleSubmit, onSubmit } = props;
+  const { handleSubmit, onSubmit } = iirFormProps;
   const {
     customerReasonForRemoval,
     evalFindings,
     genConditionReceived,
     workedPerformedNote,
-    workedPerformed
-  } = props.props;
-  // Removing white space for this specific item in the JobCost DB.
-  const workedPerformedFixString = workedPerformed
-    .replace('       ', ' ')
-    .replace('           ', ' ')
-    .replace('         ', ' ');
+    workedPerformed,
+    Manual,
+    Manual_Document,
+    Manual_Section,
+    Manual_Revision,
+    Manual_Rev_Date_MMDDYY
+  } = iirFormProps.props;
+  const disableTextArea = true;
+  let fixManual_RevisionString = 'N/A';
+  let workPerformedDefault = 'N/A';
+
   const warningCheck = {
     background: 'none'
   };
-
-  let workPerformedDefault = `${workedPerformedFixString}\n${workedPerformedNote}`;
+  // TODO: Setup for if/else statement
 
   if (workedPerformed === 'N/A' || workedPerformed === '') {
     workPerformedDefault = 'WARNING - NO WORK HAS BEEN SETUP YET!';
     warningCheck.background = 'yellow';
   } else {
+    // Removing white space for this specific item in the JobCost DB.
+    fixManual_RevisionString = Manual_Revision.replace(/\s/g, '');
+    const updatedWorkPerformed = `Manual:${Manual}  Document:${Manual_Document}-${Manual_Section}  Rev:${fixManual_RevisionString}  Dated:${Manual_Rev_Date_MMDDYY}`;
+    workPerformedDefault = `${updatedWorkPerformed}\n${workedPerformedNote}`;
     warningCheck.background = 'none';
   }
 
@@ -63,31 +76,31 @@ const IIRForm = (
           aria-multiline
           defaultValue={customerReasonForRemoval}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
       <div>
         <Field
-          label="GENERAL CONDITION AS RECEIVED (HIDDEN DAMAGE):"
+          label="GENERAL CONDITION AS RECEIVED:"
           component={FormTextInput}
           name="genConditionReceived"
           type="textarea"
           aria-multiline
           defaultValue={genConditionReceived}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
       <div>
         <Field
-          label="EVALUATION FINDINGS:"
+          label="EVALUATION FINDINGS (HIDDEN DAMAGE):"
           component={FormTextInput}
           name="evalFindings"
           type="textarea"
           aria-multiline
           defaultValue={evalFindings}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
       <div style={warningCheck}>
@@ -99,7 +112,7 @@ const IIRForm = (
           aria-multiline
           defaultValue={workPerformedDefault}
           rows="10"
-          disabled={true}
+          disabled={disableTextArea}
         />
       </div>
     </form>

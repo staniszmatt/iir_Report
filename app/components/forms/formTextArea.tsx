@@ -1,12 +1,8 @@
-/* eslint-disable jsx-a11y/no-autofocus */
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styles from './formInput.css';
 
-interface Props {
+interface TextareaProps {
   defaultValue: string;
   disabled: boolean;
   input: {
@@ -25,7 +21,7 @@ interface ValueState {
   inputValue: string;
 }
 
-export default function FormTextArea(props: Props) {
+export default function FormTextArea(textareaProps: TextareaProps) {
   const {
     defaultValue,
     disabled,
@@ -33,7 +29,7 @@ export default function FormTextArea(props: Props) {
     rows,
     label,
     meta: { error, touched }
-  } = props;
+  } = textareaProps;
 
   const [valueState, setValueState] = useState<ValueState>({
     inputValue: defaultValue
@@ -42,9 +38,8 @@ export default function FormTextArea(props: Props) {
   const valueChange = (event: { currentTarget: { value: string } }) => {
     const changeCharString = event.currentTarget.value
       .replace(/  +/g, ' ')
-      .replace(/[`]/g, '"')
-      .replace(/[']/g, '"')
-      .replace(/["]/g, '"');
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
 
     setValueState({
       ...valueState,
@@ -55,7 +50,7 @@ export default function FormTextArea(props: Props) {
   return (
     <div className={styles['textarea-container']}>
       <div>
-        <label htmlFor={props.input.name}>{label}</label>
+        <label htmlFor={textareaProps.input.name}>{label}</label>
       </div>
       <div>
         <textarea
@@ -63,12 +58,12 @@ export default function FormTextArea(props: Props) {
           value={valueState.inputValue}
           onChange={valueChange}
           disabled={disabled}
-          id={props.input.name}
+          id={textareaProps.input.name}
           aria-multiline
           rows={rows}
         />
       </div>
-      {error && <p className="red-text darken-2">{touched && error}</p>}
+      {error && touched && <p className="red-text darken-2">{error}</p>}
     </div>
   );
 }
