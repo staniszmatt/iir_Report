@@ -676,13 +676,16 @@ export function postOrUpdateIIRReport(iirNotes: {
       request = 'postIIRReport';
     }
 
-    if (
-      valueChangeCheckCustomerReasonForRemoval !== null ||
-      valueChangeCheckEvalFindings !== null ||
-      valueChangeCheckGenConditionReceived !== null
-    ) {
-      dispatch(toggleSendEmailStateOn());
+    if (state.workOrderInfo.CustomerNumber !== 'APE') {
+      if (
+        valueChangeCheckCustomerReasonForRemoval !== null ||
+        valueChangeCheckEvalFindings !== null ||
+        valueChangeCheckGenConditionReceived !== null
+      ) {
+        dispatch(toggleSendEmailStateOn());
+      }
     }
+
     dispatch(toggleSuccessUpdateModalOn());
 
     let linkedWorkOrderIfAPE = null;
