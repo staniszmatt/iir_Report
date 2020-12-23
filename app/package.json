@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "msnodesqlv8": "^2.0.5",
+    "msnodesqlv8": "^2.0.8",
     "mssql": "^6.2.3",
     "odbc": "^2.3.5"
   },
