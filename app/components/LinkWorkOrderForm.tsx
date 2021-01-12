@@ -12,7 +12,6 @@ interface FormProps {
 
 interface DispatchProps {
   onSubmit: any | (() => void);
-  label: string;
   props?: {
     workOrderSearch: string;
   };
@@ -22,7 +21,7 @@ const LinkWorkOrderForm = (
   linkWorkOrderProps: DispatchProps &
     InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  const { handleSubmit, onSubmit, label } = linkWorkOrderProps;
+  const { handleSubmit, onSubmit } = linkWorkOrderProps;
 
   function toUpperCase(value: string) {
     return value && value.toUpperCase();
@@ -34,7 +33,7 @@ const LinkWorkOrderForm = (
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Field
-              label={label}
+              label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
               component={FormInput}
               name="linkWorkOrderToAPE"
               format={toUpperCase}
@@ -59,8 +58,6 @@ function validate(values: FormProps, linkWorkOrderProps: DispatchProps) {
   const { linkWorkOrderToAPE, linkWorkOrderToAPELineItem } = values;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
-
-  debugger;
 
   if (!linkWorkOrderToAPE) {
     errors.linkWorkOrder = 'Please Enter A Work Order Number!';
