@@ -6,7 +6,8 @@ import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './LinkWorkOrderForm.css';
 
 interface FormProps {
-  linkWorkOrder: string;
+  linkWorkOrderToAPE: string;
+  linkWorkOrderToAPELineItem: string;
 }
 
 interface DispatchProps {
@@ -55,22 +56,43 @@ const LinkWorkOrderForm = (
 };
 
 function validate(values: FormProps, linkWorkOrderProps: DispatchProps) {
-  const { linkWorkOrder } = values;
+  const { linkWorkOrderToAPE, linkWorkOrderToAPELineItem } = values;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
-  if (!linkWorkOrder) {
+  debugger;
+
+  if (!linkWorkOrderToAPE) {
     errors.linkWorkOrder = 'Please Enter A Work Order Number!';
   }
-  if (linkWorkOrder) {
-    if (linkWorkOrder.length > 5 || linkWorkOrder.length < 5) {
+  if (linkWorkOrderToAPE) {
+    if (linkWorkOrderToAPE.length > 5 || linkWorkOrderToAPE.length < 5) {
       errors.linkWorkOrder =
         'Work Order Number should only be 5 characters long!';
     }
-    if (linkWorkOrder === linkWorkOrderProps.props?.workOrderSearch) {
+    if (linkWorkOrderToAPE === linkWorkOrderProps.props?.workOrderSearch) {
       errors.linkWorkOrder = 'Trying to link APE to itself';
     }
   }
+
+  if (!linkWorkOrderToAPELineItem) {
+    errors.workOrderSearchLineItem =
+      'Please enter the work order number line item number!';
+  }
+  if (linkWorkOrderToAPELineItem) {
+    if (linkWorkOrderToAPELineItem.length > 2) {
+      errors.workOrderSearchLineItem =
+        'Line item number should only be 2 characters long!';
+    }
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(linkWorkOrderToAPELineItem as any)) {
+      errors.workOrderSearchLineItem = 'Line item must be a number!';
+    }
+    if (linkWorkOrderToAPELineItem === '0') {
+      errors.workOrderSearchLineItem = 'Line item must start with 1 or higher!';
+    }
+  }
+
   return errors;
 }
 

@@ -156,11 +156,14 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               )}
               {apeOrderNotLinked && (
                 <div className={styles['link-input-container']}>
+                  <WorkOrderSearchForm onSubmit={linkWorkOrder} />
+                  {/**
                   <LinkWorkOrderForm
                     onSubmit={linkWorkOrder}
                     props={workOrder}
                     label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
                   />
+                  */}
                 </div>
               )}
               {displayUpdateAPELink && (
