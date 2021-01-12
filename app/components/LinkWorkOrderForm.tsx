@@ -60,33 +60,34 @@ function validate(values: FormProps, linkWorkOrderProps: DispatchProps) {
   const errors: any = {};
 
   if (!linkWorkOrderToAPE) {
-    errors.linkWorkOrder = 'Please Enter A Work Order Number!';
+    errors.linkWorkOrderToAPE = 'Please Enter A Work Order Number!';
   }
   if (linkWorkOrderToAPE) {
     if (linkWorkOrderToAPE.length > 5 || linkWorkOrderToAPE.length < 5) {
-      errors.linkWorkOrder =
+      errors.linkWorkOrderToAPE =
         'Work Order Number should only be 5 characters long!';
     }
     if (linkWorkOrderToAPE === linkWorkOrderProps.props?.workOrderSearch) {
-      errors.linkWorkOrder = 'Trying to link APE to itself';
+      errors.linkWorkOrderToAPE = 'Trying to link APE to itself';
     }
   }
 
   if (!linkWorkOrderToAPELineItem) {
-    errors.workOrderSearchLineItem =
+    errors.linkWorkOrderToAPELineItem =
       'Please enter the work order number line item number!';
   }
   if (linkWorkOrderToAPELineItem) {
     if (linkWorkOrderToAPELineItem.length > 2) {
-      errors.workOrderSearchLineItem =
+      errors.linkWorkOrderToAPELineItem =
         'Line item number should only be 2 characters long!';
     }
     // eslint-disable-next-line no-restricted-globals
     if (isNaN(linkWorkOrderToAPELineItem as any)) {
-      errors.workOrderSearchLineItem = 'Line item must be a number!';
+      errors.linkWorkOrderToAPELineItem = 'Line item must be a number!';
     }
     if (linkWorkOrderToAPELineItem === '0') {
-      errors.workOrderSearchLineItem = 'Line item must start with 1 or higher!';
+      errors.linkWorkOrderToAPELineItem =
+        'Line item must start with 1 or higher!';
     }
   }
 
