@@ -38,6 +38,12 @@ const LinkWorkOrderForm = (
               name="linkWorkOrderToAPE"
               format={toUpperCase}
             />
+            <Field
+              label="Line Item"
+              component={FormInput}
+              name="linkWorkOrderToAPELineItem"
+              format={toUpperCase}
+            />
           </form>
           <div>
             <Btn buttonName="Submit" ClickHandler={handleSubmit(onSubmit)} />
