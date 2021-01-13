@@ -211,6 +211,7 @@ export function handleLinkWorkOrder(
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
+
     if (Object.keys(resp.error).length === 0) {
       dispatch(getIIRData(state.workOrder));
     } else {
@@ -235,6 +236,9 @@ export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
         lineItem: state.workOrder.workOrderSearchLineItem
       }
     };
+
+    debugger;
+
     const callBackFunction = (
       event: {},
       resp: {
