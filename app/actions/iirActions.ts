@@ -156,11 +156,15 @@ export function removeAPELinkWorkOrder() {
     const state = getState().iir;
     const { workOrder, workOrderInfo } = state;
     const { workOrderSearch, workOrderSearchLineItem } = workOrder;
-    const { linkedWorkOrderIfAPE } = workOrderInfo;
+    const {
+      linkedWorkOrderIfAPE,
+      linkedWorkOrderIfAPELineItem
+    } = workOrderInfo;
     const mainRequest = {
       request: 'updateRemoveLink',
       workOrderAPE: workOrderSearch,
       workOrderLink: linkedWorkOrderIfAPE,
+      workOrderLinkLineItem: linkedWorkOrderIfAPELineItem,
       lineItem: workOrderSearchLineItem
     };
     dispatch(softResetState());
