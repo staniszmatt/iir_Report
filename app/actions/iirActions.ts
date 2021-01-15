@@ -221,23 +221,25 @@ export function handleLinkWorkOrder(
 }
 
 // TODO: Setup Testing
-export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
+export function linkWorkOrder(workOrderToLink: {
+  linkWorkOrderToAPE: string;
+  linkWorkOrderToAPELineItem: string;
+}) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     // Soft Reset to keep current work order info.
     dispatch(softResetState());
     const state = getState().iir;
-    const { linkWorkOrderToAPE } = workOrderToLink;
+    const { linkWorkOrderToAPE, linkWorkOrderToAPELineItem } = workOrderToLink;
 
     const mainRequest = {
       request: 'updateLinkWorkOrderToAPE',
       workOrderToLink: linkWorkOrderToAPE,
+      workOrderToLinkLineItem: linkWorkOrderToAPELineItem,
       originalWorkOrder: {
         workOrder: state.workOrder.workOrderSearch,
         lineItem: state.workOrder.workOrderSearchLineItem
       }
     };
-
-    debugger;
 
     const callBackFunction = (
       event: {},
@@ -386,6 +388,8 @@ export function getIIRData(workOrder: {
       workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
 
+    console.log('main request to get order data: ', mainRequest);
+
     dispatch(setWorkOrder(workOrder));
     const callBackFunction = (
       event: {},
@@ -399,6 +403,9 @@ export function getIIRData(workOrder: {
         };
       }
     ) => {
+
+      console.log('Get data resp: ', resp);
+
       dispatch(handleGeIIRDataResp(event, resp));
       ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
     };
