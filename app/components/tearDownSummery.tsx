@@ -12,7 +12,7 @@ import ArrayComponents from './ReturnArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
-import styles from './TearDownSummer.css';
+import styles from './TearDownSummer.css'
 import logo from '../img/logo.png';
 // eslint-disable-next-line import/no-cycle
 import { PropsFromRedux } from '../containers/TearDownSummeryPage';
