@@ -8,6 +8,7 @@ interface Request {
   SalesOrderNumber: string;
   salesOrderNumberLine: string;
   linkedWorkOrderIfAPE: string;
+  linkedWorkOrderIfAPELineItem: string;
   customerReasonForRemoval: string | null;
   genConditionReceived: string | null;
   evalFindings: string | null;
@@ -25,6 +26,7 @@ async function postIIRReport(request: Request) {
     SalesOrderNumber,
     salesOrderNumberLine,
     linkedWorkOrderIfAPE,
+    linkedWorkOrderIfAPELineItem,
     customerReasonForRemoval,
     genConditionReceived,
     evalFindings,
@@ -44,6 +46,7 @@ async function postIIRReport(request: Request) {
   };
   const dbQueryRequest: any = {};
   let cleanWorkOrder = '';
+  let cleanLineItem = '';
 
   // This will load objects but ignore null value objects.
   // Needed to do this so we can get a count of the total number posts to be made
@@ -61,16 +64,19 @@ async function postIIRReport(request: Request) {
       .replace(/  +/g, '')
       .replace(/[`']/g, '"')
       .replace(/[#^&*<>()@~]/g, '');
+    cleanLineItem = linkedWorkOrderIfAPELineItem
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
   } else {
     cleanWorkOrder = SalesOrderNumber.replace(/  +/g, '')
       .replace(/[`']/g, '"')
       .replace(/[#^&*<>()@~]/g, '');
+    cleanLineItem = salesOrderNumberLine
+      .replace(/  +/g, '')
+      .replace(/[`']/g, '"')
+      .replace(/[#^&*<>()@~]/g, '');
   }
-
-  const cleanLineItem = salesOrderNumberLine
-    .replace(/  +/g, '')
-    .replace(/[`']/g, '"')
-    .replace(/[#^&*<>()@~]/g, '');
 
   // Start Setup the @param count to add to query string to help setup prepare statement
   let keyValue = '';
@@ -110,7 +116,7 @@ async function postIIRReport(request: Request) {
   });
 
   try {
-    const queryString = `UPDATE tear_down_notes
+    const queryString = `UPDATE tear_down_notes_dev
     SET ${keyValue}
     OUTPUT INSERTED.id, GETDATE() as dateStamp, CURRENT_USER as UserName
     WHERE SalesOrderNumber = @param1 AND salesOrderNumberLine = @param2`;

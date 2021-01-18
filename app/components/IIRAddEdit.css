@@ -18,8 +18,8 @@
 .link-ape-display > div {
   text-align: center;
   font-size: 18px;
+  padding: 10px 0;
   border-bottom: 1px solid black;
-  padding-bottom: 15px;
   font-weight: bold;
   text-decoration: underline;
   color: #c20e0e;
@@ -72,7 +72,6 @@
 }
 
 .header-info {
-  margin-bottom: 20px;
   border-top: 1px solid black;
   border-bottom: 1px solid black;
 }
@@ -115,7 +114,7 @@
 
 .link-input-container {
   text-align: center;
-  padding-bottom: 15px;
+  padding: 15px 0;
   color: red;
   font-size: 18px;
   font-weight: bold;

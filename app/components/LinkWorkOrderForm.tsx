@@ -6,12 +6,12 @@ import Btn from './buttonFunctions/buttonClickHandler';
 import styles from './LinkWorkOrderForm.css';
 
 interface FormProps {
-  linkWorkOrder: string;
+  linkWorkOrderToAPE: string;
+  linkWorkOrderToAPELineItem: string;
 }
 
 interface DispatchProps {
   onSubmit: any | (() => void);
-  label: string;
   props?: {
     workOrderSearch: string;
   };
@@ -21,7 +21,7 @@ const LinkWorkOrderForm = (
   linkWorkOrderProps: DispatchProps &
     InjectedFormProps<FormProps, DispatchProps>
 ) => {
-  const { handleSubmit, onSubmit, label } = linkWorkOrderProps;
+  const { handleSubmit, onSubmit } = linkWorkOrderProps;
 
   function toUpperCase(value: string) {
     return value && value.toUpperCase();
@@ -33,9 +33,15 @@ const LinkWorkOrderForm = (
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Field
-              label={label}
+              label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
               component={FormInput}
               name="linkWorkOrderToAPE"
+              format={toUpperCase}
+            />
+            <Field
+              label="Line Item"
+              component={FormInput}
+              name="linkWorkOrderToAPELineItem"
               format={toUpperCase}
             />
           </form>
@@ -49,22 +55,42 @@ const LinkWorkOrderForm = (
 };
 
 function validate(values: FormProps, linkWorkOrderProps: DispatchProps) {
-  const { linkWorkOrder } = values;
+  const { linkWorkOrderToAPE, linkWorkOrderToAPELineItem } = values;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errors: any = {};
 
-  if (!linkWorkOrder) {
-    errors.linkWorkOrder = 'Please Enter A Work Order Number!';
+  if (!linkWorkOrderToAPE) {
+    errors.linkWorkOrderToAPE = 'Please Enter A Work Order Number!';
   }
-  if (linkWorkOrder) {
-    if (linkWorkOrder.length > 5 || linkWorkOrder.length < 5) {
-      errors.linkWorkOrder =
+  if (linkWorkOrderToAPE) {
+    if (linkWorkOrderToAPE.length > 5 || linkWorkOrderToAPE.length < 5) {
+      errors.linkWorkOrderToAPE =
         'Work Order Number should only be 5 characters long!';
     }
-    if (linkWorkOrder === linkWorkOrderProps.props?.workOrderSearch) {
-      errors.linkWorkOrder = 'Trying to link APE to itself';
+    if (linkWorkOrderToAPE === linkWorkOrderProps.props?.workOrderSearch) {
+      errors.linkWorkOrderToAPE = 'Trying to link APE to itself';
     }
   }
+
+  if (!linkWorkOrderToAPELineItem) {
+    errors.linkWorkOrderToAPELineItem =
+      'Please enter the work order number line item number!';
+  }
+  if (linkWorkOrderToAPELineItem) {
+    if (linkWorkOrderToAPELineItem.length > 2) {
+      errors.linkWorkOrderToAPELineItem =
+        'Line item number should only be 2 characters long!';
+    }
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(linkWorkOrderToAPELineItem as any)) {
+      errors.linkWorkOrderToAPELineItem = 'Line item must be a number!';
+    }
+    if (linkWorkOrderToAPELineItem === '0') {
+      errors.linkWorkOrderToAPELineItem =
+        'Line item must start with 1 or higher!';
+    }
+  }
+
   return errors;
 }
 

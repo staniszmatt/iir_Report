@@ -20,8 +20,11 @@ interface ReturnData {
 }
 // Checking for empty string or null fields to return NONE string or return note
 function checkStringLength(stringToCheck: string) {
+
+  console.log('String Check: ', stringToCheck);
+
   let returnString = '';
-  if (stringToCheck === null || stringToCheck.length === 0) {
+  if (stringToCheck === undefined || stringToCheck === null || stringToCheck.length === 0) {
     returnString = 'NONE';
   } else {
     returnString = stringToCheck;
@@ -161,7 +164,7 @@ async function getWorkOrderData(request: Request) {
         };
 
         const iirQuery = `SELECT *
-        FROM tear_down_notes AS i
+        FROM tear_down_notes_dev AS i
         WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
         await preState.prepare(iirQuery);
@@ -174,6 +177,8 @@ async function getWorkOrderData(request: Request) {
         returnData.data.evalFindings = 'NONE';
         returnData.data.workedPerformed = 'NONE';
         returnData.data.linkedWorkOrderIfAPE = null;
+        returnData.data.linkedWorkOrderIfAPELineItem = null;
+        returnData.data.linkedAPEWorkOrderLineItem = null;
         returnData.data.linkedAPEWorkOrder = null;
         returnData.data.recordPresent = false;
         // Add Data only if there is any.
@@ -184,6 +189,8 @@ async function getWorkOrderData(request: Request) {
             evalFindings,
             workedPerformed,
             linkedWorkOrderIfAPE,
+            linkedWorkOrderIfAPELineItem,
+            linkedAPEWorkOrderLineItem,
             linkedAPEWorkOrder
           } = getIIRData.recordset[0];
           returnData.data.recordPresent = true;
@@ -204,10 +211,10 @@ async function getWorkOrderData(request: Request) {
               preAPEState.input('param2', sql.VarChar(2));
               const preLinkedStateParams: any = {
                 param1: linkedWorkOrderIfAPE,
-                param2: lineItem
+                param2: linkedWorkOrderIfAPELineItem
               };
               const iirLinkedQuery = `SELECT *
-              FROM tear_down_notes AS i
+              FROM tear_down_notes_dev AS i
               WHERE i.SalesOrderNumber = @param1 AND i.salesOrderNumberLine = @param2`;
 
               await preAPEState.prepare(iirLinkedQuery);
@@ -241,6 +248,8 @@ async function getWorkOrderData(request: Request) {
           returnData.data.evalFindings = checkStringLength(noteEvalFindings);
           returnData.data.workedPerformed = checkStringLength(noteWorkedPerformed);
           returnData.data.linkedWorkOrderIfAPE = linkedWorkOrderIfAPE;
+          returnData.data.linkedWorkOrderIfAPELineItem = linkedWorkOrderIfAPELineItem;
+          returnData.data.linkedAPEWorkOrderLineItem = linkedAPEWorkOrderLineItem;
           returnData.data.linkedAPEWorkOrder = linkedAPEWorkOrder;
         }
       } catch (error) {

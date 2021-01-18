@@ -36,13 +36,16 @@ export default function IIRAddEdit(props: PropsFromRedux) {
   } = iir;
   const {
     linkedWorkOrderIfAPE,
+    linkedWorkOrderIfAPELineItem,
     CustomerNumber,
     linkedAPEWorkOrder,
-    ItemNumber
+    linkedAPEWorkOrderLineItem
   } = workOrderInfo;
   const iirProps = {
     CustomerNumber,
     linkedWorkOrderIfAPE,
+    linkedWorkOrderIfAPELineItem,
+    linkedAPEWorkOrderLineItem,
     linkedAPEWorkOrder,
     handleReviewIIRPDF
   };
@@ -53,12 +56,21 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
+
   const openAPEOrder = () => {
     const apeWorkOrder = {
       workOrderSearch: linkedAPEWorkOrder,
-      workOrderSearchLineItem: ItemNumber
+      workOrderSearchLineItem: linkedAPEWorkOrderLineItem
     };
     getIIRData(apeWorkOrder);
+  };
+
+  const openWorkOrder = () => {
+    const linkedWorkOrder = {
+      workOrderSearch: linkedWorkOrderIfAPE,
+      workOrderSearchLineItem: linkedWorkOrderIfAPELineItem
+    };
+    getIIRData(linkedWorkOrder);
   };
 
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
@@ -69,6 +81,8 @@ export default function IIRAddEdit(props: PropsFromRedux) {
   linkedWorkOrderIfAPE
     ? (displayUpdateAPELink = true)
     : (displayUpdateAPELink = false);
+
+  console.log('iir props: ', iirProps);
 
   return (
     <div>
@@ -144,14 +158,17 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               {linkedAPEWorkOrder && (
                 <div className={styles['link-ape-display']}>
                   <div>
-                    {`CAN'T EDIT: LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}.`}
+                    {`CAN'T EDIT: LINKED TO APE WORK ORDER ${linkedAPEWorkOrder}-${linkedAPEWorkOrderLineItem}.`}
                     <button type="button" onClick={openAPEOrder}>Open</button>
                   </div>
                 </div>
               )}
               {linkedWorkOrderIfAPE && (
                 <div className={styles['link-ape-display']}>
-                  <div>{`APE LINKED TO WORK ORDER ${linkedWorkOrderIfAPE}-${ItemNumber}.`}</div>
+                  <div>
+                    {`APE LINKED TO WORK ORDER ${linkedWorkOrderIfAPE}-${linkedWorkOrderIfAPELineItem}.`}
+                    <button type="button" onClick={openWorkOrder}>Open</button>
+                  </div>
                 </div>
               )}
               {apeOrderNotLinked && (
@@ -159,7 +176,6 @@ export default function IIRAddEdit(props: PropsFromRedux) {
                   <LinkWorkOrderForm
                     onSubmit={linkWorkOrder}
                     props={workOrder}
-                    label="REQUIRED TO LINK CUSTOMER WORK ORDER TO APE:"
                   />
                 </div>
               )}

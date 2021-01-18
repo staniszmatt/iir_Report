@@ -12,7 +12,7 @@ import ArrayComponents from './ReturnArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
-import styles from './TearDownSummer.css';
+import styles from './TearDownSummer.css'
 import logo from '../img/logo.png';
 // eslint-disable-next-line import/no-cycle
 import { PropsFromRedux } from '../containers/TearDownSummeryPage';
@@ -50,7 +50,8 @@ export default function TearDownSummery(props: PropsFromRedux) {
     linkedWorkOrderIfAPE,
     CustomerNumber,
     linkedAPEWorkOrder,
-    ItemNumber
+    linkedWorkOrderIfAPELineItem,
+    linkedAPEWorkOrderLineItem
   } = workOrderInfo;
   // Verify TS values and display "-" if zero
   const { TSO, TSN, TSR } = workOrderInfo;
@@ -60,7 +61,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
   const openAPEOrder = () => {
     const apeWorkOrder = {
       workOrderSearch: linkedAPEWorkOrder,
-      workOrderSearchLineItem: ItemNumber
+      workOrderSearchLineItem: linkedAPEWorkOrderLineItem
     };
     getWorkOrderData(apeWorkOrder);
   };
@@ -159,7 +160,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
             )}
             {linkedWorkOrderIfAPE && (
               <div className={styles['open-pdf-btn']}>
-                <div>{`APE Linked To Customer Work Order: ${linkedWorkOrderIfAPE}-${ItemNumber}`}</div>
+                <div>{`APE Linked To Customer Work Order: ${linkedWorkOrderIfAPE}-${linkedWorkOrderIfAPELineItem}`}</div>
               </div>
             )}
             {apeOrderNotLinked && (
@@ -170,7 +171,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
             {linkedAPEWorkOrder && (
               <div className={styles['blink-text']}>
                 <div>
-                  {`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}!`}
+                  {`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${linkedAPEWorkOrderLineItem}!`}
                   <button type="button" onClick={openAPEOrder}>Open</button>
                 </div>
               </div>
