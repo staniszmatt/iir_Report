@@ -66,13 +66,15 @@ export default function IIRAddEdit(props: PropsFromRedux) {
   };
 
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
-  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE && !linkedAPEWorkOrder
     ? (apeOrderNotLinked = true)
     : (apeOrderNotLinked = false);
 
   linkedWorkOrderIfAPE
     ? (displayUpdateAPELink = true)
     : (displayUpdateAPELink = false);
+
+  console.log('iir props: ', iirProps);
 
   return (
     <div>
