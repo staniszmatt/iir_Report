@@ -704,16 +704,21 @@ export function postOrUpdateIIRReport(iirNotes: {
     dispatch(toggleSuccessUpdateModalOn());
 
     let linkedWorkOrderIfAPE = null;
+    let linkedWorkOrderIfAPELineItem = null;
+
     if (
       state.workOrderInfo.linkedWorkOrderIfAPE &&
       state.workOrderInfo.linkedWorkOrderIfAPE.length > 0
     ) {
       linkedWorkOrderIfAPE = state.workOrderInfo.linkedWorkOrderIfAPE;
+      linkedWorkOrderIfAPELineItem =
+        state.workOrderInfo.linkedWorkOrderIfAPELineItem;
     }
 
     const mainRequest = {
       request,
       linkedWorkOrderIfAPE,
+      linkedWorkOrderIfAPELineItem,
       SalesOrderNumber: state.workOrder.workOrderSearch,
       salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,
