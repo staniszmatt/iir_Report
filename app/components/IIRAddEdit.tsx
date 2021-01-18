@@ -60,13 +60,13 @@ export default function IIRAddEdit(props: PropsFromRedux) {
   const openAPEOrder = () => {
     const apeWorkOrder = {
       workOrderSearch: linkedAPEWorkOrder,
-      workOrderSearchLineItem: ItemNumber
+      workOrderSearchLineItem: linkedAPEWorkOrderLineItem
     };
     getIIRData(apeWorkOrder);
   };
 
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
-  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE && !linkedAPEWorkOrder
+  CustomerNumber === 'APE' && !linkedWorkOrderIfAPE
     ? (apeOrderNotLinked = true)
     : (apeOrderNotLinked = false);
 
