@@ -39,8 +39,7 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     linkedWorkOrderIfAPELineItem,
     CustomerNumber,
     linkedAPEWorkOrder,
-    linkedAPEWorkOrderLineItem,
-    ItemNumber
+    linkedAPEWorkOrderLineItem
   } = workOrderInfo;
   const iirProps = {
     CustomerNumber,
@@ -57,12 +56,21 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     workedPerformed: workOrderInfo.workedPerformed
   };
   const cancelProp = { cancelLoading };
+
   const openAPEOrder = () => {
     const apeWorkOrder = {
       workOrderSearch: linkedAPEWorkOrder,
       workOrderSearchLineItem: linkedAPEWorkOrderLineItem
     };
     getIIRData(apeWorkOrder);
+  };
+
+  const openWorkOrder = () => {
+    const linkedWorkOrder = {
+      workOrderSearch: linkedWorkOrderIfAPE,
+      workOrderSearchLineItem: linkedWorkOrderIfAPELineItem
+    };
+    getIIRData(linkedWorkOrder);
   };
 
   // If this is an APE work order and the customer work order isn't linked, display warning and hide pdf button.
@@ -157,7 +165,10 @@ export default function IIRAddEdit(props: PropsFromRedux) {
               )}
               {linkedWorkOrderIfAPE && (
                 <div className={styles['link-ape-display']}>
-                  <div>{`APE LINKED TO WORK ORDER ${linkedWorkOrderIfAPE}-${linkedWorkOrderIfAPELineItem}.`}</div>
+                  <div>
+                    {`APE LINKED TO WORK ORDER ${linkedWorkOrderIfAPE}-${linkedWorkOrderIfAPELineItem}.`}
+                    <button type="button" onClick={openWorkOrder}>Open</button>
+                  </div>
                 </div>
               )}
               {apeOrderNotLinked && (
