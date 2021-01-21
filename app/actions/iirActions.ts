@@ -156,11 +156,15 @@ export function removeAPELinkWorkOrder() {
     const state = getState().iir;
     const { workOrder, workOrderInfo } = state;
     const { workOrderSearch, workOrderSearchLineItem } = workOrder;
-    const { linkedWorkOrderIfAPE } = workOrderInfo;
+    const {
+      linkedWorkOrderIfAPE,
+      linkedWorkOrderIfAPELineItem
+    } = workOrderInfo;
     const mainRequest = {
       request: 'updateRemoveLink',
       workOrderAPE: workOrderSearch,
       workOrderLink: linkedWorkOrderIfAPE,
+      workOrderLinkLineItem: linkedWorkOrderIfAPELineItem,
       lineItem: workOrderSearchLineItem
     };
     dispatch(softResetState());
@@ -211,6 +215,7 @@ export function handleLinkWorkOrder(
     const state = getState().iir;
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
+
     if (Object.keys(resp.error).length === 0) {
       dispatch(getIIRData(state.workOrder));
     } else {
@@ -220,21 +225,26 @@ export function handleLinkWorkOrder(
 }
 
 // TODO: Setup Testing
-export function linkWorkOrder(workOrderToLink: { linkWorkOrderToAPE: string }) {
+export function linkWorkOrder(workOrderToLink: {
+  linkWorkOrderToAPE: string;
+  linkWorkOrderToAPELineItem: string;
+}) {
   return (dispatch: Dispatch, getState: GetIIRState) => {
     // Soft Reset to keep current work order info.
     dispatch(softResetState());
     const state = getState().iir;
-    const { linkWorkOrderToAPE } = workOrderToLink;
+    const { linkWorkOrderToAPE, linkWorkOrderToAPELineItem } = workOrderToLink;
 
     const mainRequest = {
       request: 'updateLinkWorkOrderToAPE',
       workOrderToLink: linkWorkOrderToAPE,
+      workOrderToLinkLineItem: linkWorkOrderToAPELineItem,
       originalWorkOrder: {
         workOrder: state.workOrder.workOrderSearch,
         lineItem: state.workOrder.workOrderSearchLineItem
       }
     };
+
     const callBackFunction = (
       event: {},
       resp: {
@@ -676,26 +686,34 @@ export function postOrUpdateIIRReport(iirNotes: {
       request = 'postIIRReport';
     }
 
-    if (
-      valueChangeCheckCustomerReasonForRemoval !== null ||
-      valueChangeCheckEvalFindings !== null ||
-      valueChangeCheckGenConditionReceived !== null
-    ) {
-      dispatch(toggleSendEmailStateOn());
+    if (state.workOrderInfo.CustomerNumber !== 'APE') {
+      if (
+        valueChangeCheckCustomerReasonForRemoval !== null ||
+        valueChangeCheckEvalFindings !== null ||
+        valueChangeCheckGenConditionReceived !== null
+      ) {
+        dispatch(toggleSendEmailStateOn());
+      }
     }
+
     dispatch(toggleSuccessUpdateModalOn());
 
     let linkedWorkOrderIfAPE = null;
+    let linkedWorkOrderIfAPELineItem = null;
+
     if (
       state.workOrderInfo.linkedWorkOrderIfAPE &&
       state.workOrderInfo.linkedWorkOrderIfAPE.length > 0
     ) {
       linkedWorkOrderIfAPE = state.workOrderInfo.linkedWorkOrderIfAPE;
+      linkedWorkOrderIfAPELineItem =
+        state.workOrderInfo.linkedWorkOrderIfAPELineItem;
     }
 
     const mainRequest = {
       request,
       linkedWorkOrderIfAPE,
+      linkedWorkOrderIfAPELineItem,
       SalesOrderNumber: state.workOrder.workOrderSearch,
       salesOrderNumberLine: state.workOrder.workOrderSearchLineItem,
       customerReasonForRemoval: iirNotes.customerReasonForRemoval,
