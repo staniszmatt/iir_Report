@@ -52,7 +52,8 @@ const IIRForm = (
   // TODO: Setup for if/else statement
 
   if (workedPerformed === 'N/A' || workedPerformed === '') {
-    workPerformedDefault = 'WARNING - Verify work order has a 01 traveler and that a cert is associated to the work order!';
+    workPerformedDefault =
+      'WARNING - Verify work order has a 01 traveler and that a cert is associated to the work order!';
     warningCheck.background = 'yellow';
   } else {
     // Removing white space for this specific item in the JobCost DB.

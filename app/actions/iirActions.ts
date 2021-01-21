@@ -392,8 +392,6 @@ export function getIIRData(workOrder: {
       workOrderSearchLineItem: workOrder.workOrderSearchLineItem
     };
 
-    console.log('main request to get order data: ', mainRequest);
-
     dispatch(setWorkOrder(workOrder));
     const callBackFunction = (
       event: {},
@@ -407,9 +405,6 @@ export function getIIRData(workOrder: {
         };
       }
     ) => {
-
-      console.log('Get data resp: ', resp);
-
       dispatch(handleGeIIRDataResp(event, resp));
       ipcRenderer.removeListener('asynchronous-reply', callBackFunction);
     };

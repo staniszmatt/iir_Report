@@ -82,8 +82,6 @@ export default function IIRAddEdit(props: PropsFromRedux) {
     ? (displayUpdateAPELink = true)
     : (displayUpdateAPELink = false);
 
-  console.log('iir props: ', iirProps);
-
   return (
     <div>
       <div className={styles['faded-backgroundImageContainer']}>
