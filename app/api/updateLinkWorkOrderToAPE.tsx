@@ -72,7 +72,7 @@ async function postLinkWorkOrderToAPE(request: Request) {
       woLine: cleanWorkOrderToLinkLineItem
     };
     const queryStringAPE = `
-    IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line)
+    IF EXISTS (SELECT * FROM tear_down_notes WHERE tear_down_notes.SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line)
       BEGIN
         UPDATE tear_down_notes
           SET linkedWorkOrderIfAPE = @wo, linkedWorkOrderIfAPELineItem = @woLine
