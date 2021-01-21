@@ -7,6 +7,7 @@ const sql = require('mssql/msnodesqlv8');
 interface Request {
   workOrderAPE: string;
   workOrderLink: string;
+  workOrderLinkLineItem: string;
   lineItem: string;
 }
 
@@ -19,7 +20,12 @@ interface ReturnData {
 }
 
 async function updateRemoveLink(request: Request) {
-  const { workOrderAPE, workOrderLink, lineItem } = request;
+  const {
+    workOrderAPE,
+    workOrderLink,
+    lineItem,
+    workOrderLinkLineItem
+  } = request;
   const returnData: ReturnData = {
     error: {},
     resp: {
@@ -40,6 +46,10 @@ async function updateRemoveLink(request: Request) {
     .replace(/  +/g, '')
     .replace(/[`']/g, '"')
     .replace(/[#^&*<>()@~]/g, '');
+  const cleanWorkOrderLinkLineItem = workOrderLinkLineItem
+    .replace(/  +/g, '')
+    .replace(/[`']/g, '"')
+    .replace(/[#^&*<>()@~]/g, '');
 
   // Start Connection for setup of prepare statement
   const db = await pool.connect();
@@ -49,21 +59,23 @@ async function updateRemoveLink(request: Request) {
     preState.input('ape', sql.VarChar(12));
     preState.input('wo', sql.VarChar(12));
     preState.input('line', sql.VarChar(2));
+    preState.input('woLine', sql.VarChar(2));
     // Setup the values for params to pass through execute below.
     const preAPEStateParams: any = {
       ape: cleanWorkOrder,
       wo: cleanLinkWorkOrder,
-      line: cleanLineItem
+      line: cleanLineItem,
+      woLine: cleanWorkOrderLinkLineItem
     };
     const queryStringAPE = `
-      UPDATE tear_down_notes_dev
-        SET linkedWorkOrderIfAPE = null
+      UPDATE tear_down_notes
+        SET linkedWorkOrderIfAPE = null, linkedWorkOrderIfAPELineItem = null
         OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
           WHERE SalesOrderNumber = @ape AND salesOrderNumberLine = @line
 
-      UPDATE tear_down_notes_dev
-        SET linkedAPEWorkOrder = null
-          WHERE SalesOrderNumber = @wo AND salesOrderNumberLine = @line`;
+      UPDATE tear_down_notes
+        SET linkedAPEWorkOrder = null, linkedAPEWorkOrderLineItem = null
+          WHERE SalesOrderNumber = @wo AND salesOrderNumberLine = @woLine`;
 
     await preState.prepare(queryStringAPE);
     const linkAPEData = await preState.execute(preAPEStateParams);

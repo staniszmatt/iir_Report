@@ -72,16 +72,16 @@ async function postLinkWorkOrderToAPE(request: Request) {
       woLine: cleanWorkOrderToLinkLineItem
     };
     const queryStringAPE = `
-    IF EXISTS (SELECT * FROM tear_down_notes_dev WHERE SalesOrderNumber = @ape AND tear_down_notes_dev.salesOrderNumberLine = @line)
+    IF EXISTS (SELECT * FROM tear_down_notes WHERE tear_down_notes.SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line)
       BEGIN
-        UPDATE tear_down_notes_dev
+        UPDATE tear_down_notes
           SET linkedWorkOrderIfAPE = @wo, linkedWorkOrderIfAPELineItem = @woLine
             OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-              WHERE tear_down_notes_dev.SalesOrderNumber = @ape AND tear_down_notes_dev.salesOrderNumberLine = @line
+              WHERE tear_down_notes.SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line
     END
     ELSE
       BEGIN
-        INSERT INTO tear_down_notes_dev (SalesOrderNumber, linkedWorkOrderIfAPE, linkedWorkOrderIfAPELineItem, salesOrderNumberLine)
+        INSERT INTO tear_down_notes (SalesOrderNumber, linkedWorkOrderIfAPE, linkedWorkOrderIfAPELineItem, salesOrderNumberLine)
           OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
         VALUES (@ape, @wo, @woLine, @line)
     END`;
@@ -100,16 +100,16 @@ async function postLinkWorkOrderToAPE(request: Request) {
         preStateWO.input('line', sql.VarChar(2));
         preStateWO.input('woLine', sql.VarChar(2));
         const queryStringWO = `
-        IF EXISTS (SELECT * FROM tear_down_notes_dev WHERE SalesOrderNumber = @wo AND tear_down_notes_dev.salesOrderNumberLine = @woLine)
+        IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @woLine)
         BEGIN
-          UPDATE tear_down_notes_dev
+          UPDATE tear_down_notes
             SET linkedAPEWorkOrder = @ape, linkedAPEWorkOrderLineItem = @line
               OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-                WHERE tear_down_notes_dev.SalesOrderNumber = @wo AND tear_down_notes_dev.salesOrderNumberLine = @woLine
+                WHERE tear_down_notes.SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @woLine
         END
         ELSE
           BEGIN
-            INSERT INTO tear_down_notes_dev (SalesOrderNumber, linkedAPEWorkOrder, linkedAPEWorkOrderLineItem, salesOrderNumberLine)
+            INSERT INTO tear_down_notes (SalesOrderNumber, linkedAPEWorkOrder, linkedAPEWorkOrderLineItem, salesOrderNumberLine)
               OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
             VALUES (@wo, @ape, @line, @woLine)
         END`;
