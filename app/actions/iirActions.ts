@@ -335,6 +335,8 @@ export function handleGeIIRDataResp(
     // Turn off the loading screen once we receive a response.
     dispatch(toggleLoadingScreenStateOff());
 
+    console.log('data: ', resp);
+
     if (Object.keys(resp.error).length === 0) {
       // If there is no note data and set to null, set postIIRNotes to true
       if (!resp.data.recordPresent) {
