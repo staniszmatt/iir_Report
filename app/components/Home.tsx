@@ -20,7 +20,7 @@ export default function Home(props: Props | any) {
   }
 
   return (
-    <div className={styles.container} data-tid="container">
+    <div className={styles.container} data-tid="homePage">
       <div className={styles['faded-backgroundImageContainer']}>
         <img src={logo} alt="AeroParts Logo" />
       </div>

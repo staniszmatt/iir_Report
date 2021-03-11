@@ -84,7 +84,7 @@ export default function IIRAddEdit(props: PropsFromRedux) {
 
   return (
     <div>
-      <div className={styles['faded-backgroundImageContainer']}>
+      <div className={styles['faded-backgroundImageContainer']} data-tid="addEditPage">
         <img src={logo} alt="AeroParts Logo" />
       </div>
       <div className={styles['iir-container']}>

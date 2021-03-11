@@ -5,7 +5,7 @@ import styles from './NavBar.css';
 
 export default function Nav() {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-tid="navbar">
       <Link to={routes.EDITFORM}>
         <button type="button">Add/Edit Notes</button>
       </Link>

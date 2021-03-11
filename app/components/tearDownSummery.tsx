@@ -289,11 +289,11 @@ export default function TearDownSummery(props: PropsFromRedux) {
                 )}
                 {!displayOpenPDFBtn && !linkedAPEWorkOrder && (
                   <div>
-                    {displayPDFBtn && !apeOrderNotLinked && (
+                  {/**   {displayPDFBtn && !apeOrderNotLinked && (*/}
                       <button onClick={getPDF} type="button">
                         SAVE PDF
                       </button>
-                    )}
+                  {/**   )}*/}
                   </div>
                 )}
               </div>

@@ -51,17 +51,17 @@ const IIRForm = (
   };
   // TODO: Setup for if/else statement
 
-  if (workedPerformed === 'N/A' || workedPerformed === '') {
-    workPerformedDefault =
-      'WARNING - Verify work order has a 01 traveler and that a cert is associated to the work order!';
-    warningCheck.background = 'yellow';
-  } else {
+  // if (workedPerformed === 'N/A' || workedPerformed === '') {
+  //   workPerformedDefault =
+  //     'WARNING - Verify work order has a 01 traveler and that a cert is associated to the work order!';
+  //   warningCheck.background = 'yellow';
+  // } else {
     // Removing white space for this specific item in the JobCost DB.
     fixManual_RevisionString = Manual_Revision.replace(/\s/g, '');
     const updatedWorkPerformed = `Manual:${Manual}  Document:${Manual_Document}-${Manual_Section}  Rev:${fixManual_RevisionString}  Dated:${Manual_Rev_Date_MMDDYY}`;
     workPerformedDefault = `${updatedWorkPerformed}\n${workedPerformedNote}`;
     warningCheck.background = 'none';
-  }
+  // }
 
   return (
     <form

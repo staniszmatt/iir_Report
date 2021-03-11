@@ -24,7 +24,7 @@ const WorkOrderSearchForm = (
   }
 
   return (
-    <div className={styles['form-container']} data-tid="container">
+    <div className={styles['form-container']} data-tid="searchContainer">
       <div>
         <div>Search For Work Order:</div>
       </div>
