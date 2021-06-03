@@ -1,3 +1,4 @@
+import getDriver from '../config/configODBC';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const odbc = require('odbc');
 
@@ -20,8 +21,10 @@ async function testDB(queryString: QueryString) {
   };
   const { query } = queryString;
   console.log('DB query string: ', query);
+
+  const odbcDriverString = getDriver();
   try {
-    const db = await odbc.connect('DSN=AeroSuper');
+    const db = await odbc.connect(odbcDriverString);
     const data = await db.query(query);
 
     console.log('return data resp:', data);
