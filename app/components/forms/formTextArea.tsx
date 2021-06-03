@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, CSSProperties, useEffect, useRef } from 'react';
 import styles from './formInput.css';
 
 interface TextareaProps {
@@ -26,7 +26,6 @@ export default function FormTextArea(textareaProps: TextareaProps) {
     defaultValue,
     disabled,
     input,
-    rows,
     label,
     meta: { error, touched }
   } = textareaProps;
@@ -35,7 +34,25 @@ export default function FormTextArea(textareaProps: TextareaProps) {
     inputValue: defaultValue
   });
 
-  const valueChange = (event: { currentTarget: { value: string } }) => {
+  // Setup for auto height for textarea box
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [text, setText] = useState('');
+  const [textAreaHeight, setTextAreaHeight] = useState('auto');
+  const [parentHeight, setParentHeight] = useState('auto');
+
+  const parentStyle: CSSProperties = {
+    minHeight: parentHeight
+  };
+
+  const textAreaStyle: CSSProperties = {
+    height: textAreaHeight
+  };
+  // onChange handler
+  const valueChange = (event: {
+    currentTarget: { value: string };
+    target: { value: string };
+  }) => {
+    // Limiting input text
     const changeCharString = event.currentTarget.value
       .replace(/  +/g, ' ')
       .replace(/[`']/g, '"')
@@ -45,22 +62,39 @@ export default function FormTextArea(textareaProps: TextareaProps) {
       ...valueState,
       inputValue: changeCharString
     });
+    // textarea auto height setup
+    setTextAreaHeight('auto');
+    setParentHeight(
+      `${textAreaRef.current && textAreaRef.current.scrollHeight}px`
+    );
+    setText(event.target.value);
   };
+
+  useEffect(() => {
+    setParentHeight(
+      `${textAreaRef.current && textAreaRef.current.scrollHeight}px`
+    );
+    setTextAreaHeight(
+      `${textAreaRef.current && textAreaRef.current.scrollHeight}px`
+    );
+  }, [text]);
 
   return (
     <div className={styles['textarea-container']}>
       <div>
         <label htmlFor={textareaProps.input.name}>{label}</label>
       </div>
-      <div>
+      <div style={parentStyle}>
         <textarea
           {...input}
+          ref={textAreaRef}
+          style={textAreaStyle}
           value={valueState.inputValue}
           onChange={valueChange}
           disabled={disabled}
           id={textareaProps.input.name}
           aria-multiline
-          rows={rows}
+          rows={1}
         />
       </div>
       {error && touched && <p className="red-text darken-2">{error}</p>}
