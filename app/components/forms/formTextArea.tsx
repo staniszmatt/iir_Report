@@ -30,6 +30,8 @@ export default function FormTextArea(textareaProps: TextareaProps) {
     meta: { error, touched }
   } = textareaProps;
 
+  const { name } = input;
+
   const [valueState, setValueState] = useState<ValueState>({
     inputValue: defaultValue
   });
@@ -82,7 +84,7 @@ export default function FormTextArea(textareaProps: TextareaProps) {
   return (
     <div className={styles['textarea-container']}>
       <div>
-        <label htmlFor={textareaProps.input.name}>{label}</label>
+        <label htmlFor={name}>{label}</label>
       </div>
       <div style={parentStyle}>
         <textarea
@@ -92,7 +94,7 @@ export default function FormTextArea(textareaProps: TextareaProps) {
           value={valueState.inputValue}
           onChange={valueChange}
           disabled={disabled}
-          id={textareaProps.input.name}
+          id={name}
           aria-multiline
           rows={1}
         />
