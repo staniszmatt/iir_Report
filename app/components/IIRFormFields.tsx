@@ -177,7 +177,7 @@ function validate(values: FormProps) {
   }
 
   if (workedPerformed) {
-    if (workedPerformed.length > 616) {
+    if (workedPerformed.length > 800) {
       errors.workedPerformed = 'Over max character limit!';
     }
   }
