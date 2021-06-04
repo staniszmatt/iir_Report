@@ -95,16 +95,25 @@ const createWindow = async () => {
       __dirname,
       'resources',
       'png',
-      '../resources/icons/aeropartsicon_1Jk_icon.ico'
+      'aeropartsicon1Jkicon.png'
+      // '../resources/icons/aeropartsicon1Jkicon.ico'
     ),
     webPreferences:
       process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
         ? {
             nodeIntegration: true,
+            // Need to figure out how the Content-Security-Policy will work for this app before enabling.
+            // worldSafeExecuteJavaScript: true,
+            // contextIsolation: true,
+            enableRemoteModule: true,
             spellcheck: true
           }
         : {
             preload: path.join(__dirname, 'dist/renderer.prod.js'),
+            // Need to figure out how the Content-Security-Policy will work for this app before enabling.
+            // worldSafeExecuteJavaScript: true,
+            // contextIsolation: true,
+            enableRemoteModule: true,
             spellcheck: true
           }
   });
