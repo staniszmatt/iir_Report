@@ -490,7 +490,7 @@ export function openPDF() {
     const state = getState().iir;
     const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
-    shell.openPath(filePath);
+    shell.openItem(filePath);
   };
 }
 // TODO: Setup Testing

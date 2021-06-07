@@ -91,13 +91,7 @@ const createWindow = async () => {
     titleBarStyle: 'default',
     width: 1024,
     height: 728,
-    icon: path.join(
-      __dirname,
-      'resources',
-      'png',
-      'aeropartsicon1Jkicon.png'
-      // '../resources/icons/aeropartsicon1Jkicon.ico'
-    ),
+    icon: path.join(__dirname, 'resources', 'png', 'aeropartsicon1Jkicon.png'),
     webPreferences:
       process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
         ? {

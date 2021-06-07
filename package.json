@@ -16,7 +16,7 @@
     "lint-fix": "yarn --silent lint --fix; exit 0",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
-    "package": "yarn build && electron-builder build --publish never",
+    "package": "yarn build && electron-builder build --win --x64 --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
     "package-mac": "yarn build && electron-builder build --mac",
@@ -67,7 +67,7 @@
       "app/**/*"
     ],
     "win": {
-      "icon": "/resources/icons/aeropartsicon1Jkicon.ico",
+      "icon": "app/resources/aeropartsicon_1Jk_icon.ico",
       "target": [
         "nsis"
       ],
@@ -85,12 +85,12 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": false,
       "include": "build/installer.nsh",
-      "installerIcon": "aeropartsicon1Jkicon.ico",
-      "installerHeaderIcon": "aeropartsicon1Jkicon.ico",
+      "installerIcon": "aeropartsicon_1Jk_icon.ico",
+      "installerHeaderIcon": "aeropartsicon_1Jk_icon.ico",
       "deleteAppDataOnUninstall": true
     },
     "directories": {
-      "buildResources": "resources",
+      "buildResources": "app/resources",
       "output": "release"
     },
     "publish": {
@@ -201,7 +201,7 @@
     "browserslist-config-erb": "^0.0.1",
     "chalk": "^3.0.0",
     "concurrently": "^5.2.0",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "cross-spawn": "^7.0.1",
     "css-loader": "^3.4.2",
     "detect-port": "^1.3.0",
@@ -261,7 +261,6 @@
     "yarn": "^1.21.1"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.3",
     "@hot-loader/react-dom": "^16.13.0",
     "@nidi/html2canvas": "^1.0.0-rc.13",
     "connected-react-router": "^6.8.0",

@@ -3,7 +3,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 // Need to pass combined TypeScript PropsFromRedux to TearDownSummery component.
 // eslint-disable-next-line import/no-cycle
-import TearDownSummery from '../components/TearDownSummery';
+import tearDownSummery from '../components/tearDownSummery';
 import {
   getWorkOrderData,
   postOrUpdateIIRReport,
@@ -38,4 +38,4 @@ function mapDispatchToProps(dispatch: Dispatch<any>) {
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 export type PropsFromRedux = ConnectedProps<typeof connector>;
-export default connector(TearDownSummery);
+export default connector(tearDownSummery);
