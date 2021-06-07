@@ -91,20 +91,23 @@ const createWindow = async () => {
     titleBarStyle: 'default',
     width: 1024,
     height: 728,
-    icon: path.join(
-      __dirname,
-      'resources',
-      'png',
-      '../resources/icons/aeropartsicon_1Jk_icon.ico'
-    ),
+    icon: path.join(__dirname, 'resources', 'png', 'aeropartsicon1Jkicon.png'),
     webPreferences:
       process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
         ? {
             nodeIntegration: true,
+            // Need to figure out how the Content-Security-Policy will work for this app before enabling.
+            // worldSafeExecuteJavaScript: true,
+            // contextIsolation: true,
+            enableRemoteModule: true,
             spellcheck: true
           }
         : {
             preload: path.join(__dirname, 'dist/renderer.prod.js'),
+            // Need to figure out how the Content-Security-Policy will work for this app before enabling.
+            // worldSafeExecuteJavaScript: true,
+            // contextIsolation: true,
+            enableRemoteModule: true,
             spellcheck: true
           }
   });

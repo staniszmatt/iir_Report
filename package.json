@@ -1,7 +1,7 @@
 {
   "name": "tear-down-app",
   "productName": "TearDownReport",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Electron-React application with Redux, TypeScript, Webpack, React Hot Loader, and Thunk to generate and update tear down reports",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -16,7 +16,7 @@
     "lint-fix": "yarn --silent lint --fix; exit 0",
     "lint-styles": "stylelint --ignore-path .eslintignore '**/*.*(css|scss)' --syntax scss",
     "lint-styles-fix": "yarn --silent lint-styles --fix; exit 0",
-    "package": "yarn build && electron-builder build --publish never",
+    "package": "yarn build && electron-builder build --win --x64 --publish never",
     "package-all": "yarn build && electron-builder build -mwl",
     "package-ci": "yarn postinstall && yarn build && electron-builder --publish always",
     "package-mac": "yarn build && electron-builder build --mac",
@@ -67,7 +67,7 @@
       "app/**/*"
     ],
     "win": {
-      "icon": "/resources/icons/aeropartsicon_1Jk_icon.ico",
+      "icon": "app/resources/aeropartsicon_1Jk_icon.ico",
       "target": [
         "nsis"
       ],
@@ -90,7 +90,7 @@
       "deleteAppDataOnUninstall": true
     },
     "directories": {
-      "buildResources": "resources",
+      "buildResources": "app/resources",
       "output": "release"
     },
     "publish": {
@@ -170,6 +170,7 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/preset-typescript": "^7.9.0",
     "@babel/register": "^7.9.0",
+    "@types/babel__generator": "^7.6.2",
     "@types/electron-debug": "^2.1.0",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -200,12 +201,12 @@
     "browserslist-config-erb": "^0.0.1",
     "chalk": "^3.0.0",
     "concurrently": "^5.2.0",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "cross-spawn": "^7.0.1",
     "css-loader": "^3.4.2",
     "detect-port": "^1.3.0",
     "electron-builder": "^22.9.1",
-    "electron-devtools-installer": "^2.2.4",
+    "electron-devtools-installer": "^3.2.0",
     "electron-rebuild": "^1.10.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
@@ -260,7 +261,6 @@
     "yarn": "^1.21.1"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.13.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@nidi/html2canvas": "^1.0.0-rc.13",
     "connected-react-router": "^6.8.0",
