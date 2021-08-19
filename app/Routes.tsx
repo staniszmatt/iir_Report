@@ -5,7 +5,7 @@ import App from './containers/App';
 import HomePage from './containers/HomePage';
 import TearDownSummerPage from './containers/TearDownSummeryPage';
 import IIRAddEditPage from './containers/IIRAddEditPage';
-import NavBar from './components/NavBar';
+import NavBar from './components/navBar';
 import ErrorModal from './components/modals/ModalPage';
 
 export default function Routes() {
