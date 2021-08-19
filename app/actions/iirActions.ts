@@ -484,7 +484,7 @@ export function autoEmailer() {
   };
 }
 // TODO: Setup Testing
-// This will only be exactable if checkForPDFFile finds the file and sets the display open pdf btn to true.
+// This will only be executable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
   return (_dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
