@@ -97,7 +97,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
 
   const cancelProp = { cancelLoading };
   // TODO: If selectable content is required, try using @progress/kendo-react-pdf.
-  // Sets up the React component with the id to create a image and convert it to PNG then
+  // Sets up the React component with the id to create a image and convert it to jpeg then
   // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
   // create a PDF from a component.
   const getPDF = () => {
@@ -113,14 +113,14 @@ export default function TearDownSummery(props: PropsFromRedux) {
     input.style.width = '8.3in';
     input.style.height = '10.9in';
 
-    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(
+    html2canvas(input, { scrollY: -window.scrollY, scale: 10 }).then(
       canvas => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpeg');
         const pdf = new JsPDF('p', 'mm', 'a4');
         const width = pdf.internal.pageSize.getWidth();
         const height = pdf.internal.pageSize.getHeight();
 
-        pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
         savePDF(pdf.output('arraybuffer'));
       }
     );

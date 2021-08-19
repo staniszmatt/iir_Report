@@ -484,13 +484,13 @@ export function autoEmailer() {
   };
 }
 // TODO: Setup Testing
-// This will only be exactable if checkForPDFFile finds the file and sets the display open pdf btn to true.
+// This will only be executable if checkForPDFFile finds the file and sets the display open pdf btn to true.
 export function openPDF() {
   return (_dispatch: Dispatch, getState: GetIIRState) => {
     const state = getState().iir;
     const workOrderString = `${state.workOrder.workOrderSearch}-${state.workOrder.workOrderSearchLineItem}`;
     const filePath = `\\\\AMR-FS1\\Scanned\\CPLT_TRAVELERS\\TearDowns\\${workOrderString}_TEAR_DOWN.pdf`;
-    shell.openItem(filePath);
+    shell.openPath(filePath);
   };
 }
 // TODO: Setup Testing
