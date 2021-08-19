@@ -1,7 +1,7 @@
 {
   "name": "tear-down-app",
   "productName": "TearDownReport",
-  "version": "2.0.0",
+  "version": "1.5.1",
   "description": "Electron application based on React, React Router, Webpack, React Hot Loader to interface data and create specific work instructions based of inputs",
   "main": "./main.prod.js",
   "author": {
@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "msnodesqlv8": "^2.0.10",
+    "msnodesqlv8": "^2.2.0",
     "mssql": "^6.3.1",
     "odbc": "^2.3.5"
   },

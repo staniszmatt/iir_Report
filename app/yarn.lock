@@ -706,7 +706,7 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-msnodesqlv8@^2.0.10:
+msnodesqlv8@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/msnodesqlv8/-/msnodesqlv8-2.2.0.tgz#0a2d15da08924d5a1c504c6a263a8ee158e652d5"
   integrity sha512-cPTfEbIZWffkcyuQ5GQ7FRkU1tXW6lsSHm5sUrbsBg7NDC2YHMJMw47ELR8RSiHgYRjB4o2RCXiwFkD3Fgq1VQ==
