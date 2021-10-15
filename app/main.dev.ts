@@ -118,7 +118,7 @@ const createWindow = async () => {
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
+  mainWindow.webContents.on('did-finish-load', async () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
     }
@@ -130,7 +130,7 @@ const createWindow = async () => {
     }
   });
 
-  mainWindow.on('closed', () => {
+  mainWindow.on('closed', async () => {
     mainWindow = null;
   });
 
@@ -146,7 +146,7 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
@@ -154,17 +154,17 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('ready', () => {
+app.on('ready', async () => {
   createWindow();
 });
 
-app.on('activate', () => {
+app.on('activate', async () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) createWindow();
 });
 // Pass App version
-ipcMain.on('app_version', event => {
+ipcMain.on('app_version', async event => {
   const pversion = pjson.version;
   event.sender.send('app_version', { version: pversion });
 });
