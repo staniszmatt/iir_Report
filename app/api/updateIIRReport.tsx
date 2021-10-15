@@ -135,7 +135,8 @@ async function postIIRReport(request: Request) {
         errorMsg: 'Something went wrong adding IIR report!'
       };
     }
-  } catch (error) {
+    // eslint-disable-next-line prettier/prettier
+  } catch (error: any) {
     // Not sure if there is a better way but don't need to return the array of key value pairs.
     // eslint-disable-next-line array-callback-return
     Object.getOwnPropertyNames(error).map(key => {

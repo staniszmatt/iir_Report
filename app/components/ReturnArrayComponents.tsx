@@ -8,6 +8,7 @@ interface ReturnArrayProps {
 export default function ReturnArrayComponents(
   returnArrayProps: ReturnArrayProps
 ) {
+  // eslint-disable-next-line react/destructuring-assignment
   const propsArray = returnArrayProps.props;
   let mappedComponents: [] | {};
   if (propsArray === 'N/A') {
