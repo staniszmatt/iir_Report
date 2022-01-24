@@ -12,7 +12,7 @@ import ArrayComponents from './ReturnArrayComponents';
 import Btn from './buttonFunctions/buttonClickHandler';
 import WorkOrderSearchForm from './WorkOrderSearchForm';
 import IIRFromFiledPDF from './IIRFromFiledPDF';
-import styles from './TearDownSummer.css';
+import styles from './tearDownSummer.css'
 import logo from '../img/logo.png';
 // eslint-disable-next-line import/no-cycle
 import { PropsFromRedux } from '../containers/TearDownSummeryPage';
@@ -51,7 +51,8 @@ export default function TearDownSummery(props: PropsFromRedux) {
     linkedWorkOrderIfAPE,
     CustomerNumber,
     linkedAPEWorkOrder,
-    ItemNumber
+    linkedWorkOrderIfAPELineItem,
+    linkedAPEWorkOrderLineItem
   } = workOrderInfo;
   // Verify TS values and display "-" if zero
   const { TSO, TSN, TSR } = workOrderInfo;
@@ -61,7 +62,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
   const openAPEOrder = () => {
     const apeWorkOrder = {
       workOrderSearch: linkedAPEWorkOrder,
-      workOrderSearchLineItem: ItemNumber
+      workOrderSearchLineItem: linkedAPEWorkOrderLineItem
     };
     getWorkOrderData(apeWorkOrder);
   };
@@ -97,7 +98,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
 
   const cancelProp = { cancelLoading };
   // TODO: If selectable content is required, try using @progress/kendo-react-pdf.
-  // Sets up the React component with the id to create a image and convert it to PNG then
+  // Sets up the React component with the id to create a image and convert it to jpeg then
   // save that image as a PDF to print. Text is un-selectable but is a quick easy way to
   // create a PDF from a component.
   const getPDF = () => {
@@ -113,14 +114,14 @@ export default function TearDownSummery(props: PropsFromRedux) {
     input.style.width = '8.3in';
     input.style.height = '10.9in';
 
-    html2canvas(input, { scrollY: -window.scrollY, scale: 1.25 }).then(
+    html2canvas(input, { scrollY: -window.scrollY, scale: 10 }).then(
       canvas => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpeg');
         const pdf = new JsPDF('p', 'mm', 'a4');
         const width = pdf.internal.pageSize.getWidth();
         const height = pdf.internal.pageSize.getHeight();
 
-        pdf.addImage(imgData, 'JPEG', -0.25, 0, width, height);
+        pdf.addImage(imgData, 'JPEG', 0, 0, width, height);
         savePDF(pdf.output('arraybuffer'));
       }
     );
@@ -160,7 +161,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
             )}
             {linkedWorkOrderIfAPE && (
               <div className={styles['open-pdf-btn']}>
-                <div>{`APE Linked To Customer Work Order: ${linkedWorkOrderIfAPE}-${ItemNumber}`}</div>
+                <div>{`APE Linked To Customer Work Order: ${linkedWorkOrderIfAPE}-${linkedWorkOrderIfAPELineItem}`}</div>
               </div>
             )}
             {apeOrderNotLinked && (
@@ -171,7 +172,7 @@ export default function TearDownSummery(props: PropsFromRedux) {
             {linkedAPEWorkOrder && (
               <div className={styles['blink-text']}>
                 <div>
-                  {`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${ItemNumber}!`}
+                  {`PLEASE USE APE WORK ORDER ${linkedAPEWorkOrder}-${linkedAPEWorkOrderLineItem}!`}
                   <button type="button" onClick={openAPEOrder}>Open</button>
                 </div>
               </div>

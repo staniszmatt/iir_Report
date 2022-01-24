@@ -38,7 +38,9 @@ export type IIRStateType = {
       DateIssuedYYMMDD: string;
       recordPresent: string;
       linkedWorkOrderIfAPE: string;
+      linkedWorkOrderIfAPELineItem: string;
       linkedAPEWorkOrder: string;
+      linkedAPEWorkOrderLineItem: string;
       Manual_Combined: string;
       Manual: string;
       Manual_Document: string;

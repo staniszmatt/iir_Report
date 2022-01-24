@@ -6,6 +6,7 @@ const sql = require('mssql/msnodesqlv8');
 
 interface Request {
   workOrderToLink: string;
+  workOrderToLinkLineItem: string;
   originalWorkOrder: {
     workOrder: string;
     lineItem: string;
@@ -22,7 +23,11 @@ interface ReturnData {
 }
 
 async function postLinkWorkOrderToAPE(request: Request) {
-  const { workOrderToLink, originalWorkOrder } = request;
+  const {
+    workOrderToLink,
+    workOrderToLinkLineItem,
+    originalWorkOrder
+  } = request;
   const { workOrder, lineItem } = originalWorkOrder;
   const returnData: ReturnData = {
     error: {},
@@ -41,6 +46,10 @@ async function postLinkWorkOrderToAPE(request: Request) {
     .replace(/  +/g, '')
     .replace(/[`']/g, '"')
     .replace(/[#^&*<>()@~]/g, '');
+  const cleanWorkOrderToLinkLineItem = workOrderToLinkLineItem
+    .replace(/  +/g, '')
+    .replace(/[`']/g, '"')
+    .replace(/[#^&*<>()@~]/g, '');
   const cleanLineItem = lineItem
     .replace(/  +/g, '')
     .replace(/[`']/g, '"')
@@ -48,31 +57,33 @@ async function postLinkWorkOrderToAPE(request: Request) {
 
   // Start Connection for setup of prepare statement
   const db = await pool.connect();
-
+  // Initial setup for the APE order
   try {
     const preState = await new sql.PreparedStatement(db);
     preState.input('ape', sql.VarChar(12));
     preState.input('wo', sql.VarChar(12));
     preState.input('line', sql.VarChar(2));
+    preState.input('woLine', sql.VarChar(2));
     // Setup the values for params to pass through execute below.
     const preAPEStateParams: any = {
       ape: cleanWorkOrder,
       wo: cleanLinkWorkOrder,
-      line: cleanLineItem
+      line: cleanLineItem,
+      woLine: cleanWorkOrderToLinkLineItem
     };
     const queryStringAPE = `
-    IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line)
+    IF EXISTS (SELECT * FROM tear_down_notes WHERE tear_down_notes.SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line)
       BEGIN
         UPDATE tear_down_notes
-          SET linkedWorkOrderIfAPE = @wo
+          SET linkedWorkOrderIfAPE = @wo, linkedWorkOrderIfAPELineItem = @woLine
             OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
               WHERE tear_down_notes.SalesOrderNumber = @ape AND tear_down_notes.salesOrderNumberLine = @line
     END
     ELSE
       BEGIN
-        INSERT INTO tear_down_notes (SalesOrderNumber, linkedWorkOrderIfAPE, salesOrderNumberLine)
+        INSERT INTO tear_down_notes (SalesOrderNumber, linkedWorkOrderIfAPE, linkedWorkOrderIfAPELineItem, salesOrderNumberLine)
           OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-        VALUES (@ape, @wo, @line)
+        VALUES (@ape, @wo, @woLine, @line)
     END`;
 
     await preState.prepare(queryStringAPE);
@@ -81,25 +92,26 @@ async function postLinkWorkOrderToAPE(request: Request) {
 
     if (linkAPEData.recordset[0].id) {
       returnData.resp.linkAPEData = linkAPEData;
-
+      // If successfully updated APE, Update work order with APE order.
       try {
         const preStateWO = await new sql.PreparedStatement(db);
         preStateWO.input('ape', sql.VarChar(12));
         preStateWO.input('wo', sql.VarChar(12));
         preStateWO.input('line', sql.VarChar(2));
+        preStateWO.input('woLine', sql.VarChar(2));
         const queryStringWO = `
-        IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @line)
+        IF EXISTS (SELECT * FROM tear_down_notes WHERE SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @woLine)
         BEGIN
           UPDATE tear_down_notes
-            SET linkedAPEWorkOrder = @ape
+            SET linkedAPEWorkOrder = @ape, linkedAPEWorkOrderLineItem = @line
               OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-                WHERE tear_down_notes.SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @line
+                WHERE tear_down_notes.SalesOrderNumber = @wo AND tear_down_notes.salesOrderNumberLine = @woLine
         END
         ELSE
           BEGIN
-            INSERT INTO tear_down_notes (SalesOrderNumber, linkedAPEWorkOrder, salesOrderNumberLine)
+            INSERT INTO tear_down_notes (SalesOrderNumber, linkedAPEWorkOrder, linkedAPEWorkOrderLineItem, salesOrderNumberLine)
               OUTPUT inserted.id, GETDATE() as dateStamp, CURRENT_USER as userName, HOST_NAME() AS hostName
-            VALUES (@wo, @ape, @line)
+            VALUES (@wo, @ape, @line, @woLine)
         END`;
 
         await preStateWO.prepare(queryStringWO);
