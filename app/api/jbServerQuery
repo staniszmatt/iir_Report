@@ -1,0 +1,10 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import 'mssql/msnodesqlv8';
+import pool from '../config/config';
+import getDriver from '../config/configODBC';
+
+const odbc = require('odbc');
+const sql = require('mssql/msnodesqlv8');
+

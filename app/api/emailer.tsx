@@ -80,7 +80,8 @@ async function emailer(request: Request) {
       returnData.infoResp = info.rejected;
       returnData.success = false;
     }
-  } catch (err) {
+    // eslint-disable-next-line prettier/prettier
+  } catch (err: any) {
     returnData.error = err;
   }
   return returnData;
