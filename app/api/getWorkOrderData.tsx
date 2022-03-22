@@ -139,7 +139,7 @@ async function getWorkOrderData(request: Request) {
           returnData.data.Trv_Num = 'N/A';
           returnData.data.Cert_type_Description = 'N/A';
         }
-      } catch (error) {
+      } catch (error: {} | any) {
         // Not sure if there is a better way but don't need to return the array of key value pairs.
         // eslint-disable-next-line array-callback-return
         Object.getOwnPropertyNames(error).map(key => {
@@ -226,7 +226,7 @@ async function getWorkOrderData(request: Request) {
                 noteEvalFindings = getLinkedIIRData.recordset[0].evalFindings;
                 noteWorkedPerformed = getLinkedIIRData.recordset[0].workedPerformed;
               }
-            } catch (error) {
+            } catch (error: {} | any) {
               // Not sure if there is a better way but don't need to return the array of key value pairs.
               // eslint-disable-next-line array-callback-return
               Object.getOwnPropertyNames(error).map(key => {
@@ -249,7 +249,7 @@ async function getWorkOrderData(request: Request) {
           returnData.data.linkedAPEWorkOrderLineItem = linkedAPEWorkOrderLineItem;
           returnData.data.linkedAPEWorkOrder = linkedAPEWorkOrder;
         }
-      } catch (error) {
+      } catch (error: {} | any) {
         // Not sure if there is a better way but don't need to return the array of key value pairs.
         // eslint-disable-next-line array-callback-return
         Object.getOwnPropertyNames(error).map(key => {
@@ -263,7 +263,7 @@ async function getWorkOrderData(request: Request) {
       };
       returnData.noData = true;
     }
-  } catch (error) {
+  } catch (error: {} | any) {
     // Not sure if there is a better way but don't need to return the array of key value pairs.
     // eslint-disable-next-line array-callback-return
     Object.getOwnPropertyNames(error).map(key => {
